@@ -6,17 +6,25 @@ class BoxCollider : public Component
 {
 private:
 
-	ID3D11Buffer* m_VertexBuffer = NULL;
-	D3DXVECTOR3 Size = D3DXVECTOR3(1.0f,1.0f,1.0f);
+	ID3D11Buffer* mVertexBuffer = NULL;
+	ID3D11Buffer* mIndexBuffer = NULL;
+	ID3D11Buffer* mColorBuffer = NULL;
+	D3DXVECTOR3 mSize = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	bool mStay = false;
+	bool mTriggerFlag = false;
 
+	 
 public:
+
+	D3DXVECTOR3 mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	void Init();
 	void Uninit();
-	void Update(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scl);
+	void Update(Resource* target);
 	void Render();
 
 	bool Collision_Box_Stay(BoxCollider* target);
+	bool Collision_Box_Enter(BoxCollider* target);
 
 };
 

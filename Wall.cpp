@@ -8,15 +8,13 @@ void Wall::Init() {
 
 	Name = "Wall";
 
-	m_Model = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::CUBE);
+	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::CUBE);
 
 	Position = D3DXVECTOR3(0, 0, 0);
 	Rotation = D3DXVECTOR3(0, 0, 0);
-	Scale = D3DXVECTOR3(10.0f, 1.0f, 1.0f);
+	Scale = D3DXVECTOR3(50.0f, 50.0f, 10.0f);
 
-	m_Model->DisplayConfig = false;
-
-	AddComponent<BoxCollider>();
+	AddComponent<BoxCollider>()->mPositionOffest.y = Scale.y /2;
 	
 	Resource::Init();
 }
@@ -28,8 +26,13 @@ void Wall::Uninit() {
 
 void Wall::Update() {
 
-	
-	GetComponent<BoxCollider>()->Update(Position, Rotation, Scale);
+	/*{
+		ImGui::Begin(u8"•Ç");
+		ImGui::SliderFloat3(u8"‰ñ“]", Rotation, -3.14f, 3.14f);
+		ImGui::End();
+	}*/
+
+	Resource::Update();
 }
 
 void Wall::Render() {
@@ -42,7 +45,8 @@ void Wall::Render() {
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(&world);
 
-	m_Model->Draw(world);
+	mModel->Draw(world);
+
 	GetComponent<BoxCollider>()->Render();
 }
 

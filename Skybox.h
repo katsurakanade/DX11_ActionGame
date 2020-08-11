@@ -8,7 +8,7 @@ class Skybox :public Resource
 
 private:
 
-	AssimpModel* m_Model;
+	AssimpModel* mModel;
 
 public:
 

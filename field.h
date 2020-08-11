@@ -6,9 +6,8 @@ class Field : public Resource
 {
 private:
 
-	ID3D11Buffer* m_VertexBuffer = NULL;
-	ID3D11ShaderResourceView* m_Texture = NULL;
-	ID3D11ShaderResourceView* m_ToonTexture = NULL;
+	ID3D11Buffer* mVertexBuffer = NULL;
+	ID3D11ShaderResourceView* mTexture = NULL;
 
 public:
 	void Init();

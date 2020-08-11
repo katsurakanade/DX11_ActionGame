@@ -4,25 +4,25 @@
 #include <io.h>
 
 
-D3D_FEATURE_LEVEL  Renderer::m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
+D3D_FEATURE_LEVEL  Renderer::mFeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
-ID3D11Device* Renderer::m_D3DDevice = NULL;
-ID3D11DeviceContext* Renderer::m_ImmediateContext = NULL;
-IDXGISwapChain* Renderer::m_SwapChain = NULL;
-ID3D11RenderTargetView* Renderer::m_RenderTargetView = NULL;
-ID3D11DepthStencilView* Renderer::m_DepthStencilView = NULL;
+ID3D11Device* Renderer::mD3DDevice = NULL;
+ID3D11DeviceContext* Renderer::mImmediateContext = NULL;
+IDXGISwapChain* Renderer::mSwapChain = NULL;
+ID3D11RenderTargetView* Renderer::mRenderTargetView = NULL;
+ID3D11DepthStencilView* Renderer::mDepthStencilView = NULL;
 
-ID3D11InputLayout* Renderer::m_VertexLayout = NULL;
-ID3D11Buffer* Renderer::m_WorldBuffer = NULL;
-ID3D11Buffer* Renderer::m_ViewBuffer = NULL;
-ID3D11Buffer* Renderer::m_ProjectionBuffer = NULL;
-ID3D11Buffer* Renderer::m_MaterialBuffer = NULL;
-ID3D11Buffer* Renderer::m_LightBuffer = NULL;
+ID3D11InputLayout* Renderer::mVertexLayout = NULL;
+ID3D11Buffer* Renderer::mWorldBuffer = NULL;
+ID3D11Buffer* Renderer::mViewBuffer = NULL;
+ID3D11Buffer* Renderer::mProjectionBuffer = NULL;
+ID3D11Buffer* Renderer::mMaterialBuffer = NULL;
+ID3D11Buffer* Renderer::mLightBuffer = NULL;
 
-ID3D11DepthStencilState* Renderer::m_DepthStateEnable = NULL;
-ID3D11DepthStencilState* Renderer::m_DepthStateDisable = NULL;
-bool Renderer::LineMode = false;
-bool Renderer::GizmosMode = true;
+ID3D11DepthStencilState* Renderer::mDepthStateEnable = NULL;
+ID3D11DepthStencilState* Renderer::mDepthStateDisable = NULL;
+bool Renderer::mLineMode = false;
+bool Renderer::mGizmosMode = true;
 
 void Renderer::Init()
 {
@@ -51,16 +51,16 @@ void Renderer::Init()
 		0,
 		D3D11_SDK_VERSION,
 		&sd,
-		&m_SwapChain,
-		&m_D3DDevice,
-		&m_FeatureLevel,
-		&m_ImmediateContext);
+		&mSwapChain,
+		&mD3DDevice,
+		&mFeatureLevel,
+		&mImmediateContext);
 
 
 	// レンダーターゲットビュー生成、設定
 	ID3D11Texture2D* pBackBuffer = NULL;
-	m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	m_D3DDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_RenderTargetView);
+	mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	mD3DDevice->CreateRenderTargetView(pBackBuffer, NULL, &mRenderTargetView);
 	pBackBuffer->Release();
 
 	//ステンシル用テクスチャー作成
@@ -77,7 +77,7 @@ void Renderer::Init()
 	td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	td.CPUAccessFlags = 0;
 	td.MiscFlags = 0;
-	m_D3DDevice->CreateTexture2D(&td, NULL, &depthTexture);
+	mD3DDevice->CreateTexture2D(&td, NULL, &depthTexture);
 
 	//ステンシルターゲット作成
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
@@ -85,10 +85,10 @@ void Renderer::Init()
 	dsvd.Format = td.Format;
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvd.Flags = 0;
-	m_D3DDevice->CreateDepthStencilView(depthTexture, &dsvd, &m_DepthStencilView);
+	mD3DDevice->CreateDepthStencilView(depthTexture, &dsvd, &mDepthStencilView);
 
 
-	m_ImmediateContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
+	mImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 
 
 	// ビューポート設定
@@ -99,7 +99,7 @@ void Renderer::Init()
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
-	m_ImmediateContext->RSSetViewports(1, &vp);
+	mImmediateContext->RSSetViewports(1, &vp);
 
 	// ラスタライザステート設定
 	D3D11_RASTERIZER_DESC rd;
@@ -110,9 +110,9 @@ void Renderer::Init()
 	rd.MultisampleEnable = FALSE;
 
 	ID3D11RasterizerState* rs;
-	m_D3DDevice->CreateRasterizerState(&rd, &rs);
+	mD3DDevice->CreateRasterizerState(&rd, &rs);
 
-	m_ImmediateContext->RSSetState(rs);
+	mImmediateContext->RSSetState(rs);
 
 	// ブレンドステート設定
 	D3D11_BLEND_DESC blendDesc;
@@ -130,8 +130,8 @@ void Renderer::Init()
 
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	ID3D11BlendState* blendState = NULL;
-	m_D3DDevice->CreateBlendState(&blendDesc, &blendState);
-	m_ImmediateContext->OMSetBlendState(blendState, blendFactor, 0xffffffff);
+	mD3DDevice->CreateBlendState(&blendDesc, &blendState);
+	mImmediateContext->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 
 	// 深度ステンシルステート設定
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -141,13 +141,13 @@ void Renderer::Init()
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	depthStencilDesc.StencilEnable = FALSE;
 
-	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateEnable);//深度有効ステート
+	mD3DDevice->CreateDepthStencilState(&depthStencilDesc, &mDepthStateEnable);//深度有効ステート
 
 	//depthStencilDesc.DepthEnable = FALSE;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateDisable);//深度無効ステート
+	mD3DDevice->CreateDepthStencilState(&depthStencilDesc, &mDepthStateDisable);//深度無効ステート
 
-	m_ImmediateContext->OMSetDepthStencilState(m_DepthStateEnable, NULL);
+	mImmediateContext->OMSetDepthStencilState(mDepthStateEnable, NULL);
 
 	// サンプラーステート設定
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -163,9 +163,9 @@ void Renderer::Init()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	ID3D11SamplerState* samplerState = NULL;
-	m_D3DDevice->CreateSamplerState(&samplerDesc, &samplerState);
+	mD3DDevice->CreateSamplerState(&samplerDesc, &samplerState);
 
-	m_ImmediateContext->PSSetSamplers(0, 1, &samplerState);
+	mImmediateContext->PSSetSamplers(0, 1, &samplerState);
 
 	Shader::Init(Default);
 	//Shader::Init(Particle);
@@ -179,29 +179,29 @@ void Renderer::Init()
 	hBufferDesc.MiscFlags = 0;
 	hBufferDesc.StructureByteStride = sizeof(float);
 
-	m_D3DDevice->CreateBuffer(&hBufferDesc, NULL, &m_WorldBuffer);
-	m_ImmediateContext->VSSetConstantBuffers(0, 1, &m_WorldBuffer);
+	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mWorldBuffer);
+	mImmediateContext->VSSetConstantBuffers(0, 1, &mWorldBuffer);
 
-	m_D3DDevice->CreateBuffer(&hBufferDesc, NULL, &m_ViewBuffer);
-	m_ImmediateContext->VSSetConstantBuffers(1, 1, &m_ViewBuffer);
+	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mViewBuffer);
+	mImmediateContext->VSSetConstantBuffers(1, 1, &mViewBuffer);
 
-	m_D3DDevice->CreateBuffer(&hBufferDesc, NULL, &m_ProjectionBuffer);
-	m_ImmediateContext->VSSetConstantBuffers(2, 1, &m_ProjectionBuffer);
+	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mProjectionBuffer);
+	mImmediateContext->VSSetConstantBuffers(2, 1, &mProjectionBuffer);
 
 
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 
-	m_D3DDevice->CreateBuffer(&hBufferDesc, NULL, &m_MaterialBuffer);
-	m_ImmediateContext->VSSetConstantBuffers(3, 1, &m_MaterialBuffer);
+	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mMaterialBuffer);
+	mImmediateContext->VSSetConstantBuffers(3, 1, &mMaterialBuffer);
 
 
 	hBufferDesc.ByteWidth = sizeof(LIGHT);
 
-	m_D3DDevice->CreateBuffer(&hBufferDesc, NULL, &m_LightBuffer);
-	m_ImmediateContext->VSSetConstantBuffers(4, 1, &m_LightBuffer);
+	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mLightBuffer);
+	mImmediateContext->VSSetConstantBuffers(4, 1, &mLightBuffer);
 
 	// 入力レイアウト設定
-	m_ImmediateContext->IASetInputLayout(m_VertexLayout);
+	mImmediateContext->IASetInputLayout(mVertexLayout);
 
 	// シェーダ設定
 	Shader::Use(Default);
@@ -218,20 +218,20 @@ void Renderer::Init()
 void Renderer::Uninit()
 {
 	// オブジェクト解放
-	m_WorldBuffer->Release();
-	m_ViewBuffer->Release();
-	m_ProjectionBuffer->Release();
-	m_LightBuffer->Release();
-	m_MaterialBuffer->Release();
+	mWorldBuffer->Release();
+	mViewBuffer->Release();
+	mProjectionBuffer->Release();
+	mLightBuffer->Release();
+	mMaterialBuffer->Release();
 
-	m_VertexLayout->Release();
+	mVertexLayout->Release();
 	Shader::Uninit(Default);
 
-	m_ImmediateContext->ClearState();
-	m_RenderTargetView->Release();
-	m_SwapChain->Release();
-	m_ImmediateContext->Release();
-	m_D3DDevice->Release();
+	mImmediateContext->ClearState();
+	mRenderTargetView->Release();
+	mSwapChain->Release();
+	mImmediateContext->Release();
+	mD3DDevice->Release();
 
 }
 
@@ -239,9 +239,9 @@ void Renderer::Begin()
 {
 	// バックバッファクリア
 	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	m_ImmediateContext->ClearRenderTargetView(m_RenderTargetView, ClearColor);
+	mImmediateContext->ClearRenderTargetView(mRenderTargetView, ClearColor);
 
-	m_ImmediateContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	mImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 }
 
@@ -249,15 +249,15 @@ void Renderer::End()
 {
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	m_SwapChain->Present(1, 0);
+	mSwapChain->Present(1, 0);
 }
 
 void Renderer::SetDepthEnable(bool Enable)
 {
 	if (Enable)
-		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateEnable, NULL);
+		mImmediateContext->OMSetDepthStencilState(mDepthStateEnable, NULL);
 	else
-		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateDisable, NULL);
+		mImmediateContext->OMSetDepthStencilState(mDepthStateDisable, NULL);
 
 }
 
@@ -267,17 +267,17 @@ void Renderer::SetWorldViewProjection2D()
 	D3DXMatrixIdentity(&world);
 	D3DXMatrixTranspose(&world, &world);
 
-	m_ImmediateContext->UpdateSubresource(m_WorldBuffer, 0, NULL, &world, 0, 0);
+	mImmediateContext->UpdateSubresource(mWorldBuffer, 0, NULL, &world, 0, 0);
 
 	D3DXMATRIX view;
 	D3DXMatrixIdentity(&view);
 	D3DXMatrixTranspose(&view, &view);
-	m_ImmediateContext->UpdateSubresource(m_ViewBuffer, 0, NULL, &view, 0, 0);
+	mImmediateContext->UpdateSubresource(mViewBuffer, 0, NULL, &view, 0, 0);
 
 	D3DXMATRIX projection;
 	D3DXMatrixOrthoOffCenterLH(&projection, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
 	D3DXMatrixTranspose(&projection, &projection);
-	m_ImmediateContext->UpdateSubresource(m_ProjectionBuffer, 0, NULL, &projection, 0, 0);
+	mImmediateContext->UpdateSubresource(mProjectionBuffer, 0, NULL, &projection, 0, 0);
 
 }
 
@@ -285,33 +285,33 @@ void Renderer::SetWorldMatrix(D3DXMATRIX* WorldMatrix)
 {
 	D3DXMATRIX world;
 	D3DXMatrixTranspose(&world, WorldMatrix);
-	m_ImmediateContext->UpdateSubresource(m_WorldBuffer, 0, NULL, &world, 0, 0);
+	mImmediateContext->UpdateSubresource(mWorldBuffer, 0, NULL, &world, 0, 0);
 }
 
 void Renderer::SetViewMatrix(D3DXMATRIX* ViewMatrix)
 {
 	D3DXMATRIX view;
 	D3DXMatrixTranspose(&view, ViewMatrix);
-	m_ImmediateContext->UpdateSubresource(m_ViewBuffer, 0, NULL, &view, 0, 0);
+	mImmediateContext->UpdateSubresource(mViewBuffer, 0, NULL, &view, 0, 0);
 }
 
 void Renderer::SetProjectionMatrix(D3DXMATRIX* ProjectionMatrix)
 {
 	D3DXMATRIX projection;
 	D3DXMatrixTranspose(&projection, ProjectionMatrix);
-	m_ImmediateContext->UpdateSubresource(m_ProjectionBuffer, 0, NULL, &projection, 0, 0);
+	mImmediateContext->UpdateSubresource(mProjectionBuffer, 0, NULL, &projection, 0, 0);
 }
 
 void Renderer::SetMaterial(MATERIAL Material)
 {
 
-	m_ImmediateContext->UpdateSubresource(m_MaterialBuffer, 0, NULL, &Material, 0, 0);
+	mImmediateContext->UpdateSubresource(mMaterialBuffer, 0, NULL, &Material, 0, 0);
 
 }
 
 void Renderer::SetLight(LIGHT Light)
 {
 
-	m_ImmediateContext->UpdateSubresource(m_LightBuffer, 0, NULL, &Light, 0, 0);
+	mImmediateContext->UpdateSubresource(mLightBuffer, 0, NULL, &Light, 0, 0);
 
 }

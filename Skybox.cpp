@@ -8,13 +8,14 @@ void Skybox::Init() {
 
 	Name = "Skybox";
 
-	m_Model = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
+	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
+
 
 	Position = D3DXVECTOR3(0, 0, 0); 
 	Rotation = D3DXVECTOR3(0, 0, 0);
 	Scale = D3DXVECTOR3(1000.0f, 1000.0f, 1000.0f);
 
-	m_Model->DisplayConfig = false;
+	mModel->DisplayConfig = false;
 }
 
 void Skybox::Uninit() {
@@ -51,6 +52,8 @@ void Skybox::Render() {
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(&world);
 
-	m_Model->Draw(world);
+	mModel->DefaultTexture = true;
+	mModel->Draw(world);
+
 }
 

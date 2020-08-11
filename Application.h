@@ -7,15 +7,16 @@ class Application
 
 private:
 
-	static class Scene* _scene;
-	static float DeltaTime;
-	static float FpsTime;
-	static int FpsCount;
+	static class Scene* mScene;
+	static float mDeltaTime;
+	static float mFpsTime;
+	static int mFpsCount;
 	
-	static Time Timer;
-	static Time FpsTimer;
+	static Time mTimer;
+	static Time mFpsTimer;
 
-	static bool DisableLighting;
+	static bool mDisableLighting;
+
 
 public:
 
@@ -23,7 +24,7 @@ public:
 	static void Uninit();
 	static void Update();
 	static void Render();
-	static class Scene* GetScene() { return _scene; };
-	static float GetDeltaTime() { return DeltaTime; };
+	static class Scene* GetScene() { return mScene; };
+	static float GetDeltaTime() { return mDeltaTime; };
 };
 

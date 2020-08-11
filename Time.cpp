@@ -3,50 +3,50 @@
 
 
 void Time::Init() {
-	start = std::chrono::high_resolution_clock::now();
-	stop = std::chrono::high_resolution_clock::now();
-	is_running = false;
+	mStart = std::chrono::high_resolution_clock::now();
+	mStop = std::chrono::high_resolution_clock::now();
+	mRunning = false;
 }
 
 double Time::GetMilisecondsElapsed() {
 
-	if (is_running) {
-		auto elapsed = std::chrono::duration<double, std::milli >(std::chrono::high_resolution_clock::now() - start);
+	if (mRunning) {
+		auto elapsed = std::chrono::duration<double, std::milli >(std::chrono::high_resolution_clock::now() - mStart);
 		return elapsed.count();
 	}
 
 	else {
-		auto elapsed = std::chrono::duration<double, std::milli >(stop - start);
+		auto elapsed = std::chrono::duration<double, std::milli >(mStop - mStart);
 		return elapsed.count();
 	}
 }
 
 void Time::Restart() {
-	is_running = true;
-	start = std::chrono::high_resolution_clock::now();
+	mRunning = true;
+	mStart = std::chrono::high_resolution_clock::now();
 }
 
 bool Time::Stop() {
 
-	if (!is_running) {
+	if (!mRunning) {
 		return false;
 	}
 	else {
-		stop = std::chrono::high_resolution_clock::now();
-		is_running = false;
+		mStop = std::chrono::high_resolution_clock::now();
+		mRunning = false;
 		return true;
 	}
 }
 
 bool Time::Start() {
 
-	if (is_running){
+	if (mRunning){
 		return false;
 	}
 
 	else{
-		start = std::chrono::high_resolution_clock::now();
-		is_running = true;
+		mStart = std::chrono::high_resolution_clock::now();
+		mRunning = true;
 		return true;
 	}
 }

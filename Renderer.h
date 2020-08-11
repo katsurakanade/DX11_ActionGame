@@ -27,7 +27,6 @@ struct DX11_MODEL_MATERIAL
 	class CTexture* Texture;
 };
 
-
 // 描画サブセット構造体
 struct DX11_SUBSET
 {
@@ -45,31 +44,26 @@ struct LIGHT
 	D3DXCOLOR	Ambient;
 };
 
-
-class CVertexBuffer;
-class CIndexBuffer;
-class CTexture;
-
 class Renderer
 {
 private:
 
-	static D3D_FEATURE_LEVEL       m_FeatureLevel;
+	static D3D_FEATURE_LEVEL       mFeatureLevel;
 
-	static ID3D11Device* m_D3DDevice;
-	static ID3D11DeviceContext* m_ImmediateContext;
-	static IDXGISwapChain* m_SwapChain;
-	static ID3D11RenderTargetView* m_RenderTargetView;
-	static ID3D11DepthStencilView* m_DepthStencilView;
+	static ID3D11Device* mD3DDevice;
+	static ID3D11DeviceContext* mImmediateContext;
+	static IDXGISwapChain* mSwapChain;
+	static ID3D11RenderTargetView* mRenderTargetView;
+	static ID3D11DepthStencilView* mDepthStencilView;
 
-	static ID3D11Buffer* m_WorldBuffer;
-	static ID3D11Buffer* m_ViewBuffer;
-	static ID3D11Buffer* m_ProjectionBuffer;
-	static ID3D11Buffer* m_MaterialBuffer;
-	static ID3D11Buffer* m_LightBuffer;
+	static ID3D11Buffer* mWorldBuffer;
+	static ID3D11Buffer* mViewBuffer;
+	static ID3D11Buffer* mProjectionBuffer;
+	static ID3D11Buffer* mMaterialBuffer;
+	static ID3D11Buffer* mLightBuffer;
 
-	static ID3D11DepthStencilState* m_DepthStateEnable;
-	static ID3D11DepthStencilState* m_DepthStateDisable;
+	static ID3D11DepthStencilState* mDepthStateEnable;
+	static ID3D11DepthStencilState* mDepthStateDisable;
 
 
 public:
@@ -78,8 +72,8 @@ public:
 	static void Begin();
 	static void End();
 
-	static bool LineMode;
-	static bool GizmosMode;
+	static bool mLineMode;
+	static bool mGizmosMode;
 	
 	static void SetDepthEnable(bool Enable);
 	static void SetWorldViewProjection2D();
@@ -89,11 +83,10 @@ public:
 	static void SetMaterial(MATERIAL Material);
 	static void SetLight(LIGHT Light);
 
-
-	static ID3D11Device* GetDevice(void) { return m_D3DDevice; }
-	static ID3D11DeviceContext* GetDeviceContext(void) { return m_ImmediateContext; }
-	static ID3D11RenderTargetView* GetRenderTargetView() { return m_RenderTargetView; };
-	static ID3D11InputLayout* m_VertexLayout;
+	static ID3D11Device* GetDevice(void) { return mD3DDevice; }
+	static ID3D11DeviceContext* GetDeviceContext(void) { return mImmediateContext; }
+	static ID3D11RenderTargetView* GetRenderTargetView() { return mRenderTargetView; };
+	static ID3D11InputLayout* mVertexLayout;
 
 };
 

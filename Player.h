@@ -8,8 +8,10 @@ class Player : public Resource
 {
 private:
 	
-	float Speed = 0.1f;
-	AssimpModel* m_Model;
+	float mSpeed = 0.2f;
+	AssimpModel* mModel;
+
+	void Reflect();
 
 public:
 
@@ -18,5 +20,6 @@ public:
 	void Update();
 	void Render();
 
+	void SetTexture(int index);
 };
 

@@ -8,15 +8,16 @@ class Effect : public Resource
 {
 private:
 
-	ID3D11Buffer* m_VertexBuffer = NULL;
-	ID3D11ShaderResourceView* m_Texture = NULL;
-	D3DXVECTOR3 Size = D3DXVECTOR3(150.0f, 150.0f, 0.0f);
-	int m_framecount;
-	std::vector <std::vector <D3DXVECTOR2>> Frame;
+	ID3D11Buffer* mVertexBuffer = NULL;
+	ID3D11Buffer* mColorBuffer = NULL;
+	ID3D11ShaderResourceView* mTexture = NULL;
+	D3DXVECTOR3 mSize = D3DXVECTOR3(150.0f, 150.0f, 0.0f);
+	int mFramecount;
+	std::vector <std::vector <D3DXVECTOR2>> mFrame;
 
-	int width = EFFECT_X_DEFAULT;
-	int height = EFFECT_Y_DEFAULT;
-	float waitframe;
+	int mWidth = EFFECT_X_DEFAULT;
+	int mHeight = EFFECT_Y_DEFAULT;
+	float mWaitframe;
 
 	D3DXVECTOR2 MakeFrame();
 
@@ -27,7 +28,7 @@ public:
 	void Update();
 	void Render();
 
-	void SetHW(int valx,int valy) { width = valx; height = valy; };
+	void SetHW(int valx,int valy) { mWidth = valx; mHeight = valy; };
 
 };
 

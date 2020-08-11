@@ -2,20 +2,15 @@
 
 enum SHADER_TYPE
 {
-	Default,Particle
+	Default
 };
 
 class Shader
 {
 private:
 
-	static ID3D11VertexShader* VertexShader_Default;
-	static ID3D11PixelShader* PixelShader_Default;
-
-	static ID3D11VertexShader* VertexShader_Particle;
-	static ID3D11PixelShader* PixelShader_Particle;
-	static ID3D11ComputeShader* ComputeShader_Particle;
-	static ID3D11GeometryShader* GeometryShader_Particle;
+	static ID3D11VertexShader* mVertexShader_Default;
+	static ID3D11PixelShader* mPixelShader_Default;
 
 public:
 	static void Init(SHADER_TYPE type);

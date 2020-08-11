@@ -1,5 +1,6 @@
 #include "main.h"
 #include "Renderer.h"
+#include "Resource.h"
 #include "Collision.h"
 
 void BoxCollider::Init() {
@@ -8,14 +9,14 @@ void BoxCollider::Init() {
 
 	VERTEX_3D vertex[8];
 
-	vertex[0].Position = D3DXVECTOR3(Position.x - (Size.x / 2), Position.y + (Size.y / 2), Position.z + (Size.z / 2));
-	vertex[1].Position = D3DXVECTOR3(Position.x + (Size.x / 2), Position.y + (Size.y / 2),Position.z + (Size.z / 2));
-	vertex[2].Position = D3DXVECTOR3(Position.x - (Size.x / 2), Position.y + (Size.y / 2), Position.z - (Size.z / 2));
-	vertex[3].Position = D3DXVECTOR3(Position.x + (Size.x / 2), Position.y + (Size.y / 2), Position.z - (Size.z / 2));
-	vertex[4].Position = D3DXVECTOR3(Position.x - (Size.x / 2), Position.y - (Size.y / 2), Position.z + (Size.z / 2));
-	vertex[5].Position = D3DXVECTOR3(Position.x + (Size.x / 2), Position.y - (Size.y / 2),Position.z + (Size.z / 2));
-	vertex[6].Position = D3DXVECTOR3(Position.x - (Size.x / 2),Position.y - (Size.y / 2), Position.z - (Size.z / 2));
-	vertex[7].Position = D3DXVECTOR3(Position.x + (Size.x / 2), Position.y - (Size.y / 2), Position.z - (Size.z / 2));
+	vertex[0].Position = D3DXVECTOR3(Position.x - (mSize.x / 2), Position.y + (mSize.y / 2), Position.z + (mSize.z / 2));
+	vertex[1].Position = D3DXVECTOR3(Position.x + (mSize.x / 2), Position.y + (mSize.y / 2),Position.z + (mSize.z / 2));
+	vertex[2].Position = D3DXVECTOR3(Position.x - (mSize.x / 2), Position.y + (mSize.y / 2), Position.z - (mSize.z / 2));
+	vertex[3].Position = D3DXVECTOR3(Position.x + (mSize.x / 2), Position.y + (mSize.y / 2), Position.z - (mSize.z / 2));
+	vertex[4].Position = D3DXVECTOR3(Position.x - (mSize.x / 2), Position.y - (mSize.y / 2), Position.z + (mSize.z / 2));
+	vertex[5].Position = D3DXVECTOR3(Position.x + (mSize.x / 2), Position.y - (mSize.y / 2),Position.z + (mSize.z / 2));
+	vertex[6].Position = D3DXVECTOR3(Position.x - (mSize.x / 2),	Position.y - (mSize.y / 2), Position.z - (mSize.z / 2));
+	vertex[7].Position = D3DXVECTOR3(Position.x + (mSize.x / 2), Position.y - (mSize.y / 2), Position.z - (mSize.z / 2));
 
 	for (int i = 0; i < 8; i++) {
 		vertex[i].Normal = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
@@ -32,25 +33,34 @@ void BoxCollider::Init() {
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = vertex;
 
-	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
+	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
 
+	D3D11_BUFFER_DESC cbd;
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.ByteWidth = sizeof(float) * 4;
+	cbd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.MiscFlags = 0;
+
+	Renderer::GetDevice()->CreateBuffer(&cbd, &sd, &mColorBuffer);
 }
 
 void BoxCollider::Uninit() {
 
-	m_VertexBuffer->Release();
+	mVertexBuffer->Release();
 }
 
-void BoxCollider::Update(D3DXVECTOR3 pos ,D3DXVECTOR3 rot ,D3DXVECTOR3 scl){
+void BoxCollider::Update(Resource* target){
 
-	Position = pos;
-	Rotation = rot;
-	Scale = scl;
+	Position = target->Position + (mPositionOffest);
+	Rotation = target->Rotation;
+	Scale = target->Scale;
 }
 
 void BoxCollider::Render() {
 
-	if (Renderer::GizmosMode){
+	if (Renderer::mGizmosMode){
+
 		D3DXMATRIX world, scale, rot, trans;
 		D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
 		D3DXMatrixRotationYawPitchRoll(&rot, Rotation.y, Rotation.x, Rotation.z);
@@ -58,22 +68,36 @@ void BoxCollider::Render() {
 		world = scale * rot * trans;
 		Renderer::SetWorldMatrix(&world);
 
+		D3D11_MAPPED_SUBRESOURCE msr;
+		Renderer::GetDeviceContext()->Map(mColorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+		float* col = (float*)msr.pData;
+		col[0] = 0;
+		col[1] = 1;
+		col[2] = 0;
+		col[3] = 1;
+		Renderer::GetDeviceContext()->Unmap(mColorBuffer, 0);
+
+		Renderer::GetDeviceContext()->PSSetConstantBuffers(0, 1, &mColorBuffer);
+
 		UINT stride = sizeof(VERTEX_3D);
 		UINT offset = 0;
-		Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+		Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 
 		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 		Renderer::GetDeviceContext()->Draw(8, 0);
+
 	}
+
 }
+
 
 bool BoxCollider::Collision_Box_Stay(BoxCollider* target) {
 
-	D3DXVECTOR3 selfmin = Position + D3DXVECTOR3(-(Size.x * Scale.x) / 2, (Size.y * Scale.y) / 2, -(Size.z * Scale.z) / 2);
-	D3DXVECTOR3 selfmax =Position + D3DXVECTOR3((Size.x * Scale.x) / 2, -(Size.y * Scale.y) / 2, (Size.z * Scale.z) / 2);
-	D3DXVECTOR3 targetmin = target->Position + D3DXVECTOR3(-(target->Size.x * target->Scale.x) / 2, (target->Size.y * target->Scale.y) / 2, -(target->Size.z * target->Scale.z) / 2);
-	D3DXVECTOR3 targetmax = target->Position + D3DXVECTOR3((target->Size.x * target->Scale.x) / 2, -(target->Size.y * target->Scale.y) / 2, (target->Size.z * target->Scale.z) / 2);
+	D3DXVECTOR3 selfmin = Position + D3DXVECTOR3(-(mSize.x * Scale.x) / 2, (mSize.y * Scale.y) / 2, -(mSize.z * Scale.z) / 2);
+	D3DXVECTOR3 selfmax =Position + D3DXVECTOR3((mSize.x * Scale.x) / 2, -(mSize.y * Scale.y) / 2, (mSize.z * Scale.z) / 2);
+	D3DXVECTOR3 targetmin = target->Position + D3DXVECTOR3(-(target->mSize.x * target->Scale.x) / 2, (target->mSize.y * target->Scale.y) / 2, -(target->mSize.z * target->Scale.z) / 2);
+	D3DXVECTOR3 targetmax = target->Position + D3DXVECTOR3((target->mSize.x * target->Scale.x) / 2, -(target->mSize.y * target->Scale.y) / 2, (target->mSize.z * target->Scale.z) / 2);
 
 	if (selfmax.z > targetmin.z&& selfmin.z < targetmax.z) {
 		if (selfmax.x > targetmin.x&& selfmin.x < targetmax.x) {
@@ -85,4 +109,25 @@ bool BoxCollider::Collision_Box_Stay(BoxCollider* target) {
 
 	return false;
 
+}
+
+bool BoxCollider::Collision_Box_Enter(BoxCollider* target) {
+
+	mStay = Collision_Box_Stay(target);
+
+	if (mStay && !mTriggerFlag) {
+		mTriggerFlag = true;
+		return true;
+	}
+
+	else if (mStay && mTriggerFlag) {
+		return false;
+	}
+
+	else if (!mStay && mTriggerFlag) {
+		mTriggerFlag = false;
+		return false;
+	}
+
+	return false;
 }

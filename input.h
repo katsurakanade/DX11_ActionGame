@@ -4,8 +4,8 @@
 class Input
 {
 private:
-	static BYTE m_OldKeyState[256];
-	static BYTE m_KeyState[256];
+	static BYTE mOldKeyState[256];
+	static BYTE mKeyState[256];
 
 public:
 

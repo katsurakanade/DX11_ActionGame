@@ -1,8 +1,7 @@
 #include "main.h"
 #include "Renderer.h"
 #include "AssimpModel.h"
-
-bool flag = false;
+#include "Asset.h"
 
 void AssimpModel::Load(std::string FileName) {
 
@@ -27,6 +26,8 @@ void AssimpModel::Unload() {
 	}
 
 }
+std::string textype;
+
 
 void AssimpModel::DrawConfig() {
 
@@ -75,7 +76,15 @@ void AssimpModel::Draw(D3DXMATRIX root) {
 		for (int j = 0; j < textures_loaded.size(); j++) {
 			if (Meshes[i].Textures[0].path == textures_loaded[j].path) {
 
-				Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_loaded[j].texture);
+				if (DefaultTexture) {
+					Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_loaded[j].texture);
+				}
+
+				else if (!DefaultTexture) {
+					if (textures_select[j].texture != NULL) {
+						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_select[j].texture);
+					}
+				}
 
 				D3DXMATRIX world, scale, rot, trans;
 				D3DXMatrixScaling(&scale, Meshes[i].Scale.x, Meshes[i].Scale.y, Meshes[i].Scale.z);
@@ -111,8 +120,6 @@ void AssimpModel::ProcessNode(aiNode* node, const aiScene* scene) {
 		this->ProcessNode(node->mChildren[i], scene);
 	}
 }
-
-std::string textype;
 
 Mesh AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
@@ -283,8 +290,15 @@ ID3D11ShaderResourceView* AssimpModel::getTextureFromModel(const aiScene* scene,
 	int* size = reinterpret_cast<int*>(&scene->mTextures[textureindex]->mWidth);
 
 	hr = D3DX11CreateShaderResourceViewFromMemory(Renderer::GetDevice() , Renderer::GetDeviceContext(), *size, nullptr,nullptr, &texture,nullptr);
-	assert(hr);
 
 	return texture;
 
+}
+
+void AssimpModel::PushTextureSelect(int index) {
+	Texture* t = new Texture();
+	t->texture = Asset::GetTexture(index);
+	textures_select.push_back(*t);
+	delete t;
+	t = nullptr;
 }

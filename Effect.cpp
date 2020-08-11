@@ -11,6 +11,7 @@ static int waitframe;
 void Effect::Init() {
 
 	VERTEX_3D vertex[4];
+	float col[4];
 
 	vertex[0].Position = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
 	vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -32,6 +33,11 @@ void Effect::Init() {
 	vertex[3].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
 
+	col[0] = 1;
+	col[1] = 1;
+	col[2] = 1;
+	col[3] = 1;
+
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -43,10 +49,21 @@ void Effect::Init() {
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = vertex;
 
-	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
+	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
 
-	//m_Texture = Asset::GetTexture(TEXTURE_ENUM::EXP);
-	m_framecount = 0;
+	D3D11_BUFFER_DESC cbd;
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.ByteWidth = sizeof(float) * 4;
+	cbd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.MiscFlags = 0;
+
+	sd.pSysMem = col;
+
+	Renderer::GetDevice()->CreateBuffer(&cbd, &sd, &mColorBuffer);
+
+	mTexture = Asset::GetTexture(TEXTURE_ENUM::EXP);
+	mFramecount = 0;
 
 	Position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	Scale = D3DXVECTOR3(3.0f, 3.0f, 1.0f);
@@ -56,7 +73,8 @@ void Effect::Init() {
 
 void Effect::Uninit() {
 
-
+	mVertexBuffer->Release();
+	mColorBuffer->Release();
 }
 
 void Effect::Update() {
@@ -64,11 +82,11 @@ void Effect::Update() {
 	waitframe++;
 
 	if (waitframe >= 2) {
-		m_framecount++;
+		mFramecount++;
 		waitframe = 0;
 	}
 
-	if (m_framecount >= width * height) {
+	if (mFramecount >= mWidth * mHeight) {
 		Destroy();
 		return;
 	}
@@ -84,7 +102,7 @@ void Effect::Render() {
 	D3DXVECTOR2 frame = MakeFrame();
 
 	D3D11_MAPPED_SUBRESOURCE msr;
-	Renderer::GetDeviceContext()->Map(m_VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+	Renderer::GetDeviceContext()->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
 	VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
 
 	vertex[0].Position = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
@@ -95,22 +113,22 @@ void Effect::Render() {
 	vertex[1].Position = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
 	vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	vertex[1].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[1].TexCoord = D3DXVECTOR2(frame.x + (1.0f / width), frame.y);
+	vertex[1].TexCoord = D3DXVECTOR2(frame.x + (1.0f / mWidth), frame.y);
 
 	vertex[2].Position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
 	vertex[2].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	vertex[2].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[2].TexCoord = D3DXVECTOR2(frame.x, frame.y + (1.0f / height));
+	vertex[2].TexCoord = D3DXVECTOR2(frame.x, frame.y + (1.0f / mHeight));
 
 	vertex[3].Position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
 	vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	vertex[3].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[3].TexCoord = D3DXVECTOR2(frame.x + (1.0f /width), frame.y + (1.0f / height));
+	vertex[3].TexCoord = D3DXVECTOR2(frame.x + (1.0f /mWidth), frame.y + (1.0f / mHeight));
 
-	Renderer::GetDeviceContext()->Unmap(m_VertexBuffer, 0);
+	Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
 
 	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
-	D3DXMATRIX view = camera->GetviewMatrix();
+	D3DXMATRIX view = camera->GetViewMatrix();
 	D3DXMATRIX invView;
 	D3DXMatrixInverse(&invView, NULL, &view);
 	invView._41 = 0.0f;
@@ -124,11 +142,13 @@ void Effect::Render() {
 
 	Renderer::SetWorldMatrix(&world);
 
+	Renderer::GetDeviceContext()->PSSetConstantBuffers(0, 1, &mColorBuffer);
+
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
-	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
+	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
 
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
@@ -136,7 +156,7 @@ void Effect::Render() {
 }
 
 D3DXVECTOR2 Effect::MakeFrame() {
-	float x = m_framecount % width * (1.0f / width);
-	float y = m_framecount / height * (1.0f / height);
+	float x = mFramecount % mWidth * (1.0f / mWidth);
+	float y = mFramecount / mHeight * (1.0f / mHeight);
 	return D3DXVECTOR2(x,y);
 }

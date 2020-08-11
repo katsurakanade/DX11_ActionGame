@@ -7,6 +7,7 @@
 #include <iostream>
 #include <windows.h>
 #include <assert.h>
+#include <math.h>
 #include <map>
 #include <vector>
 #include <string>

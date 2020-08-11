@@ -6,17 +6,32 @@ class Sprite : public Resource
 {
 private:
 
-	ID3D11Buffer* VertexBuffer = NULL;
-	ID3D11ShaderResourceView* Texture = NULL;
-	D3DXVECTOR3 Size = D3DXVECTOR3(300.0f,150.0f,0.0f);
+	ID3D11Buffer* mVertexBuffer = NULL;
+	ID3D11Buffer* mColorBuffer = NULL;
+	ID3D11ShaderResourceView* mTexture = NULL;
+	D3DXVECTOR3 mSize = D3DXVECTOR3(150.0f,150.0f,0.0f);
+
+	bool mAnimation = false;
+	int mFramecount;
+	std::vector <std::vector <D3DXVECTOR2>> mFrame;
+	int mWidth = 3;
+	int mHeight = 3;
+	D3DXVECTOR2 MakeFrame();
 
 public:
+
 	void Init();
 	void Uninit();
 	void Update();
 	void Render();
 
 	void SetTexture(ID3D11ShaderResourceView* value);
-	void SetSize(D3DXVECTOR3 value) { Size = value; };
+	void SetSize(D3DXVECTOR3 value) { mSize = value; };
+
+	void SetAnimationSprite(bool val) { mAnimation = val; };
+	void SetFrame(int frame) { mFramecount = frame; };
+	void SetHW(int valx, int valy) { mWidth = valx; mHeight = valy; };
+
+
 };
 

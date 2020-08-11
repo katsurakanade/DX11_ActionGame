@@ -4,37 +4,36 @@
 #include "input.h"
 #include "Scene.h"
 
-Scene* Application::_scene;
-float Application::DeltaTime;
-float Application::FpsTime;
-int Application::FpsCount;
-Time Application::Timer;
-Time Application::FpsTimer;
+Scene* Application::mScene;
+float Application::mDeltaTime;
+float Application::mFpsTime;
+int Application::mFpsCount;
+Time Application::mTimer;
+Time Application::mFpsTimer;
 
-bool Application::DisableLighting;
+
+bool Application::mDisableLighting;
 
 bool Application::Init() {
 
-	DisableLighting = false;
+	mDisableLighting = false;
 
 	Input::Init();
 	Renderer::Init();
 
-	Timer.Start();
-	FpsTimer.Start();
+	mTimer.Start();
+	mFpsTimer.Start();
 
-	_scene = new Scene();
-	_scene->Init();
-
-
+	mScene = new Scene();
+	mScene->Init();
 
 	return true;
 }
 
 void Application::Uninit() {
 
-	_scene->Uninit();
-	delete _scene;
+	mScene->Uninit();
+	delete mScene;
 
 	Renderer::Uninit();
 	Input::Uninit();
@@ -43,39 +42,41 @@ void Application::Uninit() {
 
 void Application::Update() {
 	
-	DeltaTime = (float)Timer.GetMilisecondsElapsed();
-	Timer.Restart();
+	mTimer.Restart();
 	
 	Input::Update();
-	_scene->Update();
+	mScene->Update();
 
 	static int fpscount = 0;
 	static std::string str = "FPS : 0 ";
 	fpscount++;
 
-	if (FpsTimer.GetMilisecondsElapsed() > 1000.0f) {
+	if (mFpsTimer.GetMilisecondsElapsed() > 1000.0f) {
 		str = "FPS:" + std::to_string(fpscount);
 		fpscount = 0;
-		FpsTimer.Restart();
+		mFpsTimer.Restart();
 	}
 
 	{
 		ImGui::Begin(u8"システム");
 		ImGui::SetWindowSize(ImVec2(200, 200));
 		ImGui::Text(str.c_str());
-		ImGui::Checkbox(u8"線描画モード", &Renderer::LineMode);
-		ImGui::Checkbox(u8"Gizmosモード", &Renderer::GizmosMode);
-		ImGui::Checkbox(u8"ライト閉め", &DisableLighting);
+		ImGui::Text(u8"Frame Time : %f", mDeltaTime);
+		ImGui::Checkbox(u8"線描画モード", &Renderer::mLineMode);
+		ImGui::Checkbox(u8"Gizmosモード", &Renderer::mGizmosMode);
+		ImGui::Checkbox(u8"ライト閉め", &mDisableLighting);
 		ImGui::End();
 	}
 
-	Application::GetScene()->GetGameObject<Light>(CameraLayer)->GetSource()->Enable = !DisableLighting;
+	Application::GetScene()->GetGameObject<Light>(CameraLayer)->GetSource()->Enable = !mDisableLighting;
+
+	
 }
 
 void Application::Render() {
 
 	Renderer::Begin();
-	_scene->Render();
+	mScene->Render();
 	
 	Renderer::End();
 }

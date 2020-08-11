@@ -6,10 +6,10 @@ class Time
 {
 private:
 
-	bool is_running;
+	bool mRunning;
 
-	std::chrono::time_point<std::chrono::steady_clock> start;
-	std::chrono::time_point<std::chrono::steady_clock> stop;
+	std::chrono::time_point<std::chrono::steady_clock> mStart;
+	std::chrono::time_point<std::chrono::steady_clock> mStop;
 
 public:
 

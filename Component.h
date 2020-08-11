@@ -1,6 +1,8 @@
 #pragma once
 
-#include "main.h"
+#include "Resource.h"
+
+class Resource;
 
 class Component {
 
@@ -22,4 +24,5 @@ public:
 
     virtual void Init() = 0;
     virtual void Uninit() = 0;
+    virtual void Update(Resource* target) = 0;
 };

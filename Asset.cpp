@@ -2,13 +2,14 @@
 #include "Renderer.h"
 #include "Asset.h"
 
-std::vector<AssimpModel*> Asset::AssimpModelList;
-std::vector<ID3D11ShaderResourceView*> Asset::TextureList;
+std::vector<AssimpModel*> Asset::mAssimpModelList;
+std::vector<ID3D11ShaderResourceView*> Asset::mTextureList;
 
 void Asset::LoadSceneAsset(){
 
 	AddAssimpModelToList("asset\\model\\ball\\ball.obj");
 	AddAssimpModelToList("asset\\model\\cube\\cube.obj");
+	AddAssimpModelToList("asset\\model\\torus\\torus.obj");
 
 	AddTextureToList("asset/texture/number.png");
 	AddTextureToList("asset/texture/Dirt.jpg");
@@ -21,11 +22,11 @@ void Asset::LoadSceneAsset(){
 
 void Asset::UnloadSceneAsset() {
 
-	for (AssimpModel* md : AssimpModelList) {
+	for (AssimpModel* md : mAssimpModelList) {
 		md->Unload();
 	}
 
-	for (ID3D11ShaderResourceView* tex : TextureList) {
+	for (ID3D11ShaderResourceView* tex : mTextureList) {
 		tex->Release();
 	}
 

@@ -7,11 +7,11 @@ class Camera : public Resource
 
 private:
 
-	D3DXVECTOR3 Target;
-	Resource* FollowTarget;
-	D3DXVECTOR3 FollowPostionOffset;
-	D3DXVECTOR3 FollowProjectionOffset;
-	D3DXMATRIX viewMatrix;
+	D3DXVECTOR3 mTarget;
+	Resource* mFollowTarget;
+	D3DXVECTOR3 mFollowPostionOffset;
+	D3DXVECTOR3 mFollowProjectionOffset;
+	D3DXMATRIX mViewMatrix;
 
 public:
 
@@ -20,7 +20,7 @@ public:
 	void Update();
 	void Render();
 
-	void SetFollowTarget(Resource* obj) { FollowTarget = obj; };
-	D3DXMATRIX GetviewMatrix() { return viewMatrix; };
+	void SetFollowTarget(Resource* obj) { mFollowTarget = obj; };
+	D3DXMATRIX GetViewMatrix() { return mViewMatrix; };
 };
 

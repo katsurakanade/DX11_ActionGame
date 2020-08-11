@@ -1,27 +1,27 @@
 #include "main.h"
+#include "Mathematics.h"
 #include "Renderer.h"
 #include "Player.h"
 #include "input.h"
 #include "Application.h"
 #include "Scene.h"
 #include "Effect.h"
+#include "Physical.h"
 #include "field.h"
 
 void Player::Init() {
 
 	Name = "Player";
 
-	m_Model = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
-	
+	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
+
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	
 	D3DXQuaternionIdentity(&Quaternion);	
-	m_Model->DisplayConfig = false;
-
-	Application::GetScene()->GetGameObject<Camera>(CameraLayer)->SetFollowTarget(this);
 
 	AddComponent<BoxCollider>();
+	AddComponent<Physical>();
 
 	Resource::Init();
 }
@@ -32,38 +32,13 @@ void Player::Uninit() {
 
 void Player::Update() {
 
-	if (Input::GetKeyPress('W')) {
-		Position.z += Speed;
+	if (Input::GetKeyTrigger(VK_SPACE)) {
+		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-2, 1,1) * mSpeed;
 	}
 
-	if (Input::GetKeyPress('S')) {
-		Position.z -= Speed;
-	}
+	Reflect();
 
-	if (Input::GetKeyPress('A')) {
-		Position.x -= Speed;
-	}
-
-	if (Input::GetKeyPress('D')) {
-		Position.x += Speed;
-	}
-
-	std::vector<Wall*> Walllist = Application::GetScene()->GetGameObjects<Wall>(ObjectLayer);
-
-	for (Wall* trg : Walllist) {
-
-		if (auto p = trg->GetComponent<BoxCollider>()) {
-			if (GetComponent<BoxCollider>()->Collision_Box_Stay(p)) {
-				Effect* obj = Application::GetScene()->AddGameObject<Effect>(ObjectLayer);
-				obj->Position = Position;
-				obj->SetHW(8, 6);
-			}
-		}
-
-	}
-
-	GetComponent<BoxCollider>()->Update(Position, Rotation, Scale);
-
+	Resource::Update();
 }
  
 void Player::Render() {
@@ -76,6 +51,36 @@ void Player::Render() {
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(&world);
 
-	m_Model->Draw(world);
+	mModel->DefaultTexture = false;
+	mModel->Draw(world);
 	GetComponent<BoxCollider>()->Render();
+}
+
+void Player::Reflect() {
+
+	std::vector<Wall*> Walllist = Application::GetScene()->GetGameObjects<Wall>(ObjectLayer);
+
+	for (Wall* trg : Walllist) {
+
+		BoxCollider* sbc = GetComponent<BoxCollider>();
+		BoxCollider* tbc = trg->GetComponent<BoxCollider>();
+
+		if (sbc->Collision_Box_Enter(tbc)) {
+
+			D3DXVECTOR3 moveDir;
+			D3DXVec3Normalize(&moveDir, &GetComponent<Physical>()->mVelocity);
+			D3DXVECTOR3 r;
+			GetReflectVector(&r, moveDir, trg->GetFront());
+			GetComponent<Physical>()->mVelocity = r * mSpeed;
+			GetComponent<Physical>()->AddForce(this, 1);
+
+			Effect* obj = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
+			obj->Position = Position;
+			obj->SetHW(8, 6);
+		}
+	}
+}
+
+void Player::SetTexture(int index) {
+	mModel->PushTextureSelect(index);
 }

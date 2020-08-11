@@ -115,7 +115,7 @@ public:
 		Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
 		Renderer::GetDeviceContext()->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-		if (!Renderer::LineMode) {
+		if (!Renderer::mLineMode) {
 			Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
 
@@ -147,6 +147,7 @@ private:
 	std::string Directory;
 	std::vector<Mesh> Meshes;
 	std::vector<Texture> textures_loaded;
+	std::vector<Texture> textures_select;
 
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
@@ -162,6 +163,7 @@ private:
 public:
 
 	bool DisplayConfig = false;
+	bool DefaultTexture = true;
 	void SetConfingPos(D3DXVECTOR2 pos) { ConfigPos = pos; };
 
 	void Draw(D3DXMATRIX root);
@@ -173,6 +175,15 @@ public:
 	std::string GetDirectory() { return Directory; };
 	std::vector<Mesh> GetMeshes() { return Meshes; };
 	
+	void SetColorAll(D3DXCOLOR col) {
+		for (int i = 0; i < Meshes.size();i++) {
+			Meshes[i].col[0] = col.r;
+			Meshes[i].col[1] = col.g;
+			Meshes[i].col[2] = col.b;
+			Meshes[i].col[3] = col.a;
+		}
+	};
 
+	void PushTextureSelect(int index);
 };
 

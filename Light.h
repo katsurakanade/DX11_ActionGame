@@ -7,7 +7,7 @@ class Light : public Resource
 	
 private:
 
-	LIGHT* source;
+	LIGHT* mSource;
 
 public:
 
@@ -16,6 +16,6 @@ public:
 	void Update();
 	void Render();
 
-	LIGHT* GetSource() { return source; };
+	LIGHT* GetSource() { return mSource; };
 };
 

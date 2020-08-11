@@ -34,7 +34,11 @@ public:
             c->Uninit();
         }
     };
-    virtual void Update() = 0;
+    virtual void Update() {
+        for (Component* c : Components) {
+            c->Update(this);
+        }
+    };
     virtual void Render() = 0;
 
     void SetActive(bool active) { this->Active = active; };
@@ -54,8 +58,10 @@ public:
     }
 
     D3DXVECTOR3 GetForward() {
+
         D3DXMATRIX rot;
-        D3DXMatrixRotationYawPitchRoll(&rot, Rotation.y, Rotation.x, Rotation.z);
+        D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
+        D3DXMatrixRotationQuaternion(&rot, &Quaternion);
 
         D3DXVECTOR3 forward;
         forward.x = rot._31;

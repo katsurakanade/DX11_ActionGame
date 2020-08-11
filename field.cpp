@@ -1,4 +1,4 @@
-#include "main.h"
+ #include "main.h"
 #include "renderer.h"
 #include "field.h"
 #include "Scene.h"
@@ -41,19 +41,20 @@ void Field::Init() {
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = vertex;
 	
-	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
+	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
 
-	//m_Texture = Asset::GetTexture(TEXTURE_ENUM::DIRT);
-	//m_ToonTexture = Asset::GetTexture(TEXTURE_ENUM::TOON);
+	mTexture = Asset::GetTexture(TEXTURE_ENUM::DIRT);
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	Scale = D3DXVECTOR3(500.0f, 1.0f, 500.0f);
+	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	
+	D3DXQuaternionIdentity(&Quaternion);
 
 }
 
 void Field::Uninit() {
-	m_VertexBuffer->Release();
+	mVertexBuffer->Release();
 	
 }
 
@@ -66,14 +67,15 @@ void Field::Render() {
 
 	D3DXMATRIX world, scale, rot, trans;
 	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
-	D3DXMatrixRotationYawPitchRoll(&rot, Rotation.y, Rotation.x, Rotation.z);
+	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
+	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
 	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(&world);
 
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
-	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
@@ -81,7 +83,7 @@ void Field::Render() {
 	material.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	Renderer::SetMaterial(material);
 
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
+	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
 
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
