@@ -11,7 +11,7 @@ void Sprite::Init() {
 	VERTEX_3D vertex[4];
 	float col[4];
 
-	Position = D3DXVECTOR3(750, 900, 0);
+	Position = D3DXVECTOR3(0, 0, 0);
 
 	vertex[0].Position = D3DXVECTOR3(Position.x, Position.y, 0.0f);
 	vertex[1].Position = D3DXVECTOR3(Position.x + mSize.x, Position.y, 0.0f);
@@ -118,6 +118,7 @@ void Sprite::Render() {
 		Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
 	}
 
+
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
@@ -145,4 +146,34 @@ D3DXVECTOR2 Sprite::MakeFrame() {
 	float x = mFramecount % mWidth * (1.0f / mWidth);
 	float y = mFramecount / mHeight * (1.0f / mHeight);
 	return D3DXVECTOR2(x, y);
+}
+
+void Sprite::SetPosition(D3DXVECTOR2 pos) {
+
+	D3D11_MAPPED_SUBRESOURCE msr;
+	Renderer::GetDeviceContext()->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+	VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
+
+	vertex[0].Position = D3DXVECTOR3(pos.x, pos.y, 0.0f);
+	vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	vertex[0].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[0].TexCoord = D3DXVECTOR2(0, 0);
+
+	vertex[1].Position = D3DXVECTOR3(pos.x + mSize.x, pos.y, 0.0f);
+	vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	vertex[1].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[1].TexCoord = D3DXVECTOR2(1, 0);
+
+	vertex[2].Position = D3DXVECTOR3(pos.x, pos.y + mSize.y, 0.0f);
+	vertex[2].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	vertex[2].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[2].TexCoord = D3DXVECTOR2(0, 1);
+
+	vertex[3].Position = D3DXVECTOR3(pos.x + mSize.x, pos.y + mSize.y, 0.0f);
+	vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	vertex[3].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[3].TexCoord = D3DXVECTOR2(1, 1);
+
+	Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
+
 }

@@ -164,6 +164,7 @@ public:
 
 	bool DisplayConfig = false;
 	bool DefaultTexture = true;
+	int SelectTextureIndex = 0;
 	void SetConfingPos(D3DXVECTOR2 pos) { ConfigPos = pos; };
 
 	void Draw(D3DXMATRIX root);

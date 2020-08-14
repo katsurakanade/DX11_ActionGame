@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Wall.h"
 #include "Application.h"
+#include "input.h"
 #include "Scene.h"
 
 void Wall::Init() {
@@ -13,6 +14,8 @@ void Wall::Init() {
 	Position = D3DXVECTOR3(0, 0, 0);
 	Rotation = D3DXVECTOR3(0, 0, 0);
 	Scale = D3DXVECTOR3(50.0f, 50.0f, 10.0f);
+
+	D3DXQuaternionIdentity(&this->Quaternion);
 
 	AddComponent<BoxCollider>()->mPositionOffest.y = Scale.y /2;
 	
@@ -32,6 +35,8 @@ void Wall::Update() {
 		ImGui::End();
 	}*/
 
+
+
 	Resource::Update();
 }
 
@@ -46,6 +51,7 @@ void Wall::Render() {
 	Renderer::SetWorldMatrix(&world);
 
 	mModel->Draw(world);
+
 
 	GetComponent<BoxCollider>()->Render();
 }

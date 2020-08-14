@@ -11,7 +11,6 @@ int Application::mFpsCount;
 Time Application::mTimer;
 Time Application::mFpsTimer;
 
-
 bool Application::mDisableLighting;
 
 bool Application::Init() {

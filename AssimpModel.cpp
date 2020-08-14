@@ -81,8 +81,8 @@ void AssimpModel::Draw(D3DXMATRIX root) {
 				}
 
 				else if (!DefaultTexture) {
-					if (textures_select[j].texture != NULL) {
-						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_select[j].texture);
+					if (textures_select[SelectTextureIndex].texture != NULL) {
+						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_select[SelectTextureIndex].texture);
 					}
 				}
 

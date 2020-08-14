@@ -71,6 +71,26 @@ public:
         return forward;
     }
 
+    void RotationAroundXZ(D3DXVECTOR3 target,float force) {
+        float tx = target.x;
+        float ty = target.z;
+        float x0 = Position.x;
+        float y0 = Position.z;
+
+        Position.x = tx + (x0 - tx) * cos(D3DXToRadian(force)) - (y0 - ty) * sin(D3DXToRadian(force));
+        Position.z = ty + (x0 - tx) * sin(D3DXToRadian(force)) + (y0 - ty) * cos(D3DXToRadian(force));
+    }
+
+    void RotationAroundXY(D3DXVECTOR3 target, float force) {
+        float tx = target.x;
+        float ty = target.y;
+        float x0 = Position.x;
+        float y0 = Position.y;
+
+        Position.x = tx + (x0 - tx) * cos(D3DXToRadian(force)) - (y0 - ty) * sin(D3DXToRadian(force));
+        Position.y = ty + (x0 - tx) * sin(D3DXToRadian(force)) + (y0 - ty) * cos(D3DXToRadian(force));
+    }
+
     template <typename T>
     T* AddComponent() {
         T* Component = new T();

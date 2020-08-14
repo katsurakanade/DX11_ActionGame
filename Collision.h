@@ -13,10 +13,10 @@ private:
 	bool mStay = false;
 	bool mTriggerFlag = false;
 
-	 
 public:
 
 	D3DXVECTOR3 mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 mScaleOffest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	void Init();
 	void Uninit();

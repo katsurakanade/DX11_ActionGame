@@ -7,6 +7,8 @@ enum ASSIMP_MODEL_ENUM
 	BALL,
 	CUBE,
 	TORUS,
+	ARROW,
+	ENEMY,
 };
 
 enum TEXTURE_ENUM {
@@ -15,7 +17,8 @@ enum TEXTURE_ENUM {
 	METER,
 	TOON,
 	EXP,
-	CAT,
+	WIZARD,
+	SAMURAI,
 };
 
 class Asset

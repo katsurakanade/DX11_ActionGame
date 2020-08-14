@@ -1,86 +1,45 @@
 #include "main.h"
-#include "Mathematics.h"
 #include "Renderer.h"
-#include "Player.h"
-#include "input.h"
 #include "Application.h"
 #include "Scene.h"
-#include "Effect.h"
-#include "Physical.h"
-#include "field.h"
+#include "Player.h"
+#include "Ball.h"
 
 void Player::Init() {
 
-	Name = "Player";
+	mNowController = 1;
 
-	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
+	Ball* b1 = Application::GetScene()->AddGameObject<Ball>(ObjectLayer);
+	b1->Name = "Ball";
+	b1->Rotation = D3DXVECTOR3(-0.5f, 1.72f, 1.72f);
+	b1->SetModelTexture(0);
+	b1->InitArrowPosition();
+	b1->SetArrow(false);
 
-	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	
-	D3DXQuaternionIdentity(&Quaternion);	
+	Ball* b2= Application::GetScene()->AddGameObject<Ball>(ObjectLayer);
+	b2->Name = "Ball2";
+	b2->Position = D3DXVECTOR3(10, 10, 0);
+	b2->Rotation = D3DXVECTOR3(0.5f, 1.72f, 1.72f);
+	b2->SetModelTexture(1);
+	b2->InitArrowPosition();
+	b2->SetArrow(true);
 
-	AddComponent<BoxCollider>();
-	AddComponent<Physical>();
-
-	Resource::Init();
 }
 
-void Player::Uninit() {
-	Resource::Uninit();
-}
+void Player::SelectBall() {
 
-void Player::Update() {
+	std::vector<Ball*> Balllist = Application::GetScene()->GetGameObjects<Ball>(ObjectLayer);
 
-	if (Input::GetKeyTrigger(VK_SPACE)) {
-		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-2, 1,1) * mSpeed;
+	if (mNowController == 0) {
+		Balllist[0]->InitArrowPosition();
+		Balllist[0]->SetArrow(true);
+		Balllist[1]->SetArrow(false);
 	}
 
-	Reflect();
-
-	Resource::Update();
-}
- 
-void Player::Render() {
-
-	D3DXMATRIX world, scale, rot, trans;
-	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
-	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
-	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
-	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
-	world = scale * rot * trans;
-	Renderer::SetWorldMatrix(&world);
-
-	mModel->DefaultTexture = false;
-	mModel->Draw(world);
-	GetComponent<BoxCollider>()->Render();
-}
-
-void Player::Reflect() {
-
-	std::vector<Wall*> Walllist = Application::GetScene()->GetGameObjects<Wall>(ObjectLayer);
-
-	for (Wall* trg : Walllist) {
-
-		BoxCollider* sbc = GetComponent<BoxCollider>();
-		BoxCollider* tbc = trg->GetComponent<BoxCollider>();
-
-		if (sbc->Collision_Box_Enter(tbc)) {
-
-			D3DXVECTOR3 moveDir;
-			D3DXVec3Normalize(&moveDir, &GetComponent<Physical>()->mVelocity);
-			D3DXVECTOR3 r;
-			GetReflectVector(&r, moveDir, trg->GetFront());
-			GetComponent<Physical>()->mVelocity = r * mSpeed;
-			GetComponent<Physical>()->AddForce(this, 1);
-
-			Effect* obj = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
-			obj->Position = Position;
-			obj->SetHW(8, 6);
-		}
+	if (mNowController == 1) {
+		Balllist[1]->InitArrowPosition();
+		Balllist[0]->SetArrow(false);
+		Balllist[1]->SetArrow(true);
 	}
-}
 
-void Player::SetTexture(int index) {
-	mModel->PushTextureSelect(index);
 }

@@ -53,8 +53,8 @@ void BoxCollider::Uninit() {
 void BoxCollider::Update(Resource* target){
 
 	Position = target->Position + (mPositionOffest);
-	Rotation = target->Rotation;
-	Scale = target->Scale;
+	//Rotation = target->Rotation;
+	Scale = target->Scale + (mScaleOffest);
 }
 
 void BoxCollider::Render() {
@@ -90,7 +90,6 @@ void BoxCollider::Render() {
 	}
 
 }
-
 
 bool BoxCollider::Collision_Box_Stay(BoxCollider* target) {
 

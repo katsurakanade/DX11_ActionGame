@@ -26,7 +26,7 @@ void Light::Uninit() {
 
 void Light::Update() {
 
-	ImGui::Begin(u8"ライト");
+	/*ImGui::Begin(u8"ライト");
 	ImGui::SetWindowSize(ImVec2(500, 300));
 
 	float dir[3] = { mSource->Direction.x ,mSource->Direction.y ,mSource->Direction.z };
@@ -41,7 +41,7 @@ void Light::Update() {
 	ImGui::SliderFloat3("Diffuse", d, 0.0f, 1.0f);
 	mSource->Diffuse = D3DXCOLOR(d[0], d[1], d[2], 1.0f);
 
-	ImGui::End();
+	ImGui::End();*/
 
 }
 
