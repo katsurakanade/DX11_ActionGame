@@ -47,14 +47,14 @@ void Enemy::Update() {
 		if (sbc->Collision_Box_Enter(tbc)) {
 
 			// Self
-			GetComponent<Physical>()->mSpeed = 0.01f;
+			GetComponent<Physical>()->mSpeed = 0.005f;
 			D3DXVECTOR3 dir = trg->Position - Position;
 			D3DXVECTOR3 dirn;
 			D3DXVec3Normalize(&dirn, &dir);
-			GetComponent<Physical>()->mVelocity = dir;
+			GetComponent<Physical>()->mVelocity = dirn;
 
 			// Target
-			trg->GetComponent<Physical>()->SpeedDown(0.0015f);
+			trg->GetComponent<Physical>()->SpeedDown(0.00015f);
 
 			// Effect
 			Effect* obj = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
@@ -84,4 +84,9 @@ void Enemy::Render() {
 	mModel->Draw(world);
 
 	GetComponent<BoxCollider>()->Render();
+}
+
+void Enemy::Attack() {
+
+	
 }

@@ -20,9 +20,13 @@ void Asset::LoadSceneAsset(){
 	AddTextureToList("asset/texture/explosion2.png");
 	AddTextureToList("asset/texture/Wizard.png");
 	AddTextureToList("asset/texture/Samurai.png");
-	
-	mAssimpModelList[ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect(TEXTURE_ENUM::WIZARD);
+	AddTextureToList("asset/texture/Warrior.png");
+	AddTextureToList("asset/texture/Elf.png");
+
 	mAssimpModelList[ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect(TEXTURE_ENUM::SAMURAI);
+	mAssimpModelList[ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect(TEXTURE_ENUM::WIZARD);
+	mAssimpModelList[ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect(TEXTURE_ENUM::WARRIOR);
+	mAssimpModelList[ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect(TEXTURE_ENUM::ELF);
 }
 
 void Asset::UnloadSceneAsset() {

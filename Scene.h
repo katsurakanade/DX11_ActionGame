@@ -4,15 +4,14 @@
 #include "main.h"
 #include "Resource.h"
 #include "Camera.h"
-#include "Arrow.h"
-#include "Sprite.h"
 #include "Effect.h"
 #include "Light.h"
 #include "Skybox.h"
 #include "Physical.h"
-#include "field.h"
 #include "Level.h"
 #include "Player.h"
+#include "GUI.h"
+#include "Gamemanger.h"
 #include "Time.h"
 #include "Asset.h"
 
@@ -38,19 +37,14 @@ public:
 		AddGameObject<Camera>(CameraLayer);
 		AddGameObject<Light>(CameraLayer);
 
-		Sprite* sp = AddGameObject<Sprite>(SpriteLayer);
-		sp->SetTexture(Asset::GetTexture(TEXTURE_ENUM::SAMURAI));
-		sp->SetPosition(D3DXVECTOR2(100, 900));
-
-		Sprite* sp2 = AddGameObject<Sprite>(SpriteLayer);
-		sp2->SetTexture(Asset::GetTexture(TEXTURE_ENUM::WIZARD));
-		sp2->SetPosition(D3DXVECTOR2(300, 900));
-
 		AddGameObject<Skybox>(ObjectLayer)->Position = D3DXVECTOR3(0, 0, 0);
 
 		Level* level = AddGameObject<Level>(ObjectLayer);
 		Player* player = AddGameObject<Player>(ObjectLayer);
+		Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
+		GUI* gui = AddGameObject<GUI>(SpriteLayer);
 
+		
 	}
 
 	virtual void Uninit() {

@@ -40,21 +40,13 @@ void Ball::Uninit() {
 
 void Ball::Update() {
 
-	//ImGui::Begin(Name.c_str());
-	//ImGui::Text("%f,%f,%f", Rotation.x, Rotation.y, Rotation.z);
-	//ImGui::SetWindowSize(ImVec2(500, 200));
-	//float fp[3] = { Rotation.x ,Rotation.y ,Rotation.z };
-	//ImGui::SliderFloat3(u8"‰ñ“]", fp, -3.14f, 3.14f);
-	//Rotation = D3DXVECTOR3(fp[0], fp[1], fp[2]);
-	//ImGui::End();
-
 	{
 		if (Input::GetKeyPress('D')) {
-			mArrow->RotationAroundXZ(Position, 1.0f);
+			mArrow->RotationAroundXZ(Position, 0.5f * Time::GetDeltaTime());
 		}
 
 		if (Input::GetKeyPress('A')) {
-			mArrow->RotationAroundXZ(Position, -1.0f);
+			mArrow->RotationAroundXZ(Position, -0.5f * Time::GetDeltaTime());
 		}
 
 		if (Input::GetKeyTrigger(VK_SPACE) && mArrow->GetActive()) {
@@ -73,10 +65,12 @@ void Ball::Update() {
 	if (Change) {
 		if (GetComponent<Physical>()->mSpeed == 0.00f) {
 			Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
-			if (p->mNowController < 1) {
+			if (p->mNowController < 3) {
 				p->mNowController++;
 			}
 			else {
+				Gamemanger* gm = Application::GetScene()->GetGameObject<Gamemanger>(ObjectLayer);
+				gm->mState = RoundState::ENEMY_ROUND;
 				p->mNowController = 0;
 			}
 			p->SelectBall();
@@ -123,7 +117,7 @@ void Ball::ReflectWall() {
 		if (sbc->Collision_Box_Enter(tbc)) {
 
 			// Self
-			GetComponent<Physical>()->mSpeed -= 0.05f;
+			GetComponent<Physical>()->mSpeed += 0.01f;
 			D3DXVECTOR3 moveDir;
 			D3DXVec3Normalize(&moveDir, &GetComponent<Physical>()->mVelocity);
 			D3DXVECTOR3 r;
@@ -152,7 +146,7 @@ void Ball::ReflectBall() {
 			if (sbc->Collision_Box_Enter(tbc)) {
 
 				// Target
-				trg->GetComponent<Physical>()->mSpeed = 0.01f;
+				trg->GetComponent<Physical>()->mSpeed = 0.005f;
 				D3DXVECTOR3 dir = trg->Position - Position;
 				D3DXVECTOR3 dirn;
 				D3DXVec3Normalize(&dirn, &dir);

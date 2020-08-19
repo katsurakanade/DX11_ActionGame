@@ -19,6 +19,8 @@ enum TEXTURE_ENUM {
 	EXP,
 	WIZARD,
 	SAMURAI,
+	WARRIOR,
+	ELF,
 };
 
 class Asset

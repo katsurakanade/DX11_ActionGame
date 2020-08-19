@@ -1,24 +1,22 @@
 #pragma once
 
-#include <chrono>
+#include "main.h"
 
 class Time
 {
 private:
 
-	bool mRunning;
-
-	std::chrono::time_point<std::chrono::steady_clock> mStart;
-	std::chrono::time_point<std::chrono::steady_clock> mStop;
+	static DWORD mPreviousTime;
+	static DWORD mDelta;
 
 public:
 
-	void Init();
-	void Restart();
-	bool Stop();
-	bool Start();
-	double GetMilisecondsElapsed();
+	static DWORD GetDeltaTime() { return mDelta; };
+
+	static void Tick() {
+		mDelta = timeGetTime() - mPreviousTime;
+		mPreviousTime = timeGetTime();
+	}
 
 
 };
-

@@ -1,6 +1,7 @@
 #include "main.h"
 #include "Resource.h"
 #include "Physical.h"
+#include "Time.h"
 
 void Physical::Init() {
 
@@ -14,7 +15,7 @@ void Physical::Uninit() {
 
 void Physical::Update(Resource* target) {
 
-	target->Position += mVelocity* mSpeed;
+	target->Position += mVelocity* mSpeed * Time::GetDeltaTime();
 
 	/*{
 		ImGui::Begin(u8"ï®óù");

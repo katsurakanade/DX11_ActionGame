@@ -1,6 +1,7 @@
-#include "Application.h"
 #include "main.h"
+#include "Application.h"
 #include "Renderer.h"
+#include "Time.h"
 
 const char* CLASS_NAME = "AppClass";
 const char* WINDOW_NAME = "Strike";
@@ -9,6 +10,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 HWND g_Window;
 HINSTANCE g_hinstance;
+
+DWORD Time::mPreviousTime;
+DWORD Time::mDelta;
 
 HWND GetWindow()
 {
@@ -72,15 +76,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	
 	// Japanese Font
 	io.Fonts->AddFontFromFileTTF("asset\\font\\ipam.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(g_Window);
 	ImGui_ImplDX11_Init(Renderer::GetDevice(), Renderer::GetDeviceContext());
-
-
 
 	// メッセージループ
 	MSG msg;
@@ -105,6 +106,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				ImGui_ImplWin32_NewFrame();
 				ImGui::NewFrame();
 			
+				Time::Tick();
 				Application::Update();
 				Application::Render();
 		}

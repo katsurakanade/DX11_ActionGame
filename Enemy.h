@@ -16,5 +16,7 @@ public:
 	void Unint();
 	void Update();
 	void Render();
+
+	void Attack();
 };
 
