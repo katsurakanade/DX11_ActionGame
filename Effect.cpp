@@ -79,16 +79,18 @@ void Effect::Uninit() {
 
 void Effect::Update() {
 
-	waitframe++;
+	if (!mLoop) {
+		waitframe++;
 
-	if (waitframe >= 2) {
-		mFramecount++;
-		waitframe = 0;
-	}
+		if (waitframe >= 2) {
+			mFramecount++;
+			waitframe = 0;
+		}
 
-	if (mFramecount >= mWidth * mHeight) {
-		Destroy();
-		return;
+		if (mFramecount >= mWidth * mHeight) {
+			Destroy();
+			return;
+		}
 	}
 
 }
@@ -110,7 +112,7 @@ void Effect::Render() {
 	vertex[0].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = D3DXVECTOR2(frame.x, frame.y);
 
-	vertex[1].Position = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
+	vertex[1].Position = D3DXVECTOR3(-1.0f + (2.0f * mFillAmount), 1.0f, 0.0f);
 	vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	vertex[1].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = D3DXVECTOR2(frame.x + (1.0f / mWidth), frame.y);
@@ -120,13 +122,14 @@ void Effect::Render() {
 	vertex[2].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = D3DXVECTOR2(frame.x, frame.y + (1.0f / mHeight));
 
-	vertex[3].Position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
+	vertex[3].Position = D3DXVECTOR3(-1.0f + (2.0f * mFillAmount), -1.0f, 0.0f);
 	vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	vertex[3].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = D3DXVECTOR2(frame.x + (1.0f /mWidth), frame.y + (1.0f / mHeight));
 
 	Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
 
+	// BillBoard
 	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
 	D3DXMATRIX view = camera->GetViewMatrix();
 	D3DXMATRIX invView;

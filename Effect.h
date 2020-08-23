@@ -18,8 +18,11 @@ private:
 	int mWidth = EFFECT_X_DEFAULT;
 	int mHeight = EFFECT_Y_DEFAULT;
 	float mWaitframe;
+	bool mLoop = false;
 
 	D3DXVECTOR2 MakeFrame();
+
+	float mFillAmount = 1.0f;
 
 public:
 
@@ -29,6 +32,8 @@ public:
 	void Render();
 
 	void SetHW(int valx,int valy) { mWidth = valx; mHeight = valy; };
-
+	void SetTexture(ID3D11ShaderResourceView* value) { mTexture = value; };
+	void SetLoop(bool val) { mLoop = val; };
+	void SetFillAmount(float val) { mFillAmount = val; };
 };
 

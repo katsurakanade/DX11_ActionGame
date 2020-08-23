@@ -18,6 +18,8 @@ private:
 	int mHeight = 3;
 	D3DXVECTOR2 MakeFrame();
 
+	bool mFill = false;
+
 public:
 
 	void Init();
@@ -29,6 +31,7 @@ public:
 	void SetSize(D3DXVECTOR3 value) { mSize = value; };
 
 	void SetAnimationSprite(bool val) { mAnimation = val; };
+	void SetFillSprite(bool val) { mFill = val; };
 	void SetFrame(int frame) { mFramecount = frame; };
 	void SetHW(int valx, int valy) { mWidth = valx; mHeight = valy; };
 	void SetPosition(D3DXVECTOR2 pos);

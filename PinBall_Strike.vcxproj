@@ -29,6 +29,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="Gamemanger.cpp" />
+    <ClCompile Include="Gauge.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -61,6 +62,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="field.h" />
     <ClInclude Include="Gamemanger.h" />
+    <ClInclude Include="Gauge.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />

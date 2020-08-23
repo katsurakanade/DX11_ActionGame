@@ -40,6 +40,7 @@ void Player::Init() {
 	b4->InitArrowPosition();
 	b4->SetArrow(false);
 
+	mHp = mHpInit;
 }
 
 void Player::SelectBall() {

@@ -118,6 +118,9 @@ void Sprite::Render() {
 		Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
 	}
 
+	if (mFill) {
+		SetPosition(D3DXVECTOR2(Position.x, Position.y));
+	}
 
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;

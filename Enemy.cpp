@@ -5,9 +5,11 @@
 #include "Enemy.h"
 #include "Ball.h"
 
+int Enemy::ID;
+
 void Enemy::Init() {
 
-	Name = "Enemy";
+	Name = "Enemy_" + std::to_string(ID);
 
 	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::ENEMY);
 
@@ -22,7 +24,15 @@ void Enemy::Init() {
 	GetComponent<BoxCollider>()->mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 3.0f);
 	GetComponent<BoxCollider>()->mScaleOffest = D3DXVECTOR3(7.2f, 7.2f, 7.2f);
 
+	mGauge = Application::GetScene()->AddGameObject<Gauge>(ObjectLayer);
+	mGauge->SetBillBoard(this);
+	mGauge->mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 9.0f);
+
+	mHp = mHpInit;
+
 	Resource::Init();
+
+	ID++;
 }
 
 void Enemy::Unint() {
@@ -31,11 +41,11 @@ void Enemy::Unint() {
 
 void Enemy::Update() {
 
-	//{
-	//	ImGui::Begin(u8"Enemy");
-	//	ImGui::Text(u8"Hp %f", hp);
-	//	ImGui::End();
-	//}
+	/*{
+		ImGui::Begin(Name.c_str());
+		ImGui::SliderFloat("FillAmount", &mGauge->mFillAmount, 0.0f, 1.0f);
+		ImGui::End();
+	}*/
 
 	std::vector<Ball*> PlayerList = Application::GetScene()->GetGameObjects<Ball>(ObjectLayer);
 
@@ -60,13 +70,15 @@ void Enemy::Update() {
 			Effect* obj = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
 			obj->Position = Position;
 			obj->SetHW(8, 6);
-			hp -= 1.0f;
+			mHp -= 2.0f;
 		}
 	}
 
-	if (hp <= 0) {
+	if (mHp <= 0) {
 		Destroy();
 	}
+
+	mGauge->mFillAmount = mHp / mHpInit;
 
 	Resource::Update();
 }
@@ -82,11 +94,14 @@ void Enemy::Render() {
 	Renderer::SetWorldMatrix(&world);
 
 	mModel->Draw(world);
+	mGauge->Render();
 
 	GetComponent<BoxCollider>()->Render();
 }
 
 void Enemy::Attack() {
 
-	
+	Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
+
+	p->mHp *= 0.8f;
 }

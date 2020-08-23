@@ -1,12 +1,15 @@
 #pragma once
 
 #include "Resource.h"
+#include "Gauge.h"
 
 class GUI : public Resource
 {
 private:
 
 	Player* mpPlayer;
+	Gauge* mpPlayerHP;
+
 
 public:
 

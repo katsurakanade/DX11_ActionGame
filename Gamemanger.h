@@ -12,8 +12,12 @@ class Gamemanger : public Resource
 
 private:
 
+	bool mGameClear = false;
+
+	void GameClear();
 
 public:
+
 	RoundState mState;
 	void Init();
 	void Unint() {};

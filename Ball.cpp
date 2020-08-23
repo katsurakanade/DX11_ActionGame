@@ -117,7 +117,7 @@ void Ball::ReflectWall() {
 		if (sbc->Collision_Box_Enter(tbc)) {
 
 			// Self
-			GetComponent<Physical>()->mSpeed += 0.01f;
+			GetComponent<Physical>()->mSpeed -= 0.001f;
 			D3DXVECTOR3 moveDir;
 			D3DXVec3Normalize(&moveDir, &GetComponent<Physical>()->mVelocity);
 			D3DXVECTOR3 r;

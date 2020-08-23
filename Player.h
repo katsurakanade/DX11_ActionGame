@@ -5,11 +5,12 @@ class Player : public Resource
 {
 private:
 
-	float mHp = 100.0f;
+	float mHpInit = 100.0f;
 
 public:
 
 	int mNowController;
+	float mHp;
 
 	void Init();
 	void Unint() {};
@@ -17,5 +18,7 @@ public:
 	void Render() {};
 
 	void SelectBall();
+
+	float GetHpInit(){ return mHpInit; };
 };
 

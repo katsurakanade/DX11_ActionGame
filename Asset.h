@@ -21,6 +21,9 @@ enum TEXTURE_ENUM {
 	SAMURAI,
 	WARRIOR,
 	ELF,
+	BAR_EMPTY,
+	BAR_FILL,
+	CLEAR,
 };
 
 class Asset

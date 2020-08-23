@@ -2,14 +2,19 @@
 
 #include "Resource.h"
 #include "AssimpModel.h"
+#include "Gauge.h"
 
 class Enemy : public Resource
 {
-private :
+private:
+
+	static int ID;
 
 	AssimpModel* mModel;
-	
-	float hp = 50.0f;
+	float mHpInit = 50.0f;
+	float mHp;
+
+	Gauge* mGauge;
 
 public:
 	void Init();

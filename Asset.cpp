@@ -22,6 +22,9 @@ void Asset::LoadSceneAsset(){
 	AddTextureToList("asset/texture/Samurai.png");
 	AddTextureToList("asset/texture/Warrior.png");
 	AddTextureToList("asset/texture/Elf.png");
+	AddTextureToList("asset/texture/bar_empty.png");
+	AddTextureToList("asset/texture/bar_fill.png");
+	AddTextureToList("asset/texture/Clear.png");
 
 	mAssimpModelList[ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect(TEXTURE_ENUM::SAMURAI);
 	mAssimpModelList[ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect(TEXTURE_ENUM::WIZARD);
