@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Resource.h"
+#include "Renderer.h"
 
 class Light : public Resource
 {

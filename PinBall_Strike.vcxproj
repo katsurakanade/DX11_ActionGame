@@ -28,6 +28,7 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="field.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gamemanger.cpp" />
     <ClCompile Include="Gauge.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -48,6 +49,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Title.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +63,7 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="field.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Gamemanger.h" />
     <ClInclude Include="Gauge.h" />
     <ClInclude Include="GUI.h" />
@@ -88,6 +91,7 @@
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="Title.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>

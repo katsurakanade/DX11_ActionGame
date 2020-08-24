@@ -6,11 +6,6 @@
 #include "Camera.h"
 #include "Effect.h"
 #include "Light.h"
-#include "Skybox.h"
-#include "Physical.h"
-#include "Level.h"
-#include "Player.h"
-#include "GUI.h"
 #include "Gamemanger.h"
 #include "Time.h"
 #include "Asset.h"
@@ -25,27 +20,14 @@ protected:
 
 	std::list<Resource*> mGameObject[5];
 
+	bool mSwitchFlag = false;
+
 public:
 	
 	Scene() {};
 	virtual ~Scene() {  };
 
-	virtual void Init() {
-
-		Asset::LoadSceneAsset();
-
-		AddGameObject<Camera>(CameraLayer);
-		AddGameObject<Light>(CameraLayer);
-
-		AddGameObject<Skybox>(ObjectLayer)->Position = D3DXVECTOR3(0, 0, 0);
-
-		Level* level = AddGameObject<Level>(ObjectLayer);
-		Player* player = AddGameObject<Player>(ObjectLayer);
-		Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
-		GUI* gui = AddGameObject<GUI>(SpriteLayer);
-
-		
-	}
+	virtual void Init() = 0;
 
 	virtual void Uninit() {
 
@@ -60,7 +42,6 @@ public:
 			mGameObject[i].clear();
 		}
 
-		Asset::UnloadSceneAsset();
 	}
 
 	virtual void Update() {
@@ -72,7 +53,6 @@ public:
 			}
 		}
 
-	
 		for (int i = 0; i < 5; i++) {
 			mGameObject[i].remove_if([](Resource* obj) {return obj->Remove(); });
 		}
@@ -119,7 +99,6 @@ public:
 		return gameObject;
 	};
 
-
 	template <typename T>
 	T* GetGameObject(int layer) {
 		for (Resource* obj :  mGameObject[layer]) {
@@ -141,5 +120,5 @@ public:
 		return objects;
 	};
 
-	
+	void SetSwitchFlag(bool val) { mSwitchFlag = val; };
 };

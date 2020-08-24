@@ -4,6 +4,8 @@
 #include "Application.h"
 #include "Enemy.h"
 #include "Ball.h"
+#include "Player.h"
+#include "Physical.h"
 
 int Enemy::ID;
 

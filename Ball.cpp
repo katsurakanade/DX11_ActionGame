@@ -10,10 +10,13 @@
 #include "Effect.h"
 #include "Physical.h"
 #include "field.h"
+#include "Player.h"
+
+int Ball::ID;
 
 void Ball::Init() {
 
-	Name = "Ball";
+	Name = "Ball_" + std::to_string(ID);
 
 	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
 
@@ -31,6 +34,8 @@ void Ball::Init() {
 	GetComponent<BoxCollider>()->mScaleOffest  = D3DXVECTOR3(1.5f, 1.5f, 1.5f);
 
 	Resource::Init();
+
+	ID++;
 }
 
 void Ball::Uninit() {

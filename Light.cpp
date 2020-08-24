@@ -1,5 +1,4 @@
 #include "main.h"
-#include "Renderer.h"
 #include "Light.h"
 
 void Light::Init() {

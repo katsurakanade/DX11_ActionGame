@@ -9,6 +9,8 @@ class Ball : public Resource
 {
 private:
 
+	static int ID;
+
 	AssimpModel* mModel;
 	Arrow* mArrow;
 

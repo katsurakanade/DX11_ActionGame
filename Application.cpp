@@ -2,12 +2,11 @@
 #include "Renderer.h"
 #include "Application.h"
 #include "input.h"
-#include "Scene.h"
+#include "Game.h"
+#include "Title.h"
 #include "Time.h"
 
 Scene* Application::mScene;
-
-
 bool Application::mDisableLighting;
 
 bool Application::Init() {
@@ -16,8 +15,9 @@ bool Application::Init() {
 
 	Input::Init();
 	Renderer::Init();
+	Asset::LoadSceneAsset();
 
-	mScene = new Scene();
+	mScene = new Title();
 	mScene->Init();
 
 	return true;
@@ -27,6 +27,8 @@ void Application::Uninit() {
 
 	mScene->Uninit();
 	delete mScene;
+
+	Asset::UnloadSceneAsset();
 
 	Renderer::Uninit();
 	Input::Uninit();
@@ -55,6 +57,5 @@ void Application::Render() {
 
 	Renderer::Begin();
 	mScene->Render();
-	
 	Renderer::End();
 }
