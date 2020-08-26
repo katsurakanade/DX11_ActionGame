@@ -11,6 +11,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <chrono>
 
 #pragma warning(push)
 #pragma warning(disable:4005)
@@ -30,7 +31,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
 
 #pragma warning(pop)
 

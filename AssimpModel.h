@@ -1,6 +1,5 @@
 #pragma once
 
-
 struct Texture {
 	std::string type;
 	std::string path;

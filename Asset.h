@@ -2,7 +2,7 @@
 
 #include "AssimpModel.h"
 
-enum ASSIMP_MODEL_ENUM
+enum class ASSIMP_MODEL_ENUM
 {
 	BALL,
 	CUBE,
@@ -14,8 +14,6 @@ enum ASSIMP_MODEL_ENUM
 enum TEXTURE_ENUM {
 	NUMBER,
 	DIRT,
-	METER,
-	TOON,
 	EXP,
 	WIZARD,
 	SAMURAI,
@@ -24,6 +22,8 @@ enum TEXTURE_ENUM {
 	BAR_EMPTY,
 	BAR_FILL,
 	CLEAR,
+	LOGO,
+	WHITE
 };
 
 class Asset
@@ -35,24 +35,24 @@ protected:
 	static std::vector<ID3D11ShaderResourceView*> mTextureList;
 
 	static void AddAssimpModelToList(const char* value) {
+
 		AssimpModel* md = new AssimpModel();
 		md->Load(value);
-		mAssimpModelList.push_back(md);
+		mAssimpModelList.emplace_back(md);
 	}
 
 	static void AddTextureToList(const char* value) {
 		ID3D11ShaderResourceView* tex;
 		D3DX11CreateShaderResourceViewFromFile(Renderer::GetDevice(),value,NULL,NULL,&tex,NULL);
-		mTextureList.push_back(tex);
+		mTextureList.emplace_back(tex);
 	}
-
 
 public:
 
 	static void LoadSceneAsset();
 	static void UnloadSceneAsset();
 	
-	static AssimpModel* GetAssimpModel(int index) { return mAssimpModelList[index]; };
+	static AssimpModel* GetAssimpModel(ASSIMP_MODEL_ENUM index) { return mAssimpModelList[(int)index]; };
 	static ID3D11ShaderResourceView* GetTexture(int index) { return mTextureList[index]; };
 
 };

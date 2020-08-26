@@ -35,6 +35,7 @@ public:
 	void SetFrame(int frame) { mFramecount = frame; };
 	void SetHW(int valx, int valy) { mWidth = valx; mHeight = valy; };
 	void SetPosition(D3DXVECTOR2 pos);
+	void SetColor(D3DXVECTOR4 col);
 
 };
 

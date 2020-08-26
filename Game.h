@@ -10,6 +10,9 @@
 
 class Game : public Scene
 {
+private:
+
+	bool mClear = false;
 
 public:
 

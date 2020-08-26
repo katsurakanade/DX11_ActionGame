@@ -2,7 +2,7 @@
 
 #include "Resource.h"
 
-enum RoundState {
+enum class RoundState{
 	PLAYER_ROUND,
 	ENEMY_ROUND,
 };

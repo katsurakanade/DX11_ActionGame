@@ -46,4 +46,6 @@ void Level::Init() {
 	Enemy* e1 = Application::GetScene()->AddGameObject<Enemy>(ObjectLayer);
 	e1->Position = D3DXVECTOR3(0, 10, 0);
 	
+	//Enemy* e2 = Application::GetScene()->AddGameObject<Enemy>(ObjectLayer);
+	//e2->Position = D3DXVECTOR3(10, 10, 20);
 }

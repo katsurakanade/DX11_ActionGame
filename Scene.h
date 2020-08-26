@@ -6,39 +6,41 @@
 #include "Camera.h"
 #include "Effect.h"
 #include "Light.h"
+#include "Fade.h"
 #include "Gamemanger.h"
 #include "Time.h"
 #include "Asset.h"
 
 enum RenderLayer {
-	CameraLayer , ObjectLayer , EffectLayer, SpriteLayer
+	CameraLayer , ObjectLayer , EffectLayer, SpriteLayer , FadeLayer
 };
 
 class Scene {
 
 protected:
 
-	std::list<Resource*> mGameObject[5];
+	std::list<Resource*> mGameObject[6];
 
 	bool mSwitchFlag = false;
 
+	Fade* mpFade;
+
 public:
 	
-	Scene() {};
-	virtual ~Scene() {  };
+
 
 	virtual void Init() = 0;
 
 	virtual void Uninit() {
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			for (Resource* g : mGameObject[i]) {
 				g->Uninit();
 				delete g;
 			}
 		}
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			mGameObject[i].clear();
 		}
 
@@ -46,21 +48,21 @@ public:
 
 	virtual void Update() {
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			for (Resource* g : mGameObject[i])
 			{
 				g->Update();
 			}
 		}
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			mGameObject[i].remove_if([](Resource* obj) {return obj->Remove(); });
 		}
 
 		{
 			ImGui::Begin(u8"オブジェクト");
 
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 6; i++) {
 				for (Resource* g : mGameObject[i])
 				{
 					ImGui::Text(g->Name.c_str());
@@ -73,7 +75,7 @@ public:
 	}
 
 	virtual void Render() {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 6; i++) {
 			for (Resource* g : mGameObject[i])
 			{
 				if (g->GetActive()) {
@@ -86,7 +88,7 @@ public:
 	template <typename T>
 	T* AddGameObject(int layer) {
 		T* gameObject = new T();
-		mGameObject[layer].push_back(gameObject);
+		mGameObject[layer].emplace_back(gameObject);
 		gameObject->Init();
 		return gameObject;
 	};
@@ -114,7 +116,7 @@ public:
 		std::vector<T*> objects;
 		for (Resource* obj : mGameObject[layer]) {
 			if (typeid(*obj) == typeid(T)) {
-				objects.push_back((T*)obj);
+				objects.emplace_back((T*)obj);
 			}
 		}
 		return objects;

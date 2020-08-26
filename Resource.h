@@ -94,7 +94,7 @@ public:
     template <typename T>
     T* AddComponent() {
         T* Component = new T();
-        Components.push_back(Component);
+        Components.emplace_back(Component);
         Component->Init();
         return Component;
     };

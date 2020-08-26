@@ -180,3 +180,17 @@ void Sprite::SetPosition(D3DXVECTOR2 pos) {
 	Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
 
 }
+
+void Sprite::SetColor(D3DXVECTOR4 col) {
+
+	D3D11_MAPPED_SUBRESOURCE msr;
+	Renderer::GetDeviceContext()->Map(mColorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+	float* colorbuf = (float*)msr.pData;
+
+	colorbuf[0] = col.x;
+	colorbuf[1] = col.y;
+	colorbuf[2] = col.z;
+	colorbuf[3] = col.w;
+
+	Renderer::GetDeviceContext()->Unmap(mColorBuffer, 0);
+}
