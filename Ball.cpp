@@ -132,8 +132,11 @@ void Ball::ReflectWall() {
 
 			// Effect
 			Effect* obj = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
+			obj->SetTexture(Asset::GetTexture(TEXTURE_ENUM::EXP));
+			obj->SetAnimeSpeed(5.0f);
 			obj->Position = Position;
-			obj->SetHW(8, 6);
+			obj->Scale = D3DXVECTOR3(5, 5, 5);
+			obj->SetHW(4, 4);
 		}
 	}
 }

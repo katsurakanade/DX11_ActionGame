@@ -28,7 +28,7 @@ void Enemy::Init() {
 
 	mGauge = Application::GetScene()->AddGameObject<Gauge>(ObjectLayer);
 	mGauge->SetBillBoard(this);
-	mGauge->mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 9.0f);
+	mGauge->mPositionOffest = D3DXVECTOR3(0.0f, 5.0f, 9.0f);
 
 	mHp = mHpInit;
 
@@ -42,12 +42,6 @@ void Enemy::Unint() {
 }
 
 void Enemy::Update() {
-
-	/*{
-		ImGui::Begin(Name.c_str());
-		ImGui::SliderFloat("FillAmount", &mGauge->mFillAmount, 0.0f, 1.0f);
-		ImGui::End();
-	}*/
 
 	std::vector<Ball*> PlayerList = Application::GetScene()->GetGameObjects<Ball>(ObjectLayer);
 

@@ -12,35 +12,34 @@
 #include "Asset.h"
 
 enum RenderLayer {
-	CameraLayer , ObjectLayer , EffectLayer, SpriteLayer , FadeLayer
+	CameraLayer , ObjectLayer ,EffectLayer, SpriteLayer , FadeLayer , EndLayer
 };
 
 class Scene {
 
 protected:
 
-	std::list<Resource*> mGameObject[6];
+	std::list<Resource*> mGameObject[EndLayer];
 
 	bool mSwitchFlag = false;
+	bool mClear = false;
 
 	Fade* mpFade;
 
 public:
 	
-
-
 	virtual void Init() = 0;
 
 	virtual void Uninit() {
 
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < EndLayer; i++) {
 			for (Resource* g : mGameObject[i]) {
 				g->Uninit();
 				delete g;
 			}
 		}
 
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < EndLayer; i++) {
 			mGameObject[i].clear();
 		}
 
@@ -48,21 +47,21 @@ public:
 
 	virtual void Update() {
 
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < EndLayer; i++) {
 			for (Resource* g : mGameObject[i])
 			{
 				g->Update();
 			}
 		}
 
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < EndLayer; i++) {
 			mGameObject[i].remove_if([](Resource* obj) {return obj->Remove(); });
 		}
 
 		{
 			ImGui::Begin(u8"オブジェクト");
 
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < EndLayer; i++) {
 				for (Resource* g : mGameObject[i])
 				{
 					ImGui::Text(g->Name.c_str());
@@ -75,7 +74,7 @@ public:
 	}
 
 	virtual void Render() {
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < EndLayer; i++) {
 			for (Resource* g : mGameObject[i])
 			{
 				if (g->GetActive()) {

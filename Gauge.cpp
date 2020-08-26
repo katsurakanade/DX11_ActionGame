@@ -52,13 +52,13 @@ void Gauge::SetGUI(int length) {
 	hpbar_empty->Name = "hpbar";
 	hpbar_empty->SetTexture(Asset::GetTexture(TEXTURE_ENUM::BAR_EMPTY));
 	hpbar_empty->SetSize(D3DXVECTOR3((float)length, 100, 0));
-	hpbar_empty->SetPosition(D3DXVECTOR2(900, 900));
+	hpbar_empty->SetPosition(D3DXVECTOR2(Position.x, Position.y));
 
 	Sprite* hpbar_fill = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	hpbar_fill->Name = "hpbarfill";
 	hpbar_fill->SetTexture(Asset::GetTexture(TEXTURE_ENUM::BAR_FILL));
 	hpbar_fill->SetSize(D3DXVECTOR3((float)length, 100, 0));
-	hpbar_fill->Position = D3DXVECTOR3(900, 900, 0);
+	hpbar_fill->Position = D3DXVECTOR3(Position.x, Position.y, 0);
 	hpbar_fill->SetFillSprite(true);
 
 	mGuiLength = length;

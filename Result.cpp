@@ -1,47 +1,43 @@
 #include "main.h"
 #include "input.h"
-#include "Game.h"
+#include "Result.h"
 #include "Application.h"
-#include "Debug.h"
 
-void Game::Init() {
+void Result::Init() {
 
 	AddGameObject<Camera>(CameraLayer);
 	AddGameObject<Light>(CameraLayer);
+	AddGameObject<Skybox>(ObjectLayer);
 
-	AddGameObject<Skybox>(ObjectLayer)->Position = D3DXVECTOR3(0, 0, 0);
-
-	Level* level = AddGameObject<Level>(ObjectLayer);
-	Player* player = AddGameObject<Player>(ObjectLayer);
-	Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
-	GUI* gui = AddGameObject<GUI>(SpriteLayer);
+	Sprite* logo = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
+	logo->Name = "TitleLogo";
+	logo->SetTexture(Asset::GetTexture(TEXTURE_ENUM::CLEAR));
+	logo->SetSize(D3DXVECTOR3(1000, 500, 0));
+	logo->SetPosition(D3DXVECTOR2(SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 - 550));
 
 	Fade* fade = AddGameObject<Fade>(FadeLayer);
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));
 	mpFade = fade;
-
-	Debug::OutputMemoryUsage();
 }
 
-void Game::Update() {
+void Result::Update() {
 
 	Scene::Update();
 
 	if (mpFade != nullptr) {
 		if (!mpFade->GetIsFade()) {
-
 			if (mClear) {
-				Application::SwitchScene<Result>();
+				Application::SwitchScene<Title>();
 				return;
 			}
 			mpFade->Destroy();
 		}
 	}
 
-	if (mSwitchFlag && !mClear) {
+	if (Input::GetKeyTrigger(VK_SPACE) && !mClear) {
 		Fade* fade = AddGameObject<Fade>(FadeLayer);
 		fade->Start(true, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
-		mpFade = fade; 
+		mpFade = fade;
 		mClear = true;
 	}
 

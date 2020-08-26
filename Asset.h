@@ -15,6 +15,7 @@ enum TEXTURE_ENUM {
 	NUMBER,
 	DIRT,
 	EXP,
+	EXP2,
 	WIZARD,
 	SAMURAI,
 	WARRIOR,
@@ -23,7 +24,9 @@ enum TEXTURE_ENUM {
 	BAR_FILL,
 	CLEAR,
 	LOGO,
-	WHITE
+	WHITE,
+	STAR,
+	SKY,
 };
 
 class Asset

@@ -6,7 +6,6 @@
 #include "Scene.h"
 #include <vector>
 
-static int waitframe;
 
 void Effect::Init() {
 
@@ -62,7 +61,7 @@ void Effect::Init() {
 
 	Renderer::GetDevice()->CreateBuffer(&cbd, &sd, &mColorBuffer);
 
-	mTexture = Asset::GetTexture(TEXTURE_ENUM::EXP);
+	mTexture = Asset::GetTexture(TEXTURE_ENUM::EXP2);
 	mFramecount = 0;
 
 	Position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -80,11 +79,11 @@ void Effect::Uninit() {
 void Effect::Update() {
 
 	if (!mLoop) {
-		waitframe++;
+		mWaitframe++;
 
-		if (waitframe >= 2) {
+		if (mWaitframe >= mAnimeSpeed) {
 			mFramecount++;
-			waitframe = 0;
+			mWaitframe = 0;
 		}
 
 		if (mFramecount >= mWidth * mHeight) {

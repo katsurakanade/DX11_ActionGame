@@ -10,9 +10,8 @@ void Skybox::Init() {
 
 	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
 
-
 	Position = D3DXVECTOR3(0, 0, 0); 
-	Rotation = D3DXVECTOR3(0, 0, 0);
+	Rotation = D3DXVECTOR3(1.5, 0, 1.5);
 	Scale = D3DXVECTOR3(1000.0f, 1000.0f, 1000.0f);
 
 	mModel->DisplayConfig = false;
@@ -26,9 +25,9 @@ void Skybox::Update() {
 
 	Position = Application::GetScene()->GetGameObject<Camera>(CameraLayer)->Position;
 
-	Rotation.y += 0.0001f;
-	Rotation.x += 0.0001f;
-	Rotation.z += 0.0001f;
+	Rotation.y += 0.0002f;
+	Rotation.x += 0.0002f;
+	Rotation.z += 0.0002f;
 
 }
 
@@ -52,7 +51,8 @@ void Skybox::Render() {
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(&world);
 
-	mModel->DefaultTexture = true;
+	mModel->DefaultTexture = false;
+	mModel->SelectTextureIndex = TexutreIndex;
 	mModel->Draw(world);
 
 }

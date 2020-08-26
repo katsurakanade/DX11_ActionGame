@@ -5,7 +5,7 @@ class Player : public Resource
 {
 private:
 
-	float mHpInit = 100.0f;
+	float mHpInit = 40000.0f;
 
 public:
 

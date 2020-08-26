@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "Title.h"
 #include "Game.h"
+#include "Result.h"
 
 class Application
 {

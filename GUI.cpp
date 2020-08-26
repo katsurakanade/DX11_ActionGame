@@ -28,10 +28,16 @@ void GUI::Init() {
 	sp4->SetPosition(D3DXVECTOR2(700, 900));
 
 	Gauge* hp = Application::GetScene()->AddGameObject<Gauge>(SpriteLayer);
+	hp->Position = D3DXVECTOR3(900, 900, 0);
 	hp->SetGUI(900);
+
+	Digit* hp_digit = Application::GetScene()->AddGameObject<Digit>(SpriteLayer);
+	hp_digit->Position = hp->Position + D3DXVECTOR3(350,25,0);
+	hp_digit->MakeSprite(5,D3DXVECTOR2(48,48));
 
 	// SavePtr
 	mpPlayerHP = hp;
+	mpPlayerHPDigit = hp_digit;
 
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 }
@@ -44,15 +50,16 @@ void GUI::Update() {
 
 		if (sp[i]->Name == "Icon") {
 			if (i == mpPlayer->mNowController) {
-				sp[i]->SetPosition(D3DXVECTOR2((i * 200.0f) + 100.0f, 850.0f));
+				sp[i]->SetColor(D3DXVECTOR4(1,0,0,1));
 			}
 			else {
-				sp[i]->SetPosition(D3DXVECTOR2((i * 200.0f) + 100.0f, 900.0f));
+				sp[i]->SetColor(D3DXVECTOR4(1, 1, 1, 1));
 			}
 		}
 
 	}
 
 	mpPlayerHP->mFillAmount = mpPlayer->mHp / mpPlayer->GetHpInit();
+	mpPlayerHPDigit->SetValue((int)mpPlayer->mHp);
 }
 

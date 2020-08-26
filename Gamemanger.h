@@ -19,6 +19,7 @@ private:
 public:
 
 	RoundState mState;
+
 	void Init();
 	void Unint() {};
 	void Update();

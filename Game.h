@@ -7,12 +7,10 @@
 #include "Player.h"
 #include "GUI.h"
 #include "Wall.h"
+#include "Digit.h"
 
 class Game : public Scene
 {
-private:
-
-	bool mClear = false;
 
 public:
 

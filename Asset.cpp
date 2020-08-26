@@ -18,6 +18,7 @@ void Asset::LoadSceneAsset(){
 
 	AddTextureToList("asset/texture/number.png");
 	AddTextureToList("asset/texture/Dirt.jpg");
+	AddTextureToList("asset/texture/explosion.png");
 	AddTextureToList("asset/texture/explosion2.png");
 	AddTextureToList("asset/texture/Wizard.png");
 	AddTextureToList("asset/texture/Samurai.png");
@@ -28,11 +29,15 @@ void Asset::LoadSceneAsset(){
 	AddTextureToList("asset/texture/Clear.png");
 	AddTextureToList("asset/texture/logo.png");
 	AddTextureToList("asset/texture/white.png");
+	AddTextureToList("asset/texture/star.jpg");
+	AddTextureToList("asset/texture/sky.jpg");
 
 	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::SAMURAI);
 	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::WIZARD);
 	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::WARRIOR);
 	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::ELF);
+	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::STAR);
+	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::SKY);
 
 	const auto end = std::chrono::system_clock::now();
 

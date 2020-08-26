@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "input.h"
 
+
 void Sprite::Init() {
 
 	Name = "Sprite";
@@ -72,6 +73,7 @@ void Sprite::Uninit() {
 }
 
 void Sprite::Update() {
+
 
 	if (Input::GetKeyTrigger('B')) {
 		SetActive(false);
