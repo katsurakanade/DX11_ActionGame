@@ -20,7 +20,8 @@ void Game::Init() {
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));
 	mpFade = fade;
 
-	Debug::OutputMemoryUsage();
+	AudioListener::Play(Asset::GetSound(SOUND_ENUM::BGM_02), -1);
+
 }
 
 void Game::Update() {
@@ -31,6 +32,7 @@ void Game::Update() {
 		if (!mpFade->GetIsFade()) {
 
 			if (mClear) {
+				AudioListener::Stop(Asset::GetSound(SOUND_ENUM::BGM_02));
 				Application::SwitchScene<Result>();
 				return;
 			}

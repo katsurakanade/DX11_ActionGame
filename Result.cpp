@@ -18,6 +18,8 @@ void Result::Init() {
 	Fade* fade = AddGameObject<Fade>(FadeLayer);
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));
 	mpFade = fade;
+
+	AudioListener::Play(Asset::GetSound(SOUND_ENUM::BGM_03), -1);
 }
 
 void Result::Update() {
@@ -27,6 +29,7 @@ void Result::Update() {
 	if (mpFade != nullptr) {
 		if (!mpFade->GetIsFade()) {
 			if (mClear) {
+				AudioListener::Stop(Asset::GetSound(SOUND_ENUM::BGM_03));
 				Application::SwitchScene<Title>();
 				return;
 			}
@@ -35,6 +38,7 @@ void Result::Update() {
 	}
 
 	if (Input::GetKeyTrigger(VK_SPACE) && !mClear) {
+		AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_01), 0);
 		Fade* fade = AddGameObject<Fade>(FadeLayer);
 		fade->Start(true, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
 		mpFade = fade;

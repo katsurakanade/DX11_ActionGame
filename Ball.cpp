@@ -121,6 +121,8 @@ void Ball::ReflectWall() {
 
 		if (sbc->Collision_Box_Enter(tbc)) {
 
+			AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_02), 0);
+
 			// Self
 			GetComponent<Physical>()->mSpeed -= 0.001f;
 			D3DXVECTOR3 moveDir;
@@ -153,12 +155,15 @@ void Ball::ReflectBall() {
 
 			if (sbc->Collision_Box_Enter(tbc)) {
 
+				AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_02), 0);
+
 				// Target
 				trg->GetComponent<Physical>()->mSpeed = 0.005f;
 				D3DXVECTOR3 dir = trg->Position - Position;
 				D3DXVECTOR3 dirn;
 				D3DXVec3Normalize(&dirn, &dir);
 				trg->GetComponent<Physical>()->mVelocity = dir;
+
 			}
 		}
 	}

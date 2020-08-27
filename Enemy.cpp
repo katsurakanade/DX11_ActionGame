@@ -52,6 +52,8 @@ void Enemy::Update() {
 
 		if (sbc->Collision_Box_Enter(tbc)) {
 
+			AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_03), 0);
+
 			// Self
 			GetComponent<Physical>()->mSpeed = 0.005f;
 			D3DXVECTOR3 dir = trg->Position - Position;

@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Application.h"
 #include "input.h"
+#include "AudioListener.h"
 #include "Game.h"
 #include "Title.h"
 #include "Time.h"
@@ -15,6 +16,8 @@ bool Application::Init() {
 
 	Input::Init();
 	Renderer::Init();
+	AudioListener::Init();
+	AudioListener::SetVolume(0.2f);
 	Asset::LoadSceneAsset();
 
 	mScene = new Title();
@@ -32,6 +35,7 @@ void Application::Uninit() {
 
 	Renderer::Uninit();
 	Input::Uninit();
+	AudioListener::Unint();
 
 }
 

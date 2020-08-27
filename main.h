@@ -21,6 +21,7 @@
 #include <d3dx9.h>
 #include <d3dx11.h>
 #include <DirectXMath.h>
+#include <xaudio2.h>
 
 // Imgui
 #include <imgui.h>
