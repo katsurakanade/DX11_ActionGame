@@ -11,8 +11,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 HWND g_Window;
 HINSTANCE g_hinstance;
 
-DWORD Time::mPreviousTime;
-DWORD Time::mDelta;
+std::chrono::system_clock::time_point Time::mPreviousTime;
+std::chrono::duration<double> Time::mDelta;
 
 HWND GetWindow()
 {

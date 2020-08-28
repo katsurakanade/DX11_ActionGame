@@ -6,16 +6,16 @@ class Time
 {
 private:
 
-	static DWORD mPreviousTime;
-	static DWORD mDelta;
-
+	static std::chrono::system_clock::time_point mPreviousTime;
+	static std::chrono::duration<double> mDelta;
+	
 public:
 
-	static DWORD GetDeltaTime() { return mDelta; };
+	static float GetDeltaTime() { return (float)mDelta.count(); };
 
 	static void Tick() {
-		mDelta = timeGetTime() - mPreviousTime;
-		mPreviousTime = timeGetTime();
+		mDelta = std::chrono::system_clock::now() - mPreviousTime;
+		mPreviousTime = std::chrono::system_clock::now();
 	}
 
 

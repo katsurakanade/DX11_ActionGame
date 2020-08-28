@@ -47,11 +47,11 @@ void Ball::Update() {
 
 	{
 		if (Input::GetKeyPress('D')) {
-			mArrow->RotationAroundXZ(Position, 0.5f * Time::GetDeltaTime());
+			mArrow->RotationAroundXZ(Position, 300.0f * Time::GetDeltaTime());
 		}
 
 		if (Input::GetKeyPress('A')) {
-			mArrow->RotationAroundXZ(Position, -0.5f * Time::GetDeltaTime());
+			mArrow->RotationAroundXZ(Position, -300.0f * Time::GetDeltaTime());
 		}
 
 		if (Input::GetKeyTrigger(VK_SPACE) && mArrow->GetActive()) {
@@ -120,7 +120,7 @@ void Ball::ReflectWall() {
 		BoxCollider* tbc = trg->GetComponent<BoxCollider>();
 
 		if (sbc->Collision_Box_Enter(tbc)) {
-
+			
 			AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_02), 0);
 
 			// Self
@@ -139,7 +139,10 @@ void Ball::ReflectWall() {
 			obj->Position = Position;
 			obj->Scale = D3DXVECTOR3(5, 5, 5);
 			obj->SetHW(4, 4);
+
 		}
+
+		
 	}
 }
 
@@ -158,7 +161,7 @@ void Ball::ReflectBall() {
 				AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_02), 0);
 
 				// Target
-				trg->GetComponent<Physical>()->mSpeed = 0.005f;
+				trg->GetComponent<Physical>()->mSpeed = GetComponent<Physical>()->mSpeed / 2;
 				D3DXVECTOR3 dir = trg->Position - Position;
 				D3DXVECTOR3 dirn;
 				D3DXVec3Normalize(&dirn, &dir);

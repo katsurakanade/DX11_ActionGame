@@ -28,7 +28,7 @@ void AudioListener::Unint() {
 
 }
 
-void AudioListener::Play(Sound* sound,bool loop) {
+void AudioListener::Play(Sound* sound,int loop) {
 
 	XAUDIO2_VOICE_STATE xa2state;
 	XAUDIO2_BUFFER buffer;
@@ -82,4 +82,13 @@ void AudioListener::StopAll() {
 			s->mSourceVoice->Stop(0);
 		}
 	}
+}
+
+bool AudioListener::Is_Playing(Sound* sound) {
+
+	XAUDIO2_VOICE_STATE xa2state;
+
+	sound->mSourceVoice->GetState(&xa2state);
+
+	return xa2state.BuffersQueued;
 }

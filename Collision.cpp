@@ -114,19 +114,23 @@ bool BoxCollider::Collision_Box_Enter(BoxCollider* target) {
 
 	mStay = Collision_Box_Stay(target);
 
+	// Enter
 	if (mStay && !mTriggerFlag) {
+		DebugOutputString("Enter");
 		mTriggerFlag = true;
 		return true;
 	}
 
-	else if (mStay && mTriggerFlag) {
-		return false;
-	}
-
 	else if (!mStay && mTriggerFlag) {
+		DebugOutputString("Exit");
 		mTriggerFlag = false;
 		return false;
 	}
 
 	return false;
 }
+
+
+
+
+

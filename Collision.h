@@ -26,5 +26,6 @@ public:
 	bool Collision_Box_Stay(BoxCollider* target);
 	bool Collision_Box_Enter(BoxCollider* target);
 
+	bool GetTrigger() { return mTriggerFlag; };
 };
 

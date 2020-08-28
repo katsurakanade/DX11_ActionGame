@@ -52,18 +52,16 @@ void Enemy::Update() {
 
 		if (sbc->Collision_Box_Enter(tbc)) {
 
-			AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_03), 0);
-
 			// Self
-			GetComponent<Physical>()->mSpeed = 0.005f;
+			GetComponent<Physical>()->mSpeed = 10.0f;
 			D3DXVECTOR3 dir = trg->Position - Position;
 			D3DXVECTOR3 dirn;
 			D3DXVec3Normalize(&dirn, &dir);
 			GetComponent<Physical>()->mVelocity = dirn;
 
 			// Target
-			trg->GetComponent<Physical>()->SpeedDown(0.00015f);
-
+			trg->GetComponent<Physical>()->SpeedDown(0.05f);
+			
 			// Effect
 			Effect* obj = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
 			obj->Position = Position;

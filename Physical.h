@@ -7,12 +7,14 @@ class Physical : public Component
 
 private:
 
-	const float mSpeedDownCoefficient = 0.00005f;
+	const float mSpeedDownCoefficient;
 	bool IsMoving();
 
 public:
 
-	float mSpeed_Start  = 0.02f;
+	Physical() : mSpeedDownCoefficient(0.1f), mSpeed_Start(30.0f) {};
+
+	float mSpeed_Start;
 	float mSpeed;
 	D3DXVECTOR3 mVelocity;
 

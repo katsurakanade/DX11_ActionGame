@@ -20,7 +20,7 @@ bool Application::Init() {
 	AudioListener::SetVolume(0.2f);
 	Asset::LoadSceneAsset();
 
-	mScene = new Title();
+	mScene = new Game();
 	mScene->Init();
 
 	return true;

@@ -19,7 +19,7 @@ public:
 	static void Init();
 	static void Unint();
 
-	static void Play(Sound* sound,bool loop);
+	static void Play(Sound* sound, int loop);
 	static void Stop(Sound* sound);
 	static void StopAll();
 
@@ -27,6 +27,9 @@ public:
 		mMasteringVoice->SetVolume(val); 
 	};
 
-	static IXAudio2* GetXaudio() { return mXaudio; };
-};
+	static bool Is_Playing(Sound* sound);
 
+	static IXAudio2* GetXaudio() { return mXaudio; };
+
+
+};
