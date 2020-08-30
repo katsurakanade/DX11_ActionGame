@@ -26,18 +26,30 @@ void Enemy::Init() {
 	GetComponent<BoxCollider>()->mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 3.0f);
 	GetComponent<BoxCollider>()->mScaleOffest = D3DXVECTOR3(7.2f, 7.2f, 7.2f);
 
-	mGauge = Application::GetScene()->AddGameObject<Gauge>(ObjectLayer);
-	mGauge->SetBillBoard(this);
-	mGauge->mPositionOffest = D3DXVECTOR3(0.0f, 5.0f, 9.0f);
-
-	mHp = mHpInit;
-
 	Resource::Init();
 
 	ID++;
 }
 
-void Enemy::Unint() {
+void Enemy::AddGauge() {
+
+	Gauge* gauge = Application::GetScene()->AddGameObject<Gauge>(ObjectLayer);
+	gauge->SetBillBoard(this);
+	gauge->mPositionOffest = D3DXVECTOR3(0.0f, 2.0f, 9.0f);
+	mGauge = gauge;
+
+	mHpInit = 50.0f;
+	mHp = mHpInit;
+	mGauge->mFillAmount = mHp / mHpInit;
+
+}
+
+void Enemy::Uninit() {
+
+	if (mGauge) {
+		mGauge->Destroy();
+	}
+
 	Resource::Uninit();
 }
 
@@ -99,5 +111,5 @@ void Enemy::Attack() {
 
 	Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 
-	p->mHp *= 0.8f;
+	p->mHp -= 1000.0f;
 }

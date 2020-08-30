@@ -6,9 +6,12 @@
 #include "Game.h"
 #include "Title.h"
 #include "Time.h"
+#include "StaticManger.h"
 
 Scene* Application::mScene;
 bool Application::mDisableLighting;
+std::map<std::string, std::string> StaticManger::StateMap;
+
 
 bool Application::Init() {
 
@@ -19,9 +22,11 @@ bool Application::Init() {
 	AudioListener::Init();
 	AudioListener::SetVolume(0.2f);
 	Asset::LoadSceneAsset();
+	StaticManger::Init();
 
-	mScene = new Game();
+	mScene = new Title();
 	mScene->Init();
+
 
 	return true;
 }
@@ -31,6 +36,7 @@ void Application::Uninit() {
 	mScene->Uninit();
 	delete mScene;
 
+	StaticManger::Uninit();
 	Asset::UnloadSceneAsset();
 
 	Renderer::Uninit();
@@ -50,6 +56,7 @@ void Application::Update() {
 		ImGui::Checkbox(u8"線描画モード", &Renderer::mLineMode);
 		ImGui::Checkbox(u8"Gizmosモード", &Renderer::mGizmosMode);
 		ImGui::Checkbox(u8"ライト閉め", &mDisableLighting);
+
 		ImGui::End();
 	}
 

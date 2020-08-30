@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Resource.h"
+#include "Level.h"
 
 enum class RoundState{
 	PLAYER_ROUND,
 	ENEMY_ROUND,
 };
+
 
 class Gamemanger : public Resource
 {
@@ -14,7 +16,11 @@ private:
 
 	bool mGameClear = false;
 
-	void GameClear();
+	int mRound;
+
+	Level* mpLevel;
+
+	void GameClear(bool win);
 
 public:
 

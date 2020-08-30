@@ -5,6 +5,7 @@
 #include "Wall.h"
 #include "Enemy.h"
 #include "Level.h"
+#include <random>
 
 void Level::Init() {
 
@@ -43,9 +44,23 @@ void Level::Init() {
 	Front->SetFront(D3DXVECTOR3(0, 0, 1));
 	Front->ResetPositionOffest();
 
-	Enemy* e1 = Application::GetScene()->AddGameObject<Enemy>(ObjectLayer);
-	e1->Position = D3DXVECTOR3(0, 10, 0);
-	
-	//Enemy* e2 = Application::GetScene()->AddGameObject<Enemy>(ObjectLayer);
-	//e2->Position = D3DXVECTOR3(10, 10, 20);
+}
+
+void Level::SetRound(int rnd) {
+
+	Enemy* e = Application::GetScene()->AddGameObject<Enemy>(ObjectLayer);
+
+	if (rnd == 0) {
+		e->Position = D3DXVECTOR3(-50, 10, 30);
+	}
+
+	else if (rnd == 1) {
+		e->Position = D3DXVECTOR3(-25, 10, 30);
+	}
+
+	else if (rnd == 2) {
+		e->Position = D3DXVECTOR3(0, 10, 30); 
+	}
+
+	e->AddGauge();
 }

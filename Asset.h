@@ -23,6 +23,7 @@ enum TEXTURE_ENUM {
 	ELF,
 	BAR_EMPTY,
 	BAR_FILL,
+	GAMEOVER,
 	CLEAR,
 	LOGO,
 	WHITE,
@@ -115,6 +116,10 @@ protected:
 
 		mSoundList.emplace_back(sound);
 	}
+
+	static void LoadModel();
+	static void LoadTexture();
+	static void LoadSound();
 
 public:
 

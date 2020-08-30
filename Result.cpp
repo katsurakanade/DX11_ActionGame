@@ -2,6 +2,7 @@
 #include "input.h"
 #include "Result.h"
 #include "Application.h"
+#include "StaticManger.h"
 
 void Result::Init() {
 
@@ -10,10 +11,21 @@ void Result::Init() {
 	AddGameObject<Skybox>(ObjectLayer);
 
 	Sprite* logo = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
-	logo->Name = "TitleLogo";
-	logo->SetTexture(Asset::GetTexture(TEXTURE_ENUM::CLEAR));
-	logo->SetSize(D3DXVECTOR3(1000, 500, 0));
-	logo->SetPosition(D3DXVECTOR2(SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 - 550));
+	logo->Name = "Logo";
+	if (StaticManger::StateMap["GameClear"] == "true") {
+		logo->SetTexture(Asset::GetTexture(TEXTURE_ENUM::CLEAR));
+	}
+	else if (StaticManger::StateMap["GameClear"] == "false") {
+		logo->SetTexture(Asset::GetTexture(TEXTURE_ENUM::GAMEOVER));
+	}
+	logo->SetSize(D3DXVECTOR3(1280, 400, 0));
+	logo->SetPosition(D3DXVECTOR2(SCREEN_WIDTH / 2 - 550, SCREEN_HEIGHT / 2 - 550));
+
+	Sprite* Button = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
+	Button->Name = "Button";
+	Button->SetTexture(Asset::GetTexture(TEXTURE_ENUM::SPACEBUTTON));
+	Button->SetSize(D3DXVECTOR3(400, 120, 0));
+	Button->SetPosition(D3DXVECTOR2(SCREEN_WIDTH / 2 - 230, SCREEN_HEIGHT - 200));
 
 	Fade* fade = AddGameObject<Fade>(FadeLayer);
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));

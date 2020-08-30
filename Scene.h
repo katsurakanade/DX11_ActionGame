@@ -64,7 +64,8 @@ public:
 			for (int i = 0; i < EndLayer; i++) {
 				for (Resource* g : mGameObject[i])
 				{
-					ImGui::Text(g->Name.c_str());
+					std::string str = g->Name.c_str();
+					ImGui::Text(str.c_str());
 				}
 			}
 		

@@ -150,8 +150,11 @@
     <ClCompile Include="Result.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="StaticManger.cpp">
+      <Filter>ソース ファイル\Static</Filter>
+    </ClCompile>
     <ClCompile Include="AudioListener.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Static</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -287,8 +290,11 @@
     <ClInclude Include="Result.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="StaticManger.h">
+      <Filter>ヘッダー ファイル\Static</Filter>
+    </ClInclude>
     <ClInclude Include="AudioListener.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Static</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

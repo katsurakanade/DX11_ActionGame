@@ -2,6 +2,9 @@
 
 #include "main.h"
 #include "Component.h"
+#include <thread>
+#include <chrono>
+#include <functional>
 
 class Resource {
 
@@ -108,4 +111,6 @@ public:
         }
         return NULL;
     };
+
+   
 };

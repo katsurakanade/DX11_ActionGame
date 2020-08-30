@@ -54,6 +54,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StaticManger.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
@@ -100,6 +101,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="StaticManger.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Wall.h" />

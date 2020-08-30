@@ -3,7 +3,7 @@
 #include "Resource.h"
 #include "Effect.h"
 
-enum GaugeType {
+enum class GaugeType {
 	GAUGE_GUI,
 	GAUGE_BILLBOARD,
 };
@@ -24,10 +24,10 @@ private:
 public:
 
 	D3DXVECTOR3 mPositionOffest;
-	float mFillAmount = 1.0f;
+	float mFillAmount;
 
 	void Init();
-	void Unint();
+	void Uninit();
 	void Update();
 	void Render();
 

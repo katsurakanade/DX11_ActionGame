@@ -12,6 +12,7 @@ void Game::Init() {
 	AddGameObject<Skybox>(ObjectLayer)->Position = D3DXVECTOR3(0, 0, 0);
 
 	Level* level = AddGameObject<Level>(ObjectLayer);
+	level->SetRound(0);
 	Player* player = AddGameObject<Player>(ObjectLayer);
 	Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);
@@ -30,7 +31,6 @@ void Game::Update() {
 
 	if (mpFade != nullptr) {
 		if (!mpFade->GetIsFade()) {
-
 			if (mClear) {
 				AudioListener::Stop(Asset::GetSound(SOUND_ENUM::BGM_02));
 				Application::SwitchScene<Result>();

@@ -7,11 +7,18 @@
 
 void Gauge::Init() {
 
-	
+	mFillAmount = 1.0f;
 
 }
 
-void Gauge::Unint() {
+void Gauge::Uninit() {
+
+	if (mpBar_empty) {
+		mpBar_empty->Destroy();
+	}
+	if (mpBar_fill) {
+		mpBar_fill->Destroy();
+	}
 
 }
 
@@ -36,11 +43,10 @@ void Gauge::Update() {
 		mpBar_fill->SetFillAmount(mFillAmount);
 	}
 
+
 }
 
 void Gauge::Render() {
-
-	
 
 }
 
@@ -49,13 +55,13 @@ void Gauge::SetGUI(int length) {
 	mType = GaugeType::GAUGE_GUI;
 
 	Sprite* hpbar_empty = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
-	hpbar_empty->Name = "hpbar";
+	hpbar_empty->Name = "hpbarGUI";
 	hpbar_empty->SetTexture(Asset::GetTexture(TEXTURE_ENUM::BAR_EMPTY));
 	hpbar_empty->SetSize(D3DXVECTOR3((float)length, 100, 0));
 	hpbar_empty->SetPosition(D3DXVECTOR2(Position.x, Position.y));
 
 	Sprite* hpbar_fill = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
-	hpbar_fill->Name = "hpbarfill";
+	hpbar_fill->Name = "hpbarfillGUI";
 	hpbar_fill->SetTexture(Asset::GetTexture(TEXTURE_ENUM::BAR_FILL));
 	hpbar_fill->SetSize(D3DXVECTOR3((float)length, 100, 0));
 	hpbar_fill->Position = D3DXVECTOR3(Position.x, Position.y, 0);
@@ -68,14 +74,14 @@ void Gauge::SetBillBoard(Resource* target) {
 
 	mType = GaugeType::GAUGE_BILLBOARD;
 
-	Effect* hpbar_empty = Application::GetScene()->AddGameObject<Effect>(SpriteLayer);
+	Effect* hpbar_empty = Application::GetScene()->AddGameObject<Effect>(ObjectLayer);
 	hpbar_empty->Name = "hpbar";
 	hpbar_empty->SetTexture(Asset::GetTexture(TEXTURE_ENUM::BAR_EMPTY));
 	hpbar_empty->SetHW(1, 1);
 	hpbar_empty->SetLoop(true);
 	hpbar_empty->Scale = D3DXVECTOR3(4.0f, 0.5f, 1.0f);
 
-	Effect* hpbar_fill = Application::GetScene()->AddGameObject<Effect>(SpriteLayer);
+	Effect* hpbar_fill = Application::GetScene()->AddGameObject<Effect>(ObjectLayer);
 	hpbar_fill->Name = "hpbarfill";
 	hpbar_fill->SetTexture(Asset::GetTexture(TEXTURE_ENUM::BAR_FILL));
 	hpbar_fill->SetHW(1, 1);

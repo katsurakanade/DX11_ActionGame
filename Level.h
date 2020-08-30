@@ -8,11 +8,14 @@ class Level : public Resource
 private:
 
 
+
 public:
 
 	void Init();
 	void Unint() {};
-	void Update() {};
+	void Update() { };
 	void Render() {};
+
+	void SetRound(int rnd);
 };
 

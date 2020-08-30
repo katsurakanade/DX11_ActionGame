@@ -130,7 +130,7 @@ void Ball::ReflectWall() {
 			D3DXVECTOR3 r;
 			GetReflectVector(&r, moveDir, trg->GetFront());
 			GetComponent<Physical>()->mVelocity = r;
-			GetComponent<Physical>()->AddForce(this, 1.5);
+			GetComponent<Physical>()->AddForce(this, 1.75f);
 
 			// Effect
 			Effect* obj = Application::GetScene()->AddGameObject<Effect>(EffectLayer);

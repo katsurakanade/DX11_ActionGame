@@ -28,7 +28,6 @@ void AssimpModel::Unload() {
 }
 std::string textype;
 
-
 void AssimpModel::DrawConfig() {
 
 	std::string str = u8"ƒ‚ƒfƒ‹î•ñ: " + Name;

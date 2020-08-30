@@ -11,17 +11,18 @@ private:
 	static int ID;
 
 	AssimpModel* mModel;
-	float mHpInit = 50.0f;
+	float mHpInit;
 	float mHp;
 
 	Gauge* mGauge;
 
 public:
 	void Init();
-	void Unint();
+	void Uninit();
 	void Update();
 	void Render();
 
+	void AddGauge();
 	void Attack();
 };
 

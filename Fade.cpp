@@ -16,6 +16,7 @@ void Fade::Init() {
 	sp->SetColor(D3DXVECTOR4(1, 1, 1, 1));
 
 	mSprite = sp;
+
 }
 
 void Fade::Uninit() {

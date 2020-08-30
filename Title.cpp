@@ -46,6 +46,7 @@ void Title::Update() {
 	}
 
 	if (Input::GetKeyTrigger(VK_SPACE) && !mClear) {
+		
 		AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_01), 0);
 		Fade* fade = AddGameObject<Fade>(FadeLayer);
 		fade->Start(true, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
