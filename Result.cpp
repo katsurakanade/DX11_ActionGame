@@ -13,17 +13,17 @@ void Result::Init() {
 	Sprite* logo = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	logo->Name = "Logo";
 	if (StaticManger::StateMap["GameClear"] == "true") {
-		logo->SetTexture(Asset::GetTexture(TEXTURE_ENUM::CLEAR));
+		logo->SetTexture(Application::GetAsset()->GetTexture(TEXTURE_ENUM::CLEAR));
 	}
 	else if (StaticManger::StateMap["GameClear"] == "false") {
-		logo->SetTexture(Asset::GetTexture(TEXTURE_ENUM::GAMEOVER));
+		logo->SetTexture(Application::GetAsset()->GetTexture(TEXTURE_ENUM::GAMEOVER));
 	}
 	logo->SetSize(D3DXVECTOR3(1280, 400, 0));
 	logo->SetPosition(D3DXVECTOR2(SCREEN_WIDTH / 2 - 550, SCREEN_HEIGHT / 2 - 550));
 
 	Sprite* Button = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	Button->Name = "Button";
-	Button->SetTexture(Asset::GetTexture(TEXTURE_ENUM::SPACEBUTTON));
+	Button->SetTexture(Application::GetAsset()->GetTexture(TEXTURE_ENUM::SPACEBUTTON));
 	Button->SetSize(D3DXVECTOR3(400, 120, 0));
 	Button->SetPosition(D3DXVECTOR2(SCREEN_WIDTH / 2 - 230, SCREEN_HEIGHT - 200));
 
@@ -31,7 +31,7 @@ void Result::Init() {
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));
 	mpFade = fade;
 
-	AudioListener::Play(Asset::GetSound(SOUND_ENUM::BGM_03), -1);
+	AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::BGM_03), -1);
 }
 
 void Result::Update() {
@@ -41,7 +41,7 @@ void Result::Update() {
 	if (mpFade != nullptr) {
 		if (!mpFade->GetIsFade()) {
 			if (mClear) {
-				AudioListener::Stop(Asset::GetSound(SOUND_ENUM::BGM_03));
+				AudioListener::Stop(Application::GetAsset()->GetSound(SOUND_ENUM::BGM_03));
 				Application::SwitchScene<Title>();
 				return;
 			}
@@ -50,7 +50,7 @@ void Result::Update() {
 	}
 
 	if (Input::GetKeyTrigger(VK_SPACE) && !mClear) {
-		AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_01), 0);
+		AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::SE_01), 0);
 		Fade* fade = AddGameObject<Fade>(FadeLayer);
 		fade->Start(true, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
 		mpFade = fade;

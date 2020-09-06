@@ -11,6 +11,7 @@ class Application
 private:
 
 	static Scene* mScene;
+	static Asset* mAsset;
 
 	static bool mDisableLighting;
 
@@ -21,6 +22,7 @@ public:
 	static void Update();
 	static void Render();
 	static Scene* GetScene() { return mScene; };
+	static Asset* GetAsset() { return mAsset; };
 
 	template <typename T>
 	static void SwitchScene() {
@@ -35,5 +37,9 @@ public:
 		scene->Init();
 	}
 
+
+	static void UseLighting(bool val) {
+		mDisableLighting = val;
+	}
 };
 

@@ -10,6 +10,8 @@
 
 
 void Gamemanger::Init() {
+
+	Name = "GameManger";
 	mRound = 0;
 
 	mpLevel = Application::GetScene()->GetGameObject<Level>(ObjectLayer);
@@ -31,7 +33,7 @@ void Gamemanger::Update() {
 		mState = RoundState::PLAYER_ROUND;
 	}
 
-	if (!mGameClear && enemylist.size() == 0) {
+	/*if (!mGameClear && enemylist.size() == 0) {
 		mRound++;
 		mpLevel->SetRound(mRound);
 	}
@@ -39,7 +41,7 @@ void Gamemanger::Update() {
 	if (mRound == 3 && enemylist.size() == 0) {
 		mGameClear = true;
 		GameClear(true);
-	}
+	}*/
 
 	else if (!mGameClear && Application::GetScene()->GetGameObject<Player>(ObjectLayer)->mHp <= 0) {
 		GameClear(false);

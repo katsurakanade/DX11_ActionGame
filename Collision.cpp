@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Resource.h"
 #include "Collision.h"
+#include "Application.h"
 
 void BoxCollider::Init() {
 
@@ -43,6 +44,8 @@ void BoxCollider::Init() {
 	cbd.MiscFlags = 0;
 
 	Renderer::GetDevice()->CreateBuffer(&cbd, &sd, &mColorBuffer);
+
+	D3DXQuaternionIdentity(&Quaternion);
 }
 
 void BoxCollider::Uninit() {
@@ -50,11 +53,15 @@ void BoxCollider::Uninit() {
 	mVertexBuffer->Release();
 }
 
-void BoxCollider::Update(Resource* target){
+void BoxCollider::Update(){
 
-	Position = target->Position + (mPositionOffest);
-	//Rotation = target->Rotation;
-	Scale = target->Scale + (mScaleOffest);
+	Position = GetResource()->Position + (mPositionOffest);
+	Rotation = GetResource()->Rotation;
+	Scale = GetResource()->Scale + (mScaleOffest);
+
+	if (GetUsePanel()) {
+		DataPanel();
+	}
 }
 
 void BoxCollider::Render() {
@@ -71,8 +78,8 @@ void BoxCollider::Render() {
 		D3D11_MAPPED_SUBRESOURCE msr;
 		Renderer::GetDeviceContext()->Map(mColorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
 		float* col = (float*)msr.pData;
-		col[0] = 0;
-		col[1] = 1;
+		col[0] = 1;
+		col[1] = 0;
 		col[2] = 0;
 		col[3] = 1;
 		Renderer::GetDeviceContext()->Unmap(mColorBuffer, 0);
@@ -127,6 +134,17 @@ bool BoxCollider::Collision_Box_Enter(BoxCollider* target) {
 	}
 
 	return false;
+}
+
+void BoxCollider::DataPanel() {
+
+	ImGui::Begin(GetResource()->Name.c_str());
+	if (ImGui::TreeNode(u8"“–‚½‚è”»’è")) {
+		ImGui::Text("mTriggerFlag : %d", mTriggerFlag);
+		ImGui::Text("mStay : %d", mStay);
+		ImGui::TreePop();
+	}
+	ImGui::End();
 }
 
 

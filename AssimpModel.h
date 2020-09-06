@@ -130,6 +130,16 @@ public:
 	void Close() {
 		VertexBuffer->Release();
 		IndexBuffer->Release();
+		ColorBuffer->Release();
+
+		Vertices.clear();
+		Vertices.shrink_to_fit();
+
+		Indices.clear();
+		Indices.shrink_to_fit();
+
+		Textures.clear();
+		Textures.shrink_to_fit();
 	}
 
 };

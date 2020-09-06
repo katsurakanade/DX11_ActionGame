@@ -9,6 +9,8 @@ class Component {
 private:
 
 	bool Active = true;
+    bool UsePanel = false;
+    Resource* pResource;
 
 protected:
 
@@ -24,5 +26,15 @@ public:
 
     virtual void Init() = 0;
     virtual void Uninit() = 0;
-    virtual void Update(Resource* target) = 0;
+    virtual void Update() = 0;
+
+    virtual void DataPanel() = 0;
+
+    void SetUsePanel(bool val) { UsePanel = val; };
+    bool GetUsePanel() { return UsePanel; };
+
+    void SetResource(Resource* target) { pResource = target; };
+    Resource* GetResource() { return pResource; };
+
+
 };

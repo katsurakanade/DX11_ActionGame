@@ -24,7 +24,7 @@ public:
 		PROCESS_MEMORY_COUNTERS pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
 		SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-		std::string str = "Memory Usage " + std::to_string(physMemUsedByMe >> 20) + " MB";
+		std::string str = "Memory Usage " + std::to_string(physMemUsedByMe >> 10) + " KB";
 		DebugOutputString(str.c_str());
 	}
 

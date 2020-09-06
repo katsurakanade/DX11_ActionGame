@@ -30,6 +30,7 @@ public:
     virtual void Init() {
         for (Component* c : Components) {
             c->Init();
+            c->SetResource(this);
         }
     };
     virtual void Uninit() {
@@ -39,7 +40,7 @@ public:
     };
     virtual void Update() {
         for (Component* c : Components) {
-            c->Update(this);
+            c->Update();
         }
     };
     virtual void Render() = 0;

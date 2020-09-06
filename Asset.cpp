@@ -4,19 +4,20 @@
 #include "Debug.h"
 #include <thread>
 
-std::vector<AssimpModel*> Asset::mAssimpModelList;
-std::vector<ID3D11ShaderResourceView*> Asset::mTextureList;
-std::vector<Sound*> Asset::mSoundList;
 
 void Asset::LoadSceneAsset(){
 
-	std::thread thread_loadmodel(LoadModel);
-	std::thread thread_loadtexture(LoadTexture);
-	std::thread thread_loadsound(LoadSound);
+	std::thread thread_loadmodel(&Asset::LoadModel,this);
+	std::thread thread_loadtexture(&Asset::LoadTexture, this);
+	std::thread thread_loadsound(&Asset::LoadSound, this);
 
 	thread_loadmodel.join();
 	thread_loadtexture.join();
 	thread_loadsound.join();
+
+	//LoadModel();
+	//LoadTexture();
+	//LoadSound(); // Finish
 
 	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::SAMURAI);
 	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::WIZARD);
@@ -30,11 +31,18 @@ void Asset::LoadSceneAsset(){
 void Asset::UnloadSceneAsset() {
 
 	for (AssimpModel* md : mAssimpModelList) {
-		md->Unload();
+		if (md) {
+			md->Unload();
+			delete md;
+			md = nullptr;
+		}
 	}
 
 	for (ID3D11ShaderResourceView* tex : mTextureList) {
-		tex->Release();
+		if (tex) {
+			tex->Release();
+			tex = nullptr;
+		}
 	}
 
 	for (Sound* sound : mSoundList) {
@@ -48,6 +56,9 @@ void Asset::UnloadSceneAsset() {
 		sound->mDataAudio = nullptr;
 	}
 
+	std::vector<AssimpModel*>().swap(mAssimpModelList);
+	std::vector<ID3D11ShaderResourceView*>().swap(mTextureList);
+	std::vector<Sound*>().swap(mSoundList);
 }
 
 void Asset::LoadModel() {
@@ -58,6 +69,7 @@ void Asset::LoadModel() {
 	AddAssimpModelToList("asset\\model\\torus\\torus.obj");
 	AddAssimpModelToList("asset\\model\\arrow\\arrow.obj");
 	AddAssimpModelToList("asset\\model\\enemy\\enemy.obj");
+	AddAssimpModelToList("asset\\model\\human\\Human.fbx");
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Model Loaded", end, start);
@@ -84,6 +96,7 @@ void Asset::LoadTexture() {
 	AddTextureToList("asset/texture/sky.jpg");
 	AddTextureToList("asset/texture/space_button.png");
 	AddTextureToList("asset/texture/lightning.png");
+
 	auto end = std::chrono::system_clock::now();
 	Debug::OutputRuntime("Texture Loaded", end, start);
 }
@@ -97,6 +110,7 @@ void Asset::LoadSound() {
 	AddSoundToList("asset/sound/switch.wav");
 	AddSoundToList("asset/sound/CollisionWall.wav");
 	AddSoundToList("asset/sound/Explosion.wav");
+	AddSoundToList("asset/sound/razer.wav");
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Sound Loaded", end, start);

@@ -13,6 +13,8 @@ private:
 	bool mStay = false;
 	bool mTriggerFlag = false;
 
+	void DataPanel();
+
 public:
 
 	D3DXVECTOR3 mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -20,7 +22,7 @@ public:
 
 	void Init();
 	void Uninit();
-	void Update(Resource* target);
+	void Update();
 	void Render();
 
 	bool Collision_Box_Stay(BoxCollider* target);

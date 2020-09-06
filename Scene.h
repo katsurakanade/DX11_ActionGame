@@ -58,6 +58,7 @@ public:
 			mGameObject[i].remove_if([](Resource* obj) {return obj->Remove(); });
 		}
 
+		// Imgui オブジェクトリスト
 		{
 			ImGui::Begin(u8"オブジェクト");
 

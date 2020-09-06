@@ -7,9 +7,7 @@
 
 void Wall::Init() {
 
-	Name = "Wall";
-
-	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::CUBE);
+	mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::CUBE);
 
 	Position = D3DXVECTOR3(0, 0, 0);
 	Rotation = D3DXVECTOR3(0, 0, 0);

@@ -1,13 +1,13 @@
 #include "main.h"
 #include "Renderer.h"
+#include "Application.h"
 #include "AssimpModel.h"
-#include "Asset.h"
 
 void AssimpModel::Load(std::string FileName) {
 
 	Assimp::Importer imp;
 
-	const aiScene* scene = imp.ReadFile(FileName, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+	const aiScene* scene = imp.ReadFile(FileName, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_MaxQuality);
 	assert(scene);
 
 	Name = scene->mRootNode->mName.C_Str();
@@ -25,6 +25,15 @@ void AssimpModel::Unload() {
 		Meshes[i].Close();
 	}
 
+	Meshes.clear();
+	Meshes.shrink_to_fit();
+
+	textures_loaded.clear();
+	textures_loaded.shrink_to_fit();
+
+	textures_select.clear();
+	textures_select.shrink_to_fit();
+
 }
 std::string textype;
 
@@ -32,13 +41,13 @@ void AssimpModel::DrawConfig() {
 
 	std::string str = u8"モデル情報: " + Name;
 	ImGui::Begin(str.c_str());
-	ImGui::SetWindowSize(ImVec2(300, 1000));
 
 	ImGui::Text(u8"テクスチャ数 : %d ", textures_loaded.size());
 
 	if (ImGui::TreeNode(u8"テクスチャファイル")) {
 		for (int i = 0; i < textures_loaded.size(); i++) {
-			ImGui::Text("%s", textures_loaded[i].path.c_str());
+			ImGui::Text(u8"タイプ : %s", textures_loaded[i].type.c_str());
+			ImGui::Text(u8"パス : %s", textures_loaded[i].path.c_str());
 			ImGui::Image(textures_loaded[i].texture, ImVec2(100, 100));
 		}
 		ImGui::TreePop();
@@ -53,7 +62,7 @@ void AssimpModel::DrawConfig() {
 			if (ImGui::TreeNode(Meshes[i].Name.c_str())) {
 				ImGui::Checkbox(u8"表示", &Meshes[i].Enable);
 				ImGui::ColorEdit4(u8"カラー", Meshes[i].col);
-				ImGui::SliderFloat3(u8"回転", Meshes[i].Rotation,-3.14f,3.14f);
+				//ImGui::SliderFloat3(u8"回転", Meshes[i].Rotation,-3.14f,3.14f);
 				ImGui::Image(Meshes[i].Textures[0].texture, ImVec2(100, 100));
 				ImGui::TreePop();
 			}
@@ -77,10 +86,10 @@ void AssimpModel::Draw(D3DXMATRIX root) {
 
 				if (DefaultTexture) {
 					Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_loaded[j].texture);
-				}
+ 				}
 
 				else if (!DefaultTexture) {
-					if (textures_select[SelectTextureIndex].texture != NULL) {
+					if (SelectTextureIndex != 0 && textures_select[SelectTextureIndex].texture != NULL) {
 						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_select[SelectTextureIndex].texture);
 					}
 				}
@@ -210,19 +219,18 @@ std::vector<Texture> AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextur
 	{
 		aiString str;
 		mat->GetTexture(type, i, &str);
-		// Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 		bool skip = false;
 		for (UINT j = 0; j < textures_loaded.size(); j++)
 		{
 			if (std::strcmp(textures_loaded[j].path.c_str(), str.C_Str()) == 0)
 			{
 				textures.push_back(textures_loaded[j]);
-				skip = true; // A texture with the same filepath has already been loaded, continue to next one. (optimization)
+				skip = true;
 				break;
 			}
 		}
 		if (!skip)
-		{   // If texture hasn't been loaded already, load it
+		{  
 			HRESULT hr;
 			Texture texture;
 			if (textype == "embedded compressed texture")
@@ -230,20 +238,25 @@ std::vector<Texture> AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextur
 				int textureindex = getTextureIndex(&str);
 				texture.texture = getTextureFromModel(scene, textureindex);
 			}
-			else
 			{
+
 				std::string filename = std::string(str.C_Str());
 				filename = Directory + '\\' + filename;
-				std::wstring filenamews = std::wstring(filename.begin(), filename.end());
+				if (str.data[0] == 46) {
+					int id = atoi(&str.data[1]);
+					hr = D3DX11CreateShaderResourceViewFromMemory(Renderer::GetDevice(), (const unsigned char*)scene->mTextures[id]->pcData, scene->mTextures[id]->mWidth, NULL, NULL, &texture.texture, NULL);
+				}
+				else {
+					hr = D3DX11CreateShaderResourceViewFromFile(Renderer::GetDevice(), filename.c_str(), NULL, NULL, &texture.texture, NULL);
+				}
 				
-				hr = D3DX11CreateShaderResourceViewFromFile(Renderer::GetDevice(), filename.c_str(), NULL, NULL, &texture.texture, NULL);
-				//assert(hr);
 			}
 
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			textures.push_back(texture);
-			this->textures_loaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+			this->textures_loaded.push_back(texture); 
+
 		}
 	}
 	return textures;
@@ -296,7 +309,7 @@ ID3D11ShaderResourceView* AssimpModel::getTextureFromModel(const aiScene* scene,
 
 void AssimpModel::PushTextureSelect(int index) {
 	Texture* t = new Texture();
-	t->texture = Asset::GetTexture(index);
+	t->texture = Application::GetAsset()->GetTexture(index);
 	textures_select.push_back(*t);
 	delete t;
 	t = nullptr;

@@ -10,6 +10,8 @@ enum class ASSIMP_MODEL_ENUM
 	TORUS,
 	ARROW,
 	ENEMY,
+	HUMAN,
+	KNIGHT
 };
 
 enum TEXTURE_ENUM {
@@ -40,6 +42,7 @@ enum class SOUND_ENUM {
 	SE_01,
 	SE_02,
 	SE_03,
+	SE_04,
 };
 
 class Asset
@@ -47,29 +50,29 @@ class Asset
 
 private:
 
-	static HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD* pChunkSize, DWORD* pChunkDataPosition);
-	static HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset);
+	HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD* pChunkSize, DWORD* pChunkDataPosition);
+	HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset);
 
 protected:
 
-	static std::vector<AssimpModel*> mAssimpModelList;
-	static std::vector<ID3D11ShaderResourceView*> mTextureList;
-	static std::vector<Sound*> mSoundList;
+	std::vector<AssimpModel*> mAssimpModelList;
+	std::vector<ID3D11ShaderResourceView*> mTextureList;
+	std::vector<Sound*> mSoundList;
 
-	static void AddAssimpModelToList(const char* value) {
+	void AddAssimpModelToList(const char* value) {
 
 		AssimpModel* md = new AssimpModel();
 		md->Load(value);
-		mAssimpModelList.emplace_back(md);
+		mAssimpModelList.push_back(md);
 	}
 
-	static void AddTextureToList(const char* value) {
+	void AddTextureToList(const char* value) {
 		ID3D11ShaderResourceView* tex;
 		D3DX11CreateShaderResourceViewFromFile(Renderer::GetDevice(),value,NULL,NULL,&tex,NULL);
-		mTextureList.emplace_back(tex);
+		mTextureList.push_back(tex);
 	}
 
-	static void AddSoundToList(const char* value) {
+	void AddSoundToList(const char* value) {
 
 		Sound* sound = new Sound();
 
@@ -117,19 +120,19 @@ protected:
 		mSoundList.emplace_back(sound);
 	}
 
-	static void LoadModel();
-	static void LoadTexture();
-	static void LoadSound();
+	void LoadModel();
+	void LoadTexture();
+	void LoadSound();
 
 public:
 
-	static void LoadSceneAsset();
-	static void UnloadSceneAsset();
+	void LoadSceneAsset();
+	void UnloadSceneAsset();
 	
-	static AssimpModel* GetAssimpModel(ASSIMP_MODEL_ENUM index) { return mAssimpModelList[(int)index]; };
-	static ID3D11ShaderResourceView* GetTexture(int index) { return mTextureList[index]; };
-	static Sound* GetSound(SOUND_ENUM index) { return mSoundList[(int)index]; };
+	AssimpModel* GetAssimpModel(ASSIMP_MODEL_ENUM index) { return mAssimpModelList[(int)index]; };
+	ID3D11ShaderResourceView* GetTexture(int index) { return mTextureList[index]; };
+	Sound* GetSound(SOUND_ENUM index) { return mSoundList[(int)index]; };
 
-	static std::vector<Sound*> GetSoundList(){ return mSoundList; };
+	std::vector<Sound*> GetSoundList(){ return mSoundList; };
 };
 

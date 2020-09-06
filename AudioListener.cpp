@@ -75,13 +75,13 @@ void AudioListener::Stop(Sound* sound){
 
 void AudioListener::StopAll() {
 
-	for (Sound* s : Asset::GetSoundList()) {
+	/*for (Sound* s : Application::GetAsset()->GetSoundList()) {
 
 		if (s->mSourceVoice)
 		{
 			s->mSourceVoice->Stop(0);
 		}
-	}
+	}*/
 }
 
 bool AudioListener::Is_Playing(Sound* sound) {

@@ -8,7 +8,7 @@ void Skybox::Init() {
 
 	Name = "Skybox";
 
-	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
+	mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
 
 	Position = D3DXVECTOR3(0, 0, 0); 
 	Rotation = D3DXVECTOR3(1.5, 0, 1.5);

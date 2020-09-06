@@ -3,54 +3,169 @@
 #include "Application.h"
 #include "Scene.h"
 #include "Player.h"
-#include "Ball.h"
+#include "input.h"
+#include "Mathematics.h"
+
+bool start;
+float fr;
 
 void Player::Init() {
 
-	mNowController = 0;
+	Name = "Player";
 
-	Ball* b1 = Application::GetScene()->AddGameObject<Ball>(ObjectLayer);
-	b1->Rotation = D3DXVECTOR3(-0.5f, 1.72f, 1.72f);
-	b1->SetModelTexture(0);
-	b1->InitArrowPosition();
-	b1->SetArrow(true);
+	mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::HUMAN);
 
-	Ball* b2= Application::GetScene()->AddGameObject<Ball>(ObjectLayer);
-	b2->Position = D3DXVECTOR3(10, 10, 0);
-	b2->Rotation = D3DXVECTOR3(0.5f, 1.72f, 1.72f);
-	b2->SetModelTexture(1);
-	b2->InitArrowPosition();
-	b2->SetArrow(false);
+	Position = D3DXVECTOR3(0, 12, 20);
+	Rotation = D3DXVECTOR3(0.0f, -1.72f, 0.0f);
+	Scale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 
-	Ball* b3 = Application::GetScene()->AddGameObject<Ball>(ObjectLayer);
-	b3->Position = D3DXVECTOR3(30, 10, 0);
-	b3->Rotation = D3DXVECTOR3(0.5f, 1.72f, 1.72f);
-	b3->SetModelTexture(2);
-	b3->InitArrowPosition();
-	b3->SetArrow(false);
+	D3DXQuaternionIdentity(&Quaternion);
 
-	Ball* b4= Application::GetScene()->AddGameObject<Ball>(ObjectLayer);
-	b4->Position = D3DXVECTOR3(-15, 10, 0);
-	b4->Rotation = D3DXVECTOR3(0.5f, 1.72f, 1.72f);
-	b4->SetModelTexture(3);
-	b4->InitArrowPosition();
-	b4->SetArrow(false);
+	AddComponent<BoxCollider>();
+	AddComponent<Physical>();
+
+	GetComponent<BoxCollider>()->mPositionOffest = D3DXVECTOR3(0.0f, 4.25f, 0.0f);
+	GetComponent<BoxCollider>()->mScaleOffest = D3DXVECTOR3(2.5f, 9.0f, 2.5f);
+
+	//Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+	//camera->SetFollowTarget(this);
+
+	for (Component* c : Components) {
+		c->SetUsePanel(true);
+	}
+
+	Resource::Init();
 
 	mHp = mHpInit;
 }
 
-void Player::SelectBall() {
+void Player::Unint() {
+	Resource::Uninit();
+}
 
-	std::vector<Ball*> Balllist = Application::GetScene()->GetGameObjects<Ball>(ObjectLayer);
+void Player::Update() {
 
-	for (int i = 0; i < 4; i++) {
-		if (i == mNowController) {
-			Balllist[i]->InitArrowPosition();
-			Balllist[i]->SetArrow(true);
+	SettingPanel();
+
+	// ジャンプ
+	Jump(DIK_SPACE);
+
+	// 移動
+	Movement(DIK_LEFTARROW,DIK_RIGHTARROW);
+
+	// スキル
+	Skill(DIK_Q, DIK_W, DIK_E, DIK_R);
+
+	Resource::Update();
+}
+
+void Player::Render() {
+
+	D3DXMATRIX world, scale, rot, trans;
+	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
+	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
+	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
+	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
+	world = scale * rot * trans;
+	Renderer::SetWorldMatrix(&world);
+	
+	mModel->Draw(world);
+	
+	GetComponent<BoxCollider>()->Render();
+}
+
+void Player::SettingPanel() {
+
+	ImGui::Begin(Name.c_str());
+	ImGui::SliderFloat3(u8"座標", Position, -1000.0f, 1000.0f, "%.0f", 5.0f);
+	ImGui::SliderFloat3(u8"回転", Rotation, -3.14f, 3.14f);
+	ImGui::SliderFloat3(u8"スケール", Scale, 0.1f, 10.0f);
+	ImGui::Text(u8"ジャンプ可能 %d ", mCanJump);
+	ImGui::Text(u8"ジャンプ速度 %f", mJumpVel);
+	ImGui::End();
+}
+
+void Player::Jump(BYTE keykode) {
+
+	if (Input::GetKeyTrigger(keykode)) {
+		mCanJump = false;
+		mJumpVel = 0;
+	}
+
+	if (mCanJump == false) {
+		Position.y = 50 * sin(2.0f * 3.14f / 40.0f * mJumpTime);
+		mJumpTime++;
+	}
+
+	/*float speed = GetComponent<Physical>()->mSpeed;
+
+	if (speed <= 0.1f) {
+		GetComponent<Physical>()->AddForce(D3DXVECTOR3(0, 15.0f, 0) * mJumpVel);
+	}
+
+	else {
+		D3DXVECTOR3 forward;
+		D3DXVec3Normalize(&forward, &-GetForward());
+		D3DXVECTOR3 dir = (forward)+D3DXVECTOR3(0, -1.0f, 0);
+		D3DXVECTOR3 r;
+		GetReflectVector(&r, dir, D3DXVECTOR3(0, 15.0f, 0));
+		r.z = 0;
+		GetComponent<Physical>()->AddForce(r * speed * mJumpVel);
+	}*/
+
+	if (Position.y > 1) {
+		mCanJump = true;
+		mJumpVel = 0;
+		mJumpTime = 0;
+	}
+
+}
+
+void Player::Movement(BYTE keykodeR, BYTE keykodeL) {
+
+	if (Input::GetKeyPress(keykodeL)) {
+
+		if (Rotation.y != -1.72f) {
+			Rotation = D3DXVECTOR3(0.0f, -1.72f, 0.0f);
 		}
-		else {
-			Balllist[i]->SetArrow(false);
+
+		if (GetComponent<Physical>()->mAcceleration < 1.5f) {
+			GetComponent<Physical>()->mAcceleration += 0.1f;
 		}
+		GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
+		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(1.0f, 0, 0);
+	}
+
+	if (Input::GetKeyPress(keykodeR)) {
+
+		if (Rotation.y != 1.72f) {
+			Rotation = D3DXVECTOR3(0.0f, 1.72f, 0.0f);
+		}
+
+		if (GetComponent<Physical>()->mAcceleration < 1.5f) {
+			GetComponent<Physical>()->mAcceleration += 0.1f;
+		}
+		GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
+		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-1.0f, 0, 0);
+	}
+}
+
+void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3) {
+
+	if (Input::GetKeyTrigger(keykode_0)) {
+		AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::SE_04), 0);
+	}
+
+	if (Input::GetKeyTrigger(keykode_1)) {
+
+	}
+
+	if (Input::GetKeyTrigger(keykode_2)) {
+
+	}
+
+	if (Input::GetKeyTrigger(keykode_3)) {
+
 	}
 
 }

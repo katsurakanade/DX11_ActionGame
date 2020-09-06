@@ -23,5 +23,5 @@ void main( in  float4 inPosition	: POSITION0, in  float4 inNormal	: NORMAL0, in 
     //inverted_color.a = tex_color.a;
     //inverted_color.rgb *= inverted_color.a;
 	
-    outDiffuse = tex_color /** inDiffuse*/ * basecolor;
+    outDiffuse = tex_color * inDiffuse * basecolor;
 }

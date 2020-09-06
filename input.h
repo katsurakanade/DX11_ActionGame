@@ -1,11 +1,19 @@
 #pragma once
 
 
+#define	NUM_KEY_MAX	(256)
+#define DIRECTINPUT_VERSION (0x0800)
+#include <dinput.h>
+
 class Input
 {
 private:
-	static BYTE mOldKeyState[256];
-	static BYTE mKeyState[256];
+
+	static LPDIRECTINPUT8 mInput;
+	static LPDIRECTINPUTDEVICE8 DevKeyboard;
+	static BYTE mOldKeyState[NUM_KEY_MAX];
+	static BYTE mKeyState[NUM_KEY_MAX];
+	static BYTE mKeyStateRelease[NUM_KEY_MAX];
 
 public:
 
@@ -13,7 +21,8 @@ public:
 	static void Uninit();
 	static void Update();
 
-	static bool GetKeyPress( BYTE KeyCode );
-	static bool GetKeyTrigger( BYTE KeyCode );
+	static bool GetKeyPress( int Keycode);
+	static bool GetKeyTrigger(int Keycode);
+	static bool GetKeyRelease(int nKey);
 
 };

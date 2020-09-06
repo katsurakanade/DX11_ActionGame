@@ -1,5 +1,5 @@
 #include "main.h"
-#include "Mathematics.h"
+
 #include "Renderer.h"
 #include "Ball.h"
 #include "input.h"
@@ -18,7 +18,7 @@ void Ball::Init() {
 
 	Name = "Ball_" + std::to_string(ID);
 
-	mModel = Asset::GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
+	mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
 
 	Position = D3DXVECTOR3(0, 10, 10);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -45,7 +45,7 @@ void Ball::Uninit() {
 
 void Ball::Update() {
 
-	{
+	/*{
 		if (Input::GetKeyPress('D')) {
 			mArrow->RotationAroundXZ(Position, 300.0f * Time::GetDeltaTime());
 		}
@@ -86,7 +86,7 @@ void Ball::Update() {
 	ReflectWall();
 	ReflectBall();
 
-	Resource::Update();
+	Resource::Update();*/
 }
  
 void Ball::Render() {
@@ -121,20 +121,20 @@ void Ball::ReflectWall() {
 
 		if (sbc->Collision_Box_Enter(tbc)) {
 			
-			AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_02), 0);
+			AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::SE_02), 0);
 
 			// Self
 			GetComponent<Physical>()->mSpeed -= 0.001f;
 			D3DXVECTOR3 moveDir;
 			D3DXVec3Normalize(&moveDir, &GetComponent<Physical>()->mVelocity);
 			D3DXVECTOR3 r;
-			GetReflectVector(&r, moveDir, trg->GetFront());
+			//GetReflectVector(&r, moveDir, trg->GetFront());
 			GetComponent<Physical>()->mVelocity = r;
-			GetComponent<Physical>()->AddForce(this, 1.75f);
+			//GetComponent<Physical>()->AddForce(this, 1.75f);
 
 			// Effect
 			Effect* obj = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
-			obj->SetTexture(Asset::GetTexture(TEXTURE_ENUM::EXP));
+			obj->SetTexture(Application::GetAsset()->GetTexture(TEXTURE_ENUM::EXP));
 			obj->SetAnimeSpeed(5.0f);
 			obj->Position = Position;
 			obj->Scale = D3DXVECTOR3(5, 5, 5);
@@ -158,7 +158,7 @@ void Ball::ReflectBall() {
 
 			if (sbc->Collision_Box_Enter(tbc)) {
 
-				AudioListener::Play(Asset::GetSound(SOUND_ENUM::SE_02), 0);
+				AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::SE_02), 0);
 
 				// Target
 				trg->GetComponent<Physical>()->mSpeed = GetComponent<Physical>()->mSpeed / 2;

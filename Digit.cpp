@@ -46,7 +46,7 @@ void Digit::MakeSprite(int fig,D3DXVECTOR2 size) {
 	for (int i = 0; i < mFig; i++) {
 
 		Sprite* sp = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
-		sp->SetTexture(Asset::GetTexture(TEXTURE_ENUM::NUMBER));
+		sp->SetTexture(Application::GetAsset()->GetTexture(TEXTURE_ENUM::NUMBER));
 		sp->SetAnimationSprite(true);
 		sp->SetHW(5, 5);
 		sp->SetSize(D3DXVECTOR3(size.x, size.y, 1));

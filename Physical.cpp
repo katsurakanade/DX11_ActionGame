@@ -1,49 +1,60 @@
 #include "main.h"
 #include "Resource.h"
+#include "Application.h"
 #include "Physical.h"
 #include "Time.h"
+#include "Wall.h"
 
 void Physical::Init() {
 
 	mVelocity = D3DXVECTOR3(0, 0, 0);
-	mSpeed = mSpeed_Start;
+
 }
 
 void Physical::Uninit() {
 
 }
 
-void Physical::Update(Resource* target) {
+void Physical::Update() {
 
-	target->Position += mVelocity* mSpeed * Time::GetDeltaTime();
+	std::vector <Wall*> grounds = Application::GetScene()->GetGameObjects<Wall>(ObjectLayer);
 
-	/*{
-		ImGui::Begin(u8"物理");
-		ImGui::Text(u8"Velocity %f %f %f",mVelocity.x, mVelocity.y, mVelocity.z);
-		ImGui::Text(u8"Speed %f", mSpeed);
-		ImGui::End();
-	}*/
+	for (Wall* wall : grounds) {
+		if (GetResource()->GetComponent<BoxCollider>()->Collision_Box_Stay(wall->GetComponent<BoxCollider>())) {
+			IsGround = true;
+		}
+	}
 
 	if (IsMoving()) {
+
+		if (mAcceleration > 0) {
+			mAcceleration *= mSpeedDownCoefficient;
+		}
+
+		else if (mAcceleration < 0.00f) {
+			mAcceleration = 0.00f;
+		}
+
 		if (mSpeed > 0) {
-			mSpeed -= mSpeedDownCoefficient;
+			mSpeed *= mSpeedDownCoefficient;
 		}
 
 		else if (mSpeed < 0.00f) {
 			mSpeed = 0.00f;
 		}
 	}
-	
+
+	ProcessPostion();
+
+	IsGround = false;
+
+	if (GetUsePanel()) {
+		DataPanel();
+	}
 }
 
-void Physical::Start() {
-	mSpeed = mSpeed_Start;
-}
-
-void Physical::AddForce(Resource* target,float force) {
-	D3DXVECTOR3 vel;
-	D3DXVec3Normalize(&vel, &mVelocity);
-	target->Position += (vel * force);
+void Physical::AddForce(D3DXVECTOR3 force) {
+	mForce = force;
 }
 
 bool Physical::IsMoving() {
@@ -62,3 +73,30 @@ bool Physical::IsMoving() {
 
 	return false;
 }
+
+void Physical::ProcessPostion() {
+
+	// 重力
+	if (!IsGround) {
+		GetResource()->Position.y -= mGravity * Time::GetDeltaTime();
+	}
+
+	// 移動速度
+	GetResource()->Position += mVelocity * mSpeed * Time::GetDeltaTime();
+	// ジャンプ速度
+	GetResource()->Position += mForce * 3.0f * Time::GetDeltaTime();
+}
+
+void Physical::DataPanel() {
+
+	ImGui::Begin(GetResource()->Name.c_str());
+	if (ImGui::TreeNode(u8"物理")) {
+		ImGui::Text("Acc : %f ", mAcceleration);
+		ImGui::Text("Speed : %f ", mSpeed);
+		ImGui::Text("Vel : (%f,%f,%f)  ", mVelocity.x, mVelocity.y, mVelocity.z);
+		ImGui::Text("Force : (%f,%f,%f)  ", mForce.x, mForce.y, mForce.z);
+		ImGui::TreePop();
+	}
+	ImGui::End();
+}
+

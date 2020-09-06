@@ -16,6 +16,5 @@ public:
 	void Update() { };
 	void Render() {};
 
-	void SetRound(int rnd);
 };
 
