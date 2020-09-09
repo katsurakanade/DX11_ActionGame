@@ -3,19 +3,48 @@
 #include "Shader.h"
 #include <io.h>
 
-ID3D11VertexShader* Shader::mVertexShader_Default = NULL;
-ID3D11PixelShader* Shader::mPixelShader_Default = NULL;
+std::vector < ID3D11VertexShader*> Shader::mVertexShaderArray;
+std::vector < ID3D11PixelShader*> Shader::mPixelShaderArray;
+std::vector < ID3D11ComputeShader*> Shader::mComputeShaderArray;
 
-void Shader::Init(SHADER_TYPE type) {
+void Shader::Init() {
+
+	mVertexShaderArray.resize(SHADER_MAX);
+	mPixelShaderArray.resize(SHADER_MAX);
+	mComputeShaderArray.resize(SHADER_MAX);
+
+	CreateVertexShader(SHADER_TYPE::Default);
+	CreatePixelShader(SHADER_TYPE::Default);
+	CreateComputeShader(SHADER_TYPE::Default);
+}
+
+void Shader::Uninit() {
+
+	for (ID3D11VertexShader* v : mVertexShaderArray) {
+		v->Release();
+	}
+
+	for (ID3D11PixelShader* p : mPixelShaderArray) {
+		p->Release();
+	}
+
+	std::vector<ID3D11VertexShader*>().swap(mVertexShaderArray);
+	std::vector<ID3D11PixelShader*>().swap(mPixelShaderArray);
+}
+
+void Shader::Use(SHADER_TYPE type) {
+
+	Renderer::GetDeviceContext()->VSSetShader(mVertexShaderArray[(int)type], NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(mPixelShaderArray[(int)type], NULL, 0);
+
+}
+
+void Shader::CreateVertexShader(SHADER_TYPE type) {
 
 	const char* vspass = "";
-	const char* pspass = "";
-	const char* cspass = "";
-	const char* gspass = "";
 
 	if (type == SHADER_TYPE::Default) {
 		vspass = "vertexShader.cso";
-		pspass = "pixelShader.cso";
 	}
 
 	// 頂点シェーダ生成
@@ -29,9 +58,7 @@ void Shader::Init(SHADER_TYPE type) {
 		fread(buffer, fsize, 1, file);
 		fclose(file);
 
-		if (type == SHADER_TYPE::Default) {
-			Renderer::GetDevice()->CreateVertexShader(buffer, fsize, NULL, &mVertexShader_Default);
-		}
+		Renderer::GetDevice()->CreateVertexShader(buffer, fsize, NULL, &mVertexShaderArray[int(type)]);
 
 		// 入力レイアウト生成
 		D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -43,9 +70,18 @@ void Shader::Init(SHADER_TYPE type) {
 		};
 		UINT numElements = ARRAYSIZE(layout);
 
-		Renderer::GetDevice()->CreateInputLayout(layout,numElements,buffer,fsize, &Renderer::mVertexLayout);
+		Renderer::GetDevice()->CreateInputLayout(layout, numElements, buffer, fsize, &Renderer::mVertexLayout);
 
 		delete[] buffer;
+	}
+
+}
+
+void Shader::CreatePixelShader(SHADER_TYPE type) {
+	const char* pspass = "";
+
+	if (type == SHADER_TYPE::Default) {
+		pspass = "pixelShader.cso";
 	}
 
 	// ピクセルシェーダ生成
@@ -59,39 +95,31 @@ void Shader::Init(SHADER_TYPE type) {
 		fread(buffer, fsize, 1, file);
 		fclose(file);
 
-		if (type == SHADER_TYPE::Default) {
-			Renderer::GetDevice()->CreatePixelShader(buffer, fsize, NULL, &mPixelShader_Default);
-		}
+		Renderer::GetDevice()->CreatePixelShader(buffer, fsize, NULL, &mPixelShaderArray[int(type)]);
 
 		delete[] buffer;
 	}
-
 }
 
-void Shader::Use(SHADER_TYPE type) {
-	
-	switch (type)
-	{
-	case Default:
-		Renderer::GetDeviceContext()->VSSetShader(mVertexShader_Default, NULL, 0);
-		Renderer::GetDeviceContext()->PSSetShader(mPixelShader_Default, NULL, 0);
-		break;
-	default:
-		break;
-	}
-	
-}
+void Shader::CreateComputeShader(SHADER_TYPE type) {
 
-void Shader::Uninit(SHADER_TYPE type) {
+	const char* cspass = "";
 
-	switch (type)
-	{
-	case Default:
-		mVertexShader_Default->Release();
-		mPixelShader_Default->Release();
-		break;
-	default:
-		break;
+	if (type == SHADER_TYPE::Default) {
+		cspass = "computeShader.cso";
 	}
+
+	FILE* file;
+	long int fsize;
+
+	file = fopen(cspass, "rb");
+	fsize = _filelength(_fileno(file));
+	unsigned char* buffer = new unsigned char[fsize];
+	fread(buffer, fsize, 1, file);
+	fclose(file);
+
+	Renderer::GetDevice()->CreateComputeShader(buffer, fsize, nullptr, &mComputeShaderArray[int(type)]);
+
+	delete[] buffer;
 
 }

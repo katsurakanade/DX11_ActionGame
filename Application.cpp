@@ -9,12 +9,12 @@
 #include "StaticManger.h"
 #include "psapi.h"
 #include "Debug.h"
+#include <thread>
 
 Scene* Application::mScene;
 Asset* Application::mAsset;
 bool Application::mDisableLighting;
 std::map<std::string, std::string> StaticManger::StateMap;
-
 
 bool Application::Init() {
 
@@ -23,17 +23,11 @@ bool Application::Init() {
 	Input::Init();
 	Renderer::Init();
 	AudioListener::Init();
-	AudioListener::SetVolume(0.1f);
+	AudioListener::SetVolume(1.0f);
 	StaticManger::Init();
 
-	Debug::OutputMemoryUsage();
-	mAsset = new Asset();
-	mAsset->LoadSceneAsset();
-	Debug::OutputMemoryUsage();
-	
 	mScene = new Game();
 	mScene->Init();
-
 
 	return true;
 }
@@ -42,17 +36,13 @@ void Application::Uninit() {
 
 	mScene->Uninit();
 	delete mScene;
-
-	mAsset->UnloadSceneAsset();
-	delete mAsset;
-	mAsset = nullptr;
-	Debug::OutputMemoryUsage();
+	mScene = nullptr;
 
 	StaticManger::Uninit();
 
 	Renderer::Uninit();
 	Input::Uninit();
-	AudioListener::Unint();
+	AudioListener::Uninit();
 
 }
 
@@ -61,20 +51,9 @@ void Application::Update() {
 	Input::Update();
 	mScene->Update();
 
-	PROCESS_MEMORY_COUNTERS pmc;
-	GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-	std::string str = "Memory Usage : " + std::to_string(physMemUsedByMe >> 20) + " MB";
+	std::thread system(System);
 
-	{
-		ImGui::Begin(u8"システム");
-		ImGui::Text("Frame Time : %f", Time::GetDeltaTime());
-		ImGui::Text(str.c_str());
-		ImGui::Checkbox(u8"線描画モード", &Renderer::mLineMode);
-		ImGui::Checkbox(u8"Gizmosモード", &Renderer::mGizmosMode);
-		ImGui::Checkbox(u8"ライト閉め", &mDisableLighting);
-		ImGui::End();
-	}
+	system.join();
 
 	Application::GetScene()->GetGameObject<Light>(CameraLayer)->GetSource()->Enable = !mDisableLighting;
 
@@ -85,4 +64,19 @@ void Application::Render() {
 	Renderer::Begin();
 	mScene->Render();
 	Renderer::End();
+}
+
+void Application::System() {
+
+	std::string str = "Memory Usage : " + Debug::GetMemoryUsage();
+
+	{
+		ImGui::Begin(u8"システム");
+		ImGui::Text("Frame Time : %f", Time::GetDeltaTime());
+		ImGui::Text(str.c_str());
+		ImGui::Checkbox(u8"線描画モード", &Renderer::mLineMode);
+		ImGui::Checkbox(u8"Gizmosモード", &Renderer::mGizmosMode);
+		ImGui::Checkbox(u8"ライト閉め", &mDisableLighting);
+		ImGui::End();
+	}
 }

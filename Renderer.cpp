@@ -167,8 +167,7 @@ void Renderer::Init()
 
 	mImmediateContext->PSSetSamplers(0, 1, &samplerState);
 
-	Shader::Init(Default);
-	//Shader::Init(Particle);
+	Shader::Init();
 
 	// 定数バッファ生成
 	D3D11_BUFFER_DESC hBufferDesc;
@@ -204,7 +203,7 @@ void Renderer::Init()
 	mImmediateContext->IASetInputLayout(mVertexLayout);
 
 	// シェーダ設定
-	Shader::Use(Default);
+	Shader::Use(SHADER_TYPE::Default);
 
 	// マテリアル初期化
 	MATERIAL material;
@@ -225,7 +224,7 @@ void Renderer::Uninit()
 	mMaterialBuffer->Release();
 
 	mVertexLayout->Release();
-	Shader::Uninit(Default);
+	Shader::Uninit();
 
 	mImmediateContext->ClearState();
 	mRenderTargetView->Release();
@@ -250,6 +249,156 @@ void Renderer::End()
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	mSwapChain->Present(1, 0);
+}
+
+HRESULT Renderer::CreateStructuredBuffer(UINT elementSize,UINT count,void* pInitData,ID3D11Buffer** ppBufferOut)
+{
+
+	HRESULT hr;
+
+	(*ppBufferOut) = nullptr;
+
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+
+	desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+	desc.ByteWidth = elementSize * count;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	desc.StructureByteStride = elementSize;
+
+	if (pInitData)
+	{
+		D3D11_SUBRESOURCE_DATA initData;
+		initData.pSysMem = pInitData;
+
+		hr = mD3DDevice->CreateBuffer(&desc, &initData, ppBufferOut);
+
+		return hr;
+	}
+
+	hr = mD3DDevice->CreateBuffer(&desc, nullptr, ppBufferOut);
+
+	return hr;
+}
+
+HRESULT Renderer::CreateBufferSRV(ID3D11Buffer* pBuffer, ID3D11ShaderResourceView** ppSRVOut) {
+
+	HRESULT hr;
+
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	pBuffer->GetDesc(&desc);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	memset(&srvDesc, 0, sizeof(srvDesc));
+
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+	srvDesc.BufferEx.FirstElement = 0;
+
+	if (desc.MiscFlags & D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS)
+	{
+		srvDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+		srvDesc.BufferEx.Flags = D3D11_BUFFEREX_SRV_FLAG_RAW;
+		srvDesc.BufferEx.NumElements = desc.ByteWidth / 4;
+	}
+	else if (desc.MiscFlags & D3D11_RESOURCE_MISC_BUFFER_STRUCTURED)
+	{
+		srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+		srvDesc.BufferEx.NumElements = desc.ByteWidth / desc.StructureByteStride;
+	}
+	else
+	{
+		return E_INVALIDARG;
+	}
+
+	hr = mD3DDevice->CreateShaderResourceView(pBuffer, &srvDesc, ppSRVOut);
+
+	return hr;
+}
+
+HRESULT Renderer::CreateBufferUAV(ID3D11Buffer* pBuffer, ID3D11UnorderedAccessView** ppUAVOut) {
+	
+	HRESULT hr;
+
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	pBuffer->GetDesc(&desc);
+
+	D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+	memset(&uavDesc, 0, sizeof(uavDesc));
+
+	uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+	uavDesc.Buffer.FirstElement = 0;
+
+	if (desc.MiscFlags & D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS)
+	{
+		uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+		uavDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
+		uavDesc.Buffer.NumElements = desc.ByteWidth / 4;
+	}
+	else if (desc.MiscFlags & D3D11_RESOURCE_MISC_BUFFER_STRUCTURED)
+	{
+		uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+		uavDesc.Buffer.NumElements = desc.ByteWidth / desc.StructureByteStride;
+	}
+	else
+	{
+		return E_INVALIDARG;
+	}
+
+	hr = mD3DDevice->CreateUnorderedAccessView(pBuffer, &uavDesc, ppUAVOut);
+
+	return hr;
+}
+
+void Renderer::RunComputeShader(ID3D11ComputeShader* pComputeShader, UINT numViews, ID3D11ShaderResourceView** pSRVs, ID3D11Buffer* pCBCS, void* pCSData, DWORD numDataBytes, ID3D11UnorderedAccessView* pUAV, UINT x, UINT y, UINT z) {
+
+	mImmediateContext->CSSetShader(pComputeShader, nullptr, 0);
+	mImmediateContext->CSSetShaderResources(0, numViews, pSRVs);
+	mImmediateContext->CSSetUnorderedAccessViews(0, 1, &pUAV, nullptr);
+
+	if (pCBCS)
+	{
+		D3D11_MAPPED_SUBRESOURCE res;
+
+		mImmediateContext->Map(pCBCS, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+		memcpy(res.pData, pCSData, numDataBytes);
+		mImmediateContext->Unmap(pCBCS, 0);
+
+		ID3D11Buffer* ppCB[1] = { pCBCS };
+		mImmediateContext->CSSetConstantBuffers(0, 1, ppCB);
+	}
+
+	mImmediateContext->Dispatch(x, y, z);
+
+	ID3D11UnorderedAccessView* pNullUAVs[1] = { nullptr };
+	ID3D11ShaderResourceView* pNullSRVs[2] = { nullptr, nullptr };
+	ID3D11Buffer* pNullCBs[1] = { nullptr };
+
+	mImmediateContext->CSSetShader(nullptr, nullptr, 0);
+	mImmediateContext->CSSetUnorderedAccessViews(0, 1, pNullUAVs, nullptr);
+	mImmediateContext->CSSetShaderResources(0, 2, pNullSRVs);
+	mImmediateContext->CSSetConstantBuffers(0, 1, pNullCBs);
+}
+
+ID3D11Buffer* Renderer::CreateAndCopyToBuffer(ID3D11Buffer* pBuffer)
+{
+	ID3D11Buffer* pCloneBuf = nullptr;
+
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+
+	pBuffer->GetDesc(&desc);
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	desc.Usage = D3D11_USAGE_STAGING;
+	desc.BindFlags = 0;
+	desc.MiscFlags = 0;
+
+	mD3DDevice->CreateBuffer(&desc, nullptr, &pCloneBuf);
+	mImmediateContext->CopyResource(pCloneBuf, pBuffer);
+
+	return pCloneBuf;
+
 }
 
 void Renderer::SetDepthEnable(bool Enable)

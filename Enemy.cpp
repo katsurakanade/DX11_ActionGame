@@ -13,7 +13,7 @@ void Enemy::Init() {
 
 	Name = "Enemy_" + std::to_string(ID);
 
-	mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::ENEMY);
+	//mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::ENEMY);
 
 	Position = D3DXVECTOR3(0, 10, 0);
 	Rotation = D3DXVECTOR3(1.72f, 0.0f, 0.0f);

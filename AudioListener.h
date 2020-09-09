@@ -17,14 +17,14 @@ private:
 public:
 
 	static void Init();
-	static void Unint();
+	static void Uninit();
 
-	static void Play(Sound* sound, int loop);
+	static void Play(Sound* sound, int loop,float volume);
 	static void Stop(Sound* sound);
 	static void StopAll();
 
 	static void SetVolume(float val) { 
-		mMasteringVoice->SetVolume(val); 
+		mMasteringVoice->SetVolume(val);
 	};
 
 	static bool Is_Playing(Sound* sound);

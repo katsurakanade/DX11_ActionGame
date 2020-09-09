@@ -3,6 +3,10 @@
 #include "AssimpModel.h"
 #include "AudioListener.h"
 
+enum class SCENE_ASSET {
+	TITLE,GAME,RESULT
+};
+
 enum class ASSIMP_MODEL_ENUM
 {
 	BALL,
@@ -11,7 +15,6 @@ enum class ASSIMP_MODEL_ENUM
 	ARROW,
 	ENEMY,
 	HUMAN,
-	KNIGHT
 };
 
 enum TEXTURE_ENUM {
@@ -27,11 +30,11 @@ enum TEXTURE_ENUM {
 	BAR_FILL,
 	GAMEOVER,
 	CLEAR,
-	LOGO,
-	WHITE,
-	STAR,
-	SKY,
-	SPACEBUTTON,
+	//LOGO,
+	//WHITE,
+	//STAR,
+	//SKY,
+	//SPACEBUTTON,
 	LIGHTNING,
 };
 
@@ -45,6 +48,42 @@ enum class SOUND_ENUM {
 	SE_04,
 };
 
+enum class ASSIMP_MODEL_ENUM_TITLE
+{
+	BALL,
+};
+
+enum class TEXTURE_ENUM_TITLE {
+	LOGO,
+	WHITE,
+	SKY,
+	STAR,
+	SPACEBUTTON,
+};
+
+enum class SOUND_ENUM_TITLE {
+	BGM_01,
+	SE_01,
+};
+
+enum class ASSIMP_MODEL_ENUM_GAME
+{
+	BALL,
+	CUBE,
+	ENEMY,
+	HUMAN,
+};
+
+enum class TEXTURE_ENUM_GAME {
+	WHITE,
+	SKY,
+	STAR,
+};
+
+enum class SOUND_ENUM_GAME {
+	BGM_02,
+};
+
 class Asset
 {
 
@@ -53,15 +92,16 @@ private:
 	HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD* pChunkSize, DWORD* pChunkDataPosition);
 	HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset);
 
+	SCENE_ASSET mScene;
+
 protected:
 
 	std::vector<AssimpModel*> mAssimpModelList;
 	std::vector<ID3D11ShaderResourceView*> mTextureList;
 	std::vector<Sound*> mSoundList;
 
-	void AddAssimpModelToList(const char* value) {
-
-		AssimpModel* md = new AssimpModel();
+	void AddAssimpModelToList(const char* value,bool animation) {
+		AssimpModel* md = new AssimpModel(animation);
 		md->Load(value);
 		mAssimpModelList.push_back(md);
 	}
@@ -126,12 +166,17 @@ protected:
 
 public:
 
+	Asset() = delete;
+	Asset(SCENE_ASSET scene) : mScene(scene) {};
+
 	void LoadSceneAsset();
 	void UnloadSceneAsset();
 	
-	AssimpModel* GetAssimpModel(ASSIMP_MODEL_ENUM index) { return mAssimpModelList[(int)index]; };
+	SCENE_ASSET GetScene() { return mScene; };
+
+	AssimpModel* GetAssimpModel(int index) { return mAssimpModelList[(int)index]; };
 	ID3D11ShaderResourceView* GetTexture(int index) { return mTextureList[index]; };
-	Sound* GetSound(SOUND_ENUM index) { return mSoundList[(int)index]; };
+	Sound* GetSound(int index) { return mSoundList[(int)index]; };
 
 	std::vector<Sound*> GetSoundList(){ return mSoundList; };
 };

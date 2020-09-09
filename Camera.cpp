@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "Camera.h"
 
+bool flag = false;
+
 void Camera::Init() {
 
 	Name = "Camera";
@@ -12,8 +14,10 @@ void Camera::Init() {
 	Position = D3DXVECTOR3(0.0f, 10.0f, -40.0f);
 	mTarget = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 
-	mFollowPostionOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	mFollowProjectionOffset = D3DXVECTOR3(0.0f, 0.0f,0.0f);
+	mFollowPostionOffset = D3DXVECTOR3(0.0f, 3.0f, 14.0f);
+	mFollowProjectionOffset = D3DXVECTOR3(0.0f, 15.0f,14.0f);
+
+	mControllerPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 void Camera::Uninit() {
@@ -23,22 +27,32 @@ void Camera::Uninit() {
 void Camera::Update() {
 
 	if (mFollowTarget) {
-		mTarget.x = mFollowTarget->Position.x + mFollowProjectionOffset.x;
-		//D3DXVECTOR3 foward = mFollowTarget->GetForward();
-		//Position = mTarget - foward * 5.0f + mFollowPostionOffset;
+		mTarget = mFollowTarget->Position + mFollowProjectionOffset;
+		if (!flag) {
+			Position = mTarget + mFollowPostionOffset + mControllerPosition;
+		}
+		
 	}
+
 
 	ImGui::Begin(u8"カメラ");
 
-	float fp[3] = { Position.x ,Position.y ,Position.z };
-	ImGui::SliderFloat3(u8"座標", fp, -200.0f, 200.0f,"%.0f",2.0f);
-	Position = D3DXVECTOR3(fp[0], fp[1], fp[2]);
+	ImGui::SliderFloat3(u8"座標", mFollowPostionOffset, -200.0f, 200.0f,"%.0f",2.0f);
 
-	float fpr[3] = { mTarget.x ,mTarget.y ,mTarget.z };
-	ImGui::SliderFloat3(u8"視点", fpr, -200.0f, 200.0f, "%.0f", 2.0f);
-	mTarget = D3DXVECTOR3(fpr[0], fpr[1], fpr[2]);
+	ImGui::SliderFloat3(u8"視点", mFollowProjectionOffset, -200.0f, 200.0f, "%.0f", 2.0f);
+
+	ImGui::SliderFloat3(u8"コントロール", mControllerPosition, -200.0f, 200.0f, "%.0f", 2.0f);
 
 	ImGui::End();
+
+	//if (Input::GetKeyPress(DIK_C)) {
+	//	RotationAroundXZ(mFollowTarget->Position, 1.0f);
+	//	flag = true;
+	//}
+
+	//if (Input::GetKeyRelease(DIK_C)) {
+	//	flag = false;
+	//}
 
 	
 }

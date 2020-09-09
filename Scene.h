@@ -25,6 +25,7 @@ protected:
 	bool mClear = false;
 
 	Fade* mpFade;
+	Asset* mAsset;
 
 public:
 	
@@ -42,7 +43,9 @@ public:
 		for (int i = 0; i < EndLayer; i++) {
 			mGameObject[i].clear();
 		}
-
+		mAsset->UnloadSceneAsset();
+		delete mAsset;
+		mAsset = nullptr;
 	}
 
 	virtual void Update() {
@@ -124,4 +127,6 @@ public:
 	};
 
 	void SetSwitchFlag(bool val) { mSwitchFlag = val; };
+
+	Asset* GetAsset() { return mAsset; };
 };

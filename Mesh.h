@@ -1,102 +1,94 @@
-#ifndef MESH_H
-#define MESH_H
-
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
-using namespace std;
-
-#include <vector>
-#include <d3d11_1.h>
-#include <DirectXMath.h>
-using namespace DirectX;
-
-struct VERTEX {
-	FLOAT X, Y, Z;
-	XMFLOAT2 texcoord;
-};
+#pragma once
 
 struct Texture {
-	string type;
-	string path;
-	ID3D11ShaderResourceView *texture;
+	std::string type;
+	std::string path;
+	ID3D11ShaderResourceView* texture;
 };
 
-class Mesh {
-public:
-	vector<VERTEX> vertices;
-	vector<UINT> indices;
-	vector<Texture> textures;
-	ID3D11Device *dev;
+struct DEFORM_VERTEX {
+	aiVector3D Position;
+	aiVector3D Normal;
 
-	Mesh(ID3D11Device *dev, vector<VERTEX> vertices, vector<UINT> indices, vector<Texture> textures)
-	{
-		this->vertices = vertices;
-		this->indices = indices;
-		this->textures = textures;
+	int mBoneNum;
+	std::string mBoneName[4];
+	float mBoneWeight[4];
+};
 
-		this->dev = dev;
+struct BONE {
+	aiMatrix4x4 mMatrix;
+	aiMatrix4x4 mAnimationMatrix;
+	aiMatrix4x4 mOffsetMatirx;
+};
 
-		this->setupMesh(dev);
-	}
-
-	void Draw(ID3D11DeviceContext *devcon)
-	{
-		UINT stride = sizeof(VERTEX);
-		UINT offset = 0;
-
-		devcon->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
-		devcon->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-		devcon->PSSetShaderResources(0, 1, &textures[0].texture);
-
-		devcon->DrawIndexed(indices.size(), 0, 0);
-	}
-
-	void Close()
-	{
-		VertexBuffer->Release();
-		IndexBuffer->Release();
-	}
+class Mesh
+{
 private:
-	/*  Render data  */
-	ID3D11Buffer *VertexBuffer, *IndexBuffer;
 
-	/*  Functions    */
-	// Initializes all the buffer objects/arrays
-	bool setupMesh(ID3D11Device *dev)
-	{
-		HRESULT hr;
+	ID3D11Buffer* VertexBuffer, * IndexBuffer, * ColorBuffer;
 
-		D3D11_BUFFER_DESC vbd;
-		vbd.Usage = D3D11_USAGE_IMMUTABLE;
-		vbd.ByteWidth = sizeof(VERTEX) * vertices.size();
-		vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vbd.CPUAccessFlags = 0;
-		vbd.MiscFlags = 0;
+	bool SetupMesh();
 
-		D3D11_SUBRESOURCE_DATA initData;
-		initData.pSysMem = &vertices[0];
 
-		hr = dev->CreateBuffer(&vbd, &initData, &VertexBuffer);
-		if (FAILED(hr))
-			return false;
+public:
 
-		D3D11_BUFFER_DESC ibd;
-		ibd.Usage = D3D11_USAGE_IMMUTABLE;
-		ibd.ByteWidth = sizeof(UINT) * indices.size();
-		ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		ibd.CPUAccessFlags = 0;
-		ibd.MiscFlags = 0;
+	std::string Name;
+	std::string TexturePass;
+	std::vector <VERTEX_3D> Vertices;
+	std::vector <UINT> Indices;
+	std::vector <Texture> Textures;
+	std::vector <DEFORM_VERTEX> mDeformVertex;
+	std::map <const std::string, BONE> mBone;
 
-		initData.pSysMem = &indices[0];
+	bool Enable;
 
-		hr = dev->CreateBuffer(&ibd, &initData, &IndexBuffer);
-		if (FAILED(hr))
-			return false;
-	}
+	float col[4] = { 1.0f,1.0f,1.0f,1.0f };
+
+	MATERIAL Material;
+
+	Mesh(std::string name, std::vector<VERTEX_3D> vertices, std::vector<UINT> indices, std::vector <Texture> textures, MATERIAL material, std::vector <DEFORM_VERTEX> deform, std::map <const std::string, BONE> bone) {
+
+		this->Name = name;
+		this->Vertices = vertices;
+		this->Indices = indices;
+		this->Textures = textures;
+		this->Material = material;
+		this->mDeformVertex = deform;
+		this->mBone = bone;
+
+		this->Enable = true;
+		this->SetupMesh();
+
+		D3DXQuaternionIdentity(&Quaternion);
+
+	};
+
+	Mesh(std::string name, std::vector<VERTEX_3D> vertices, std::vector<UINT> indices, std::vector <Texture> textures, MATERIAL material) {
+
+		this->Name = name;
+		this->Vertices = vertices;
+		this->Indices = indices;
+		this->Textures = textures;
+		this->Material = material;
+
+		this->Enable = true;
+		this->SetupMesh();
+
+		D3DXQuaternionIdentity(&Quaternion);
+	};
+
+	D3DXQUATERNION Quaternion;
+
+	D3DXVECTOR3 Position = D3DXVECTOR3(0.0, 0.0, 0.0);
+	D3DXVECTOR3 Rotation = D3DXVECTOR3(0.0, 0.0, 0.0);
+	D3DXVECTOR3 Scale = D3DXVECTOR3(1.0, 1.0, 1.0);
+
+	void Update();
+
+	void Draw();
+
+	void Close();
+
+	void UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix);
 };
 
-#endif

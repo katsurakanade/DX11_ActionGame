@@ -14,11 +14,14 @@ private:
 
 	AssimpModel* mModel;
 
+	int mFrame = 0;
+
 	void SettingPanel();
 
 	void Jump(BYTE keykode);
-	void Movement(BYTE keykodeR, BYTE keykodeL);
+	void Movement(BYTE keykodeF, BYTE keykodeB,BYTE keykodeR, BYTE keykodeL);
 	void Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3);
+
 
 public:
 

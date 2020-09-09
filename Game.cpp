@@ -6,10 +6,15 @@
 
 void Game::Init() {
 
+	mAsset = new Asset(SCENE_ASSET::GAME);
+	mAsset->LoadSceneAsset();
+	Application::SetAsset(mAsset);
+
 	AddGameObject<Camera>(CameraLayer);
 	AddGameObject<Light>(CameraLayer);
 
-	AddGameObject<Skybox>(ObjectLayer)->Position = D3DXVECTOR3(0, 0, 0);
+	Skybox* skybox = Application::GetScene()->AddGameObject<Skybox>(SpriteLayer);
+	skybox->SetModelTexture(1);
 
 	Level* level = AddGameObject<Level>(ObjectLayer);
 	Player* player = AddGameObject<Player>(ObjectLayer);
@@ -20,7 +25,7 @@ void Game::Init() {
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));
 	mpFade = fade;
 
-	AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::BGM_02), -1);
+	AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
 
 }
 
@@ -31,7 +36,7 @@ void Game::Update() {
 	if (mpFade != nullptr) {
 		if (!mpFade->GetIsFade()) {
 			if (mClear) {
-				AudioListener::Stop(Application::GetAsset()->GetSound(SOUND_ENUM::BGM_02));
+				AudioListener::Stop(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02));
 				Application::SwitchScene<Result>();
 				return;
 			}
@@ -46,4 +51,8 @@ void Game::Update() {
 		mClear = true;
 	}
 
+	if (Input::GetKeyTrigger(DIK_T)) {
+		AudioListener::Stop(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02));
+		Application::SwitchScene<Title>();
+	}
 }

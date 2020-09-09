@@ -1,3 +1,6 @@
+
+#include "Common.hlsl"
+
 cbuffer MaterialBuffer : register( b1 )
 {
 	float4		Ambient;
@@ -13,15 +16,10 @@ Texture2D	g_Texture : register(t0);
 
 SamplerState	g_SamplerState : register( s0 );
 
-void main( in  float4 inPosition	: POSITION0, in  float4 inNormal	: NORMAL0, in  float2 inTexCoord: TEXCOORD0, in  float4 inDiffuse: COLOR0 , out float4 outDiffuse: SV_Target )
+void main(in PS_IN In , out float4 outDiffuse : SV_Target)
 {
     float4 basecolor = g_BaseColor;
-    float4 tex_color = g_Texture.Sample(g_SamplerState, inTexCoord);
-	
-	// îΩì]êFïœä∑
-    //float4 inverted_color = 1 - tex_color;
-    //inverted_color.a = tex_color.a;
-    //inverted_color.rgb *= inverted_color.a;
-	
-    outDiffuse = tex_color * inDiffuse * basecolor;
+    float4 tex_color = g_Texture.Sample(g_SamplerState, In.TexCoord);
+		
+    outDiffuse = tex_color * In.Diffuse * basecolor;
 }

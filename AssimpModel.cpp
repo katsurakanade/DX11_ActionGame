@@ -2,68 +2,70 @@
 #include "Renderer.h"
 #include "Application.h"
 #include "AssimpModel.h"
+#include "Debug.h"
 
 void AssimpModel::Load(std::string FileName) {
 
-	Assimp::Importer imp;
+	mScene = aiImportFile(FileName.c_str(), aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_MaxQuality);
 
-	const aiScene* scene = imp.ReadFile(FileName, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_MaxQuality);
-	assert(scene);
+	mName = mScene->mRootNode->mName.C_Str();
 
-	Name = scene->mRootNode->mName.C_Str();
+	this->mDirectory = FileName.substr(0, FileName.find_last_of('\\'));
 
-	this->Directory = FileName.substr(0, FileName.find_last_of('\\'));
-
-	ProcessNode(scene->mRootNode, scene);
+	ProcessNode(mScene->mRootNode, mScene);
 
 }
 
 void AssimpModel::Unload() {
 
-	for (int i = 0; i < Meshes.size(); i++)
+	for (int i = 0; i < mMeshes.size(); i++)
 	{
-		Meshes[i].Close();
+		mMeshes[i]->Close();
+		delete mMeshes[i];
+		mMeshes[i] = nullptr;
 	}
 
-	Meshes.clear();
-	Meshes.shrink_to_fit();
+	mMeshes.clear();
+	mMeshes.shrink_to_fit();
 
-	textures_loaded.clear();
-	textures_loaded.shrink_to_fit();
+	mTexturesLoaded.clear();
+	mTexturesLoaded.shrink_to_fit();
 
-	textures_select.clear();
-	textures_select.shrink_to_fit();
+	mTexturesSelect.clear();
+	mTexturesSelect.shrink_to_fit();
 
 }
+
 std::string textype;
 
 void AssimpModel::DrawConfig() {
 
-	std::string str = u8"モデル情報: " + Name;
+	std::string str = u8"モデル情報: " + mName;
 	ImGui::Begin(str.c_str());
 
-	ImGui::Text(u8"テクスチャ数 : %d ", textures_loaded.size());
-
+	ImGui::Text(u8"テクスチャ数 : %d ", mTexturesLoaded.size());
 	if (ImGui::TreeNode(u8"テクスチャファイル")) {
-		for (int i = 0; i < textures_loaded.size(); i++) {
-			ImGui::Text(u8"タイプ : %s", textures_loaded[i].type.c_str());
-			ImGui::Text(u8"パス : %s", textures_loaded[i].path.c_str());
-			ImGui::Image(textures_loaded[i].texture, ImVec2(100, 100));
+		for (int i = 0; i < mTexturesLoaded.size(); i++) {
+			ImGui::Text(u8"タイプ : %s", mTexturesLoaded[i].type.c_str());
+			ImGui::Text(u8"パス : %s", mTexturesLoaded[i].path.c_str());
+			ImGui::Image(mTexturesLoaded[i].texture, ImVec2(100, 100));
 		}
 		ImGui::TreePop();
 
 	}
 
-	ImGui::Text(u8"メッシュ数 : %d", Meshes.size());
-
+	ImGui::Text(u8"メッシュ数 : %d", mMeshes.size());
 	if (ImGui::TreeNode(u8"メッシュ情報")) {
 
-		for (int i = 0; i < Meshes.size(); i++) {
-			if (ImGui::TreeNode(Meshes[i].Name.c_str())) {
-				ImGui::Checkbox(u8"表示", &Meshes[i].Enable);
-				ImGui::ColorEdit4(u8"カラー", Meshes[i].col);
-				//ImGui::SliderFloat3(u8"回転", Meshes[i].Rotation,-3.14f,3.14f);
-				ImGui::Image(Meshes[i].Textures[0].texture, ImVec2(100, 100));
+		for (int i = 0; i < mMeshes.size(); i++) {
+			if (ImGui::TreeNode(mMeshes[i]->Name.c_str())) {
+				ImGui::Checkbox(u8"表示", &mMeshes[i]->Enable);
+				ImGui::ColorEdit4(u8"カラー", mMeshes[i]->col);
+				ImGui::Image(mMeshes[i]->Textures[0].texture, ImVec2(100, 100));
+				if (Animation) {
+					ImGui::Text("Bone :  %d", mMeshes[i]->mBone.size());
+					ImGui::Text("Deform Vertex : %d", mMeshes[i]->mDeformVertex.size());
+				}
 				ImGui::TreePop();
 			}
 		}
@@ -74,37 +76,68 @@ void AssimpModel::DrawConfig() {
 	ImGui::End();
 }
 
+void AssimpModel::Update(int frame){
+
+	if (!mScene->HasAnimations()) {
+		return;
+	}
+
+	aiAnimation* animation = mScene->mAnimations[0];
+
+	for (unsigned int c = 0; c < animation->mNumChannels; c++) {
+		aiNodeAnim* node = animation->mChannels[c];
+
+		int f;
+		f = frame % node->mNumRotationKeys;
+		aiQuaternion rot = node->mRotationKeys[f].mValue;
+
+		f = frame % node->mNumPositionKeys;
+		aiVector3D pos = node->mPositionKeys[f].mValue;
+
+		for (Mesh* m : mMeshes) {
+			BONE* bone = &m->mBone[node->mNodeName.C_Str()];
+			m->UpdateBoneMatrix(mScene->mRootNode, aiMatrix4x4());
+			bone->mAnimationMatrix = aiMatrix4x4(aiVector3D(1.0f, 1.0f, 1.0f), rot, pos);
+		}
+
+	}
+
+	for (Mesh* m : mMeshes) {
+		m->Update();
+	}
+}
+
 void AssimpModel::Draw(D3DXMATRIX root) {
 
 	if (DisplayConfig) {
 		DrawConfig();
 	}
 
-	for (int i = 0; i < Meshes.size(); i++) {
-		for (int j = 0; j < textures_loaded.size(); j++) {
-			if (Meshes[i].Textures[0].path == textures_loaded[j].path) {
+	for (int i = 0; i < mMeshes.size(); i++) {
+		for (int j = 0; j < mTexturesLoaded.size(); j++) {
+			if (mMeshes[i]->Textures[0].path == mTexturesLoaded[j].path) {
 
 				if (DefaultTexture) {
-					Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_loaded[j].texture);
+					Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexturesLoaded[j].texture);
  				}
 
 				else if (!DefaultTexture) {
-					if (SelectTextureIndex != 0 && textures_select[SelectTextureIndex].texture != NULL) {
-						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &textures_select[SelectTextureIndex].texture);
+					if (SelectTextureIndex != 0 && mTexturesSelect[SelectTextureIndex].texture != NULL) {
+						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexturesSelect[SelectTextureIndex].texture);
 					}
 				}
 
 				D3DXMATRIX world, scale, rot, trans;
-				D3DXMatrixScaling(&scale, Meshes[i].Scale.x, Meshes[i].Scale.y, Meshes[i].Scale.z);
-				D3DXQuaternionRotationYawPitchRoll(&Meshes[i].Quaternion, Meshes[i].Rotation.y, Meshes[i].Rotation.x, Meshes[i].Rotation.z);
-				D3DXMatrixRotationQuaternion(&rot, &Meshes[i].Quaternion);
-				D3DXMatrixTranslation(&trans, Meshes[i].Position.x, Meshes[i].Position.y, Meshes[i].Position.z);
+				D3DXMatrixScaling(&scale, mMeshes[i]->Scale.x, mMeshes[i]->Scale.y, mMeshes[i]->Scale.z);
+				D3DXQuaternionRotationYawPitchRoll(&mMeshes[i]->Quaternion, mMeshes[i]->Rotation.y, mMeshes[i]->Rotation.x, mMeshes[i]->Rotation.z);
+				D3DXMatrixRotationQuaternion(&rot, &mMeshes[i]->Quaternion);
+				D3DXMatrixTranslation(&trans, mMeshes[i]->Position.x, mMeshes[i]->Position.y, mMeshes[i]->Position.z);
 				world = scale * rot * trans;
 				world *= root;
 				Renderer::SetWorldMatrix(&world);
 
-				if (Meshes[i].Enable){
-					Meshes[i].Draw();
+				if (mMeshes[i]->Enable){
+					mMeshes[i]->Draw();
 				}
 			}
 		}
@@ -120,22 +153,25 @@ void AssimpModel::ProcessNode(aiNode* node, const aiScene* scene) {
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 	
-		Meshes.push_back(this->ProcessMesh(mesh, scene));
+		mMeshes.push_back(this->ProcessMesh(mesh, scene));
 	}
 
 	for (UINT i = 0; i < node->mNumChildren; i++)
 	{
 		this->ProcessNode(node->mChildren[i], scene);
 	}
+
 }
 
-Mesh AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
+Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 	// Data to fill
 	std::string name;
 	std::vector<VERTEX_3D> vertices;
 	std::vector<UINT> indices;
 	std::vector<Texture> textures;
+	std::vector <DEFORM_VERTEX> DeformVertex;
+	std::map <const std::string, BONE> Bone;
 	MATERIAL material;
 
 	if (mesh->mMaterialIndex >= 0)
@@ -145,7 +181,6 @@ Mesh AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		if (textype.empty()) {
 			textype = determineTextureType(scene, mat);
 		}
-
 	} 
 
 	name = mesh->mName.C_Str();
@@ -189,7 +224,7 @@ Mesh AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 		aiMaterial* aimaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-		std::vector<Texture> diffuseMaps = this->loadMaterialTextures(aimaterial, aiTextureType_DIFFUSE, "texture_diffuse", scene);
+		std::vector<Texture> diffuseMaps = this->loadMaterialTextures(aimaterial, aiTextureType_DIFFUSE, "Diffuse", scene);
 
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
@@ -206,9 +241,45 @@ Mesh AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		material.Shininess = 225.0f;
 	}
 
-	
+	if (Animation) {
+		for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
+			DEFORM_VERTEX deform;
+			deform.Position = mesh->mVertices[v];
+			deform.Normal = mesh->mNormals[v];
+			deform.mBoneNum = 0;
 
-	return Mesh(name,vertices, indices, textures, material);
+			for (unsigned int b = 0; b < 4; b++) {
+				deform.mBoneName[b] = "";
+				deform.mBoneWeight[b] = 0.0f;
+			}
+
+			DeformVertex.push_back(deform);
+		}
+
+		for (unsigned int b = 0; b < mesh->mNumBones; b++) {
+			aiBone* bone = mesh->mBones[b];
+			Bone[bone->mName.C_Str()].mOffsetMatirx = bone->mOffsetMatrix;
+
+			for (unsigned int w = 0; w < bone->mNumWeights; w++) {
+				aiVertexWeight weight = bone->mWeights[w];
+
+				int num = DeformVertex[weight.mVertexId].mBoneNum;
+				DeformVertex[weight.mVertexId].mBoneWeight[num] = weight.mWeight;
+				DeformVertex[weight.mVertexId].mBoneName[num] = bone->mName.C_Str();
+				DeformVertex[weight.mVertexId].mBoneNum++;
+
+				assert(DeformVertex[weight.mVertexId].mBoneNum <= 4);
+
+			}
+		}
+
+		CreateBone(scene->mRootNode, Bone);
+
+		return new Mesh(name, vertices, indices, textures, material, DeformVertex, Bone);
+	}
+
+	return new Mesh(name, vertices, indices, textures, material);
+
 }
 
 std::vector<Texture> AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName, const aiScene* scene) {
@@ -220,11 +291,11 @@ std::vector<Texture> AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextur
 		aiString str;
 		mat->GetTexture(type, i, &str);
 		bool skip = false;
-		for (UINT j = 0; j < textures_loaded.size(); j++)
+		for (UINT j = 0; j < mTexturesLoaded.size(); j++)
 		{
-			if (std::strcmp(textures_loaded[j].path.c_str(), str.C_Str()) == 0)
+			if (std::strcmp(mTexturesLoaded[j].path.c_str(), str.C_Str()) == 0)
 			{
-				textures.push_back(textures_loaded[j]);
+				textures.push_back(mTexturesLoaded[j]);
 				skip = true;
 				break;
 			}
@@ -241,7 +312,7 @@ std::vector<Texture> AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextur
 			{
 
 				std::string filename = std::string(str.C_Str());
-				filename = Directory + '\\' + filename;
+				filename = mDirectory + '\\' + filename;
 				if (str.data[0] == 46) {
 					int id = atoi(&str.data[1]);
 					hr = D3DX11CreateShaderResourceViewFromMemory(Renderer::GetDevice(), (const unsigned char*)scene->mTextures[id]->pcData, scene->mTextures[id]->mWidth, NULL, NULL, &texture.texture, NULL);
@@ -255,7 +326,7 @@ std::vector<Texture> AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextur
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			textures.push_back(texture);
-			this->textures_loaded.push_back(texture); 
+			this->mTexturesLoaded.push_back(texture);
 
 		}
 	}
@@ -307,10 +378,28 @@ ID3D11ShaderResourceView* AssimpModel::getTextureFromModel(const aiScene* scene,
 
 }
 
-void AssimpModel::PushTextureSelect(int index) {
+void AssimpModel::PushTextureSelect(Asset* asset,int index) {
 	Texture* t = new Texture();
-	t->texture = Application::GetAsset()->GetTexture(index);
-	textures_select.push_back(*t);
+	t->texture = asset->GetTexture(index);
+	mTexturesSelect.push_back(*t);
 	delete t;
 	t = nullptr;
+}
+
+void AssimpModel::CreateBone(aiNode* node, std::map <const std::string, BONE> tBone) {
+	BONE bone;
+	tBone[node->mName.C_Str()] = bone;
+
+	for (unsigned int n = 0; n < node->mNumChildren; n++) {
+		CreateBone(node->mChildren[n],tBone);
+	}
+}
+
+void AssimpModel::SetColorAll(D3DXCOLOR col) {
+	for (int i = 0; i < mMeshes.size(); i++) {
+		mMeshes[i]->col[0] = col.r;
+		mMeshes[i]->col[1] = col.g;
+		mMeshes[i]->col[2] = col.b;
+		mMeshes[i]->col[3] = col.a;
+	}
 }

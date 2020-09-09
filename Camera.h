@@ -11,7 +11,10 @@ private:
 	Resource* mFollowTarget;
 	D3DXVECTOR3 mFollowPostionOffset;
 	D3DXVECTOR3 mFollowProjectionOffset;
+	D3DXVECTOR3 mControllerPosition;
+	D3DXVECTOR3 mControllerSavePosition;
 	D3DXMATRIX mViewMatrix;
+
 
 public:
 

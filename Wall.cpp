@@ -7,7 +7,7 @@
 
 void Wall::Init() {
 
-	mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::CUBE);
+	mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::CUBE);
 
 	Position = D3DXVECTOR3(0, 0, 0);
 	Rotation = D3DXVECTOR3(0, 0, 0);
@@ -27,14 +27,6 @@ void Wall::Uninit() {
 
 void Wall::Update() {
 
-	/*{
-		ImGui::Begin(u8"•Ç");
-		ImGui::SliderFloat3(u8"‰ñ“]", Rotation, -3.14f, 3.14f);
-		ImGui::End();
-	}*/
-
-
-
 	Resource::Update();
 }
 
@@ -49,7 +41,6 @@ void Wall::Render() {
 	Renderer::SetWorldMatrix(&world);
 
 	mModel->Draw(world);
-
 
 	GetComponent<BoxCollider>()->Render();
 }

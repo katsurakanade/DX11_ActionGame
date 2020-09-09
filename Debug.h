@@ -21,11 +21,28 @@ public:
 
 	// 使用メモリ表示(コンソール)(MB)
 	static void OutputMemoryUsage() {
-		PROCESS_MEMORY_COUNTERS pmc;
-		GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-		SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-		std::string str = "Memory Usage " + std::to_string(physMemUsedByMe >> 10) + " KB";
+		HANDLE hProc = GetCurrentProcess();
+		PROCESS_MEMORY_COUNTERS_EX pmc;
+		BOOL isSuccess = GetProcessMemoryInfo(
+			hProc,
+			(PROCESS_MEMORY_COUNTERS*)&pmc,
+			sizeof(pmc));
+		CloseHandle(hProc);
+		std::string str = "Memory Usage " + std::to_string(pmc.PrivateUsage >> 10) + " KB";
 		DebugOutputString(str.c_str());
+	}
+
+	static std::string GetMemoryUsage() {
+
+		HANDLE hProc = GetCurrentProcess();
+		PROCESS_MEMORY_COUNTERS_EX pmc;
+		BOOL isSuccess = GetProcessMemoryInfo(
+			hProc,
+			(PROCESS_MEMORY_COUNTERS*)&pmc,
+			sizeof(pmc));
+		CloseHandle(hProc);
+		std::string str = std::to_string(pmc.PrivateUsage >> 10) + " KB";
+		return str;
 	}
 
 };

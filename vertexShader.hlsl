@@ -1,6 +1,5 @@
-//*****************************************************************************
-// 定数バッファ
-//*****************************************************************************
+
+#include "Common.hlsl"
 
 // マトリクスバッファ
 cbuffer WorldBuffer : register( b0 )
@@ -47,44 +46,38 @@ cbuffer LightBuffer : register( b4 )
 	LIGHT		Light;
 }
 
-void main( in  float4 inPosition		: POSITION0,
-						  in  float4 inNormal		: NORMAL0,
-						  in  float4 inDiffuse		: COLOR0,
-						  in  float2 inTexCoord		: TEXCOORD0,
 
-						  out float4 outPosition	: SV_POSITION,
-						  out float4 outNormal		: NORMAL0,
-						  out float2 outTexCoord	: TEXCOORD0,
-						  out float4 outDiffuse		: COLOR0 )
+void main(in VS_IN In, out PS_IN Out)
 {
 	matrix wvp;
 	wvp = mul(World, View);
 	wvp = mul(wvp, Projection);
 
-	outPosition = mul( inPosition, wvp);
-	outNormal = inNormal;
-	outTexCoord = inTexCoord;
+    Out.Position = mul( In.Position, wvp);
+    Out.Normal = In.Normal;
+    Out.TexCoord = In.TexCoord;
 	
 	float4 worldNormal, normal;
-	normal = float4(inNormal.xyz, 0.0);
+	normal = float4(In.Normal.xyz, 0.0);
 	
 	worldNormal = mul(normal, World);
 	worldNormal = normalize(worldNormal);
 	
 	if (Light.Enable)
 	{
-		float light = 0.5 - 0.5 * dot(Light.Direction.xyz, worldNormal.xyz);
+				
+        float light = 0.5 - 0.5 * dot(Light.Direction.xyz, worldNormal.xyz);
 
-        outDiffuse = inDiffuse * Material.Diffuse * light * Light.Diffuse ;
-		outDiffuse += inDiffuse * Material.Ambient * Light.Ambient;
-		outDiffuse += Material.Emission;
-	}
+        Out.Diffuse = In.Diffuse * Material.Diffuse * light * Light.Diffuse;
+        Out.Diffuse += In.Diffuse * Material.Ambient * Light.Ambient;
+        Out.Diffuse += Material.Emission;
+    }
 	else
 	{
-		outDiffuse = inDiffuse * Material.Diffuse;
-	}
+        Out.Diffuse = In.Diffuse * Material.Diffuse;
+    }
 
-	outDiffuse.a = inDiffuse.a * Material.Diffuse.a;
+    Out.Diffuse.a = In.Diffuse.a * Material.Diffuse.a;
 
 }
 

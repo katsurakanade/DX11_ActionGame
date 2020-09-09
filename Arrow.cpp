@@ -8,7 +8,7 @@ void Arrow::Init() {
 
 	Name = "Arrow";
 
-	mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::TORUS);
+	//mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::TORUS);
 
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);

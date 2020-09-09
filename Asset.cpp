@@ -4,8 +4,8 @@
 #include "Debug.h"
 #include <thread>
 
-
 void Asset::LoadSceneAsset(){
+
 
 	std::thread thread_loadmodel(&Asset::LoadModel,this);
 	std::thread thread_loadtexture(&Asset::LoadTexture, this);
@@ -15,20 +15,26 @@ void Asset::LoadSceneAsset(){
 	thread_loadtexture.join();
 	thread_loadsound.join();
 
-	//LoadModel();
-	//LoadTexture();
-	//LoadSound(); // Finish
-
-	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::SAMURAI);
-	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::WIZARD);
-	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::WARRIOR);
-	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::ELF);
-	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::STAR);
-	mAssimpModelList[(int)ASSIMP_MODEL_ENUM::BALL]->PushTextureSelect((int)TEXTURE_ENUM::SKY);
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_TITLE::BALL]->PushTextureSelect(this,(int)TEXTURE_ENUM_TITLE::STAR);
+		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_TITLE::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_TITLE::SKY);
+		break;
+	case SCENE_ASSET::GAME:
+		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_GAME::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_GAME::STAR);
+		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_GAME::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_GAME::SKY);
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
 
 }
 
 void Asset::UnloadSceneAsset() {
+
 
 	for (AssimpModel* md : mAssimpModelList) {
 		if (md) {
@@ -41,7 +47,6 @@ void Asset::UnloadSceneAsset() {
 	for (ID3D11ShaderResourceView* tex : mTextureList) {
 		if (tex) {
 			tex->Release();
-			tex = nullptr;
 		}
 	}
 
@@ -59,17 +64,36 @@ void Asset::UnloadSceneAsset() {
 	std::vector<AssimpModel*>().swap(mAssimpModelList);
 	std::vector<ID3D11ShaderResourceView*>().swap(mTextureList);
 	std::vector<Sound*>().swap(mSoundList);
+
 }
 
 void Asset::LoadModel() {
 
 	auto start = std::chrono::system_clock::now();
-	AddAssimpModelToList("asset\\model\\ball\\ball.obj");
-	AddAssimpModelToList("asset\\model\\cube\\cube.obj");
-	AddAssimpModelToList("asset\\model\\torus\\torus.obj");
-	AddAssimpModelToList("asset\\model\\arrow\\arrow.obj");
-	AddAssimpModelToList("asset\\model\\enemy\\enemy.obj");
-	AddAssimpModelToList("asset\\model\\human\\Human.fbx");
+
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		AddAssimpModelToList("asset\\model\\ball\\ball.obj", false);
+		break;
+	case SCENE_ASSET::GAME:
+		AddAssimpModelToList("asset\\model\\ball\\ball.obj",false);
+		AddAssimpModelToList("asset\\model\\cube\\cube.obj", false);
+		AddAssimpModelToList("asset\\model\\mito\\mito.pmx", false);
+		AddAssimpModelToList("asset\\model\\human\\Human.fbx", true);
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
+
+	//AddAssimpModelToList("asset\\model\\ball\\ball.obj",false);
+	//AddAssimpModelToList("asset\\model\\cube\\cube.obj", false);
+	//AddAssimpModelToList("asset\\model\\torus\\torus.obj", false);
+	//AddAssimpModelToList("asset\\model\\arrow\\arrow.obj", false);
+	//AddAssimpModelToList("asset\\model\\mito\\mito.pmx", false);
+	//AddAssimpModelToList("asset\\model\\human\\Human.fbx", true);
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Model Loaded", end, start);
@@ -78,24 +102,45 @@ void Asset::LoadModel() {
 void Asset::LoadTexture() {
 
 	auto start = std::chrono::system_clock::now();
-	AddTextureToList("asset/texture/number.png");
-	AddTextureToList("asset/texture/Dirt.jpg");
-	AddTextureToList("asset/texture/explosion.png");
-	AddTextureToList("asset/texture/explosion2.png");
-	AddTextureToList("asset/texture/Wizard.png");
-	AddTextureToList("asset/texture/Samurai.png");
-	AddTextureToList("asset/texture/Warrior.png");
-	AddTextureToList("asset/texture/Elf.png");
-	AddTextureToList("asset/texture/bar_empty.png");
-	AddTextureToList("asset/texture/bar_fill.png");
-	AddTextureToList("asset/texture/gameover.png");
-	AddTextureToList("asset/texture/Clear.png");
-	AddTextureToList("asset/texture/logo.png");
-	AddTextureToList("asset/texture/white.png");
-	AddTextureToList("asset/texture/star.jpg");
-	AddTextureToList("asset/texture/sky.jpg");
-	AddTextureToList("asset/texture/space_button.png");
-	AddTextureToList("asset/texture/lightning.png");
+
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		AddTextureToList("asset/texture/logo.png");
+		AddTextureToList("asset/texture/white.png");
+		AddTextureToList("asset/texture/star.jpg");
+		AddTextureToList("asset/texture/sky.jpg");
+		AddTextureToList("asset/texture/space_button.png");
+		break;
+	case SCENE_ASSET::GAME:
+		AddTextureToList("asset/texture/white.png");
+		AddTextureToList("asset/texture/star.jpg");
+		AddTextureToList("asset/texture/sky.jpg");
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
+
+	//AddTextureToList("asset/texture/number.png");
+	//AddTextureToList("asset/texture/Dirt.jpg");
+	//AddTextureToList("asset/texture/explosion.png");
+	//AddTextureToList("asset/texture/explosion2.png");
+	//AddTextureToList("asset/texture/Wizard.png");
+	//AddTextureToList("asset/texture/Samurai.png");
+	//AddTextureToList("asset/texture/Warrior.png");
+	//AddTextureToList("asset/texture/Elf.png");
+	//AddTextureToList("asset/texture/bar_empty.png");
+	//AddTextureToList("asset/texture/bar_fill.png");
+	//AddTextureToList("asset/texture/gameover.png");
+	//AddTextureToList("asset/texture/Clear.png");
+	//AddTextureToList("asset/texture/logo.png");
+	//AddTextureToList("asset/texture/white.png");
+	//AddTextureToList("asset/texture/star.jpg");
+	//AddTextureToList("asset/texture/sky.jpg");
+	//AddTextureToList("asset/texture/space_button.png");
+	//AddTextureToList("asset/texture/lightning.png");
 
 	auto end = std::chrono::system_clock::now();
 	Debug::OutputRuntime("Texture Loaded", end, start);
@@ -104,13 +149,29 @@ void Asset::LoadTexture() {
 void Asset::LoadSound() {
 
 	auto start = std::chrono::system_clock::now();
-	AddSoundToList("asset/sound/bgm.wav");
+
+
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		AddSoundToList("asset/sound/bgm.wav");
+		AddSoundToList("asset/sound/switch.wav");
+		break;
+	case SCENE_ASSET::GAME:
+		AddSoundToList("asset/sound/bgm2.wav");
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
+	/*AddSoundToList("asset/sound/bgm.wav");
 	AddSoundToList("asset/sound/bgm2.wav");
 	AddSoundToList("asset/sound/bgm3.wav");
 	AddSoundToList("asset/sound/switch.wav");
 	AddSoundToList("asset/sound/CollisionWall.wav");
 	AddSoundToList("asset/sound/Explosion.wav");
-	AddSoundToList("asset/sound/razer.wav");
+	AddSoundToList("asset/sound/razer.wav");*/
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Sound Loaded", end, start);

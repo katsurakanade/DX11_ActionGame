@@ -18,7 +18,7 @@ void Ball::Init() {
 
 	Name = "Ball_" + std::to_string(ID);
 
-	mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
+	//mModel = Application::GetAsset()->GetAssimpModel(ASSIMP_MODEL_ENUM::BALL);
 
 	Position = D3DXVECTOR3(0, 10, 10);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -121,7 +121,7 @@ void Ball::ReflectWall() {
 
 		if (sbc->Collision_Box_Enter(tbc)) {
 			
-			AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::SE_02), 0);
+			//AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::SE_02), 0,1.0f);
 
 			// Self
 			GetComponent<Physical>()->mSpeed -= 0.001f;
@@ -158,7 +158,7 @@ void Ball::ReflectBall() {
 
 			if (sbc->Collision_Box_Enter(tbc)) {
 
-				AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::SE_02), 0);
+				//AudioListener::Play(Application::GetAsset()->GetSound(SOUND_ENUM::SE_02), 0,1.0f);
 
 				// Target
 				trg->GetComponent<Physical>()->mSpeed = GetComponent<Physical>()->mSpeed / 2;

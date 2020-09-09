@@ -23,6 +23,9 @@ public:
 	static void Render();
 	static Scene* GetScene() { return mScene; };
 	static Asset* GetAsset() { return mAsset; };
+	static void SetAsset(Asset* asset) { mAsset = asset; };
+
+	static void System();
 
 	template <typename T>
 	static void SwitchScene() {
@@ -36,7 +39,6 @@ public:
 		mScene = scene;
 		scene->Init();
 	}
-
 
 	static void UseLighting(bool val) {
 		mDisableLighting = val;

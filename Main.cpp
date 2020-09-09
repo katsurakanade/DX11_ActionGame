@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Renderer.h"
 #include "Time.h"
+#include "Debug.h"
 
 const char* CLASS_NAME = "AppClass";
 const char* WINDOW_NAME = "Strike";

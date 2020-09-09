@@ -1,6 +1,6 @@
 #include "main.h"
 #include "Renderer.h"
-#include "Asset.h"
+#include "Application.h"
 #include "AudioListener.h"
 
 IXAudio2* AudioListener::mXaudio;
@@ -14,11 +14,10 @@ void AudioListener::Init() {
 	// XAudio生成
 	XAudio2Create(&mXaudio, 0);
 
-	// マスタリングボイス生成
 	mXaudio->CreateMasteringVoice(&mMasteringVoice);
 }
 
-void AudioListener::Unint() {
+void AudioListener::Uninit() {
 
 	mMasteringVoice->DestroyVoice();
 
@@ -28,7 +27,7 @@ void AudioListener::Unint() {
 
 }
 
-void AudioListener::Play(Sound* sound,int loop) {
+void AudioListener::Play(Sound* sound,int loop, float volume) {
 
 	XAUDIO2_VOICE_STATE xa2state;
 	XAUDIO2_BUFFER buffer;
@@ -49,10 +48,13 @@ void AudioListener::Play(Sound* sound,int loop) {
 
 		// オーディオバッファの削除
 		sound->mSourceVoice->FlushSourceBuffers();
+
 	}
 
 	// オーディオバッファの登録
 	sound->mSourceVoice->SubmitSourceBuffer(&buffer);
+
+	sound->mSourceVoice->SetVolume(volume);
 
 	// 再生
 	sound->mSourceVoice->Start(0);
@@ -75,13 +77,13 @@ void AudioListener::Stop(Sound* sound){
 
 void AudioListener::StopAll() {
 
-	/*for (Sound* s : Application::GetAsset()->GetSoundList()) {
+	for (Sound* s : Application::GetAsset()->GetSoundList()) {
 
 		if (s->mSourceVoice)
 		{
 			s->mSourceVoice->Stop(0);
 		}
-	}*/
+	}
 }
 
 bool AudioListener::Is_Playing(Sound* sound) {
