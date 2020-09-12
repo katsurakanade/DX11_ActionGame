@@ -4,7 +4,7 @@
 
 enum class SHADER_TYPE
 {
-	Default
+	Default,SkinMesh
 };
 
 class Shader

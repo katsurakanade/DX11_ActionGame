@@ -256,8 +256,6 @@ HRESULT Renderer::CreateStructuredBuffer(UINT elementSize,UINT count,void* pInit
 
 	HRESULT hr;
 
-	(*ppBufferOut) = nullptr;
-
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
 
@@ -265,6 +263,34 @@ HRESULT Renderer::CreateStructuredBuffer(UINT elementSize,UINT count,void* pInit
 	desc.ByteWidth = elementSize * count;
 	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	desc.StructureByteStride = elementSize;
+
+	if (pInitData)
+	{
+		D3D11_SUBRESOURCE_DATA initData;
+		initData.pSysMem = pInitData;
+
+		hr = mD3DDevice->CreateBuffer(&desc, &initData, ppBufferOut);
+
+		return hr;
+	}
+
+	hr = mD3DDevice->CreateBuffer(&desc, nullptr, ppBufferOut);
+
+	return hr;
+}
+
+HRESULT Renderer::CreateStructuredBuffer_DYN(UINT elementSize, UINT count, void* pInitData, ID3D11Buffer** ppBufferOut) {
+	HRESULT hr;
+
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.ByteWidth = elementSize * count;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	desc.StructureByteStride = elementSize;
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	if (pInitData)
 	{
@@ -329,6 +355,7 @@ HRESULT Renderer::CreateBufferUAV(ID3D11Buffer* pBuffer, ID3D11UnorderedAccessVi
 
 	uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
 	uavDesc.Buffer.FirstElement = 0;
+
 
 	if (desc.MiscFlags & D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS)
 	{

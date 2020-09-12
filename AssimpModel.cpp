@@ -62,7 +62,7 @@ void AssimpModel::DrawConfig() {
 				ImGui::Checkbox(u8"•\Ž¦", &mMeshes[i]->Enable);
 				ImGui::ColorEdit4(u8"ƒJƒ‰[", mMeshes[i]->col);
 				ImGui::Image(mMeshes[i]->Textures[0].texture, ImVec2(100, 100));
-				if (Animation) {
+				if (Anicmatrixion) {
 					ImGui::Text("Bone :  %d", mMeshes[i]->mBone.size());
 					ImGui::Text("Deform Vertex : %d", mMeshes[i]->mDeformVertex.size());
 				}
@@ -82,10 +82,10 @@ void AssimpModel::Update(int frame){
 		return;
 	}
 
-	aiAnimation* animation = mScene->mAnimations[0];
+	aiAnimation* anicmatrixion = mScene->mAnimations[0];
 
-	for (unsigned int c = 0; c < animation->mNumChannels; c++) {
-		aiNodeAnim* node = animation->mChannels[c];
+	for (unsigned int c = 0; c < anicmatrixion->mNumChannels; c++) {
+		aiNodeAnim* node = anicmatrixion->mChannels[c];
 
 		int f;
 		f = frame % node->mNumRotationKeys;
@@ -95,6 +95,7 @@ void AssimpModel::Update(int frame){
 		aiVector3D pos = node->mPositionKeys[f].mValue;
 
 		for (Mesh* m : mMeshes) {
+			
 			BONE* bone = &m->mBone[node->mNodeName.C_Str()];
 			m->UpdateBoneMatrix(mScene->mRootNode, aiMatrix4x4());
 			bone->mAnimationMatrix = aiMatrix4x4(aiVector3D(1.0f, 1.0f, 1.0f), rot, pos);
@@ -171,8 +172,8 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 	std::vector<UINT> indices;
 	std::vector<Texture> textures;
 	std::vector <DEFORM_VERTEX> DeformVertex;
-	std::map <const std::string, BONE> Bone;
-	MATERIAL material;
+	std::unordered_map  <std::string, BONE> Bone;
+	MATERIAL  cmatrixerial;
 
 	if (mesh->mMaterialIndex >= 0)
 	{
@@ -224,24 +225,24 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 		aiMaterial* aimaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-		std::vector<Texture> diffuseMaps = this->loadMaterialTextures(aimaterial, aiTextureType_DIFFUSE, "Diffuse", scene);
+		std::vector<Texture> diffuseMaps = this->loadcmatrixerialTextures(aimaterial, aiTextureType_DIFFUSE, "Diffuse", scene);
 
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
 		aiColor3D color;
 
 		aimaterial->Get(AI_MATKEY_COLOR_AMBIENT, color);
-		material.Ambient = D3DXCOLOR(color.r, color.g, color.b, 1.0f);
+		cmatrixerial.Ambient = D3DXCOLOR(color.r, color.g, color.b, 1.0f);
 		aimaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-		material.Diffuse = D3DXCOLOR(color.r, color.g, color.b, 1.0f);
+		cmatrixerial.Diffuse = D3DXCOLOR(color.r, color.g, color.b, 1.0f);
 		aimaterial->Get(AI_MATKEY_COLOR_SPECULAR, color);
-		material.Specular = D3DXCOLOR(color.r, color.g, color.b, 1.0f);
+		cmatrixerial.Specular = D3DXCOLOR(color.r, color.g, color.b, 1.0f);
 		aimaterial->Get(AI_MATKEY_COLOR_EMISSIVE, color);
-		material.Emission = D3DXCOLOR(color.r, color.g, color.b, 1.0f);
-		material.Shininess = 225.0f;
+		cmatrixerial.Emission = D3DXCOLOR(color.r, color.g, color.b, 1.0f);
+		cmatrixerial.Shininess = 225.0f;
 	}
 
-	if (Animation) {
+	if (Anicmatrixion) {
 		for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
 			DEFORM_VERTEX deform;
 			deform.Position = mesh->mVertices[v];
@@ -249,6 +250,7 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 			deform.mBoneNum = 0;
 
 			for (unsigned int b = 0; b < 4; b++) {
+				
 				deform.mBoneName[b] = "";
 				deform.mBoneWeight[b] = 0.0f;
 			}
@@ -275,21 +277,21 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 		CreateBone(scene->mRootNode, Bone);
 
-		return new Mesh(name, vertices, indices, textures, material, DeformVertex, Bone);
+		return new Mesh(name, vertices, indices, textures, cmatrixerial, DeformVertex, Bone);
 	}
 
-	return new Mesh(name, vertices, indices, textures, material);
+	return new Mesh(name, vertices, indices, textures, cmatrixerial);
 
 }
 
-std::vector<Texture> AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName, const aiScene* scene) {
+std::vector<Texture> AssimpModel::loadcmatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene) {
 
 	std::vector<Texture> textures;
 
-	for (UINT i = 0; i < mat->GetTextureCount(type); i++)
+	for (UINT i = 0; i < cmatrix->GetTextureCount(type); i++)
 	{
 		aiString str;
-		mat->GetTexture(type, i, &str);
+		cmatrix->GetTexture(type, i, &str);
 		bool skip = false;
 		for (UINT j = 0; j < mTexturesLoaded.size(); j++)
 		{
@@ -333,10 +335,10 @@ std::vector<Texture> AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextur
 	return textures;
 }
 
-std::string AssimpModel::determineTextureType(const aiScene* scene, aiMaterial* mat) {
+std::string AssimpModel::determineTextureType(const aiScene* scene, aiMaterial* cmatrix) {
 
 	aiString textypeStr;
-	mat->GetTexture(aiTextureType_DIFFUSE, 0, &textypeStr);
+	cmatrix->GetTexture(aiTextureType_DIFFUSE, 0, &textypeStr);
 	std::string textypeteststr = textypeStr.C_Str();
 	if (textypeteststr == "*0" || textypeteststr == "*1" || textypeteststr == "*2" || textypeteststr == "*3" || textypeteststr == "*4" || textypeteststr == "*5")
 	{
@@ -386,7 +388,7 @@ void AssimpModel::PushTextureSelect(Asset* asset,int index) {
 	t = nullptr;
 }
 
-void AssimpModel::CreateBone(aiNode* node, std::map <const std::string, BONE> tBone) {
+void AssimpModel::CreateBone(aiNode* node, std::unordered_map  <std::string, BONE> tBone) {
 	BONE bone;
 	tBone[node->mName.C_Str()] = bone;
 

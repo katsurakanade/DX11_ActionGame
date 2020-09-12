@@ -76,6 +76,7 @@ public:
 	static bool mGizmosMode;
 
 	static HRESULT CreateStructuredBuffer(UINT elementSize,UINT count,void* pInitData,ID3D11Buffer** ppBufferOut);
+	static HRESULT CreateStructuredBuffer_DYN(UINT elementSize, UINT count, void* pInitData, ID3D11Buffer** ppBufferOut);
 	static HRESULT CreateBufferSRV(ID3D11Buffer* pBuffer, ID3D11ShaderResourceView** ppSRVOut);
 	static HRESULT CreateBufferUAV(ID3D11Buffer* pBuffer, ID3D11UnorderedAccessView** ppUAVOut);
 

@@ -11,11 +11,12 @@ void Shader::Init() {
 
 	mVertexShaderArray.resize(SHADER_MAX);
 	mPixelShaderArray.resize(SHADER_MAX);
-	mComputeShaderArray.resize(SHADER_MAX);
+	mComputeShaderArray.resize(2);
 
 	CreateVertexShader(SHADER_TYPE::Default);
 	CreatePixelShader(SHADER_TYPE::Default);
 	CreateComputeShader(SHADER_TYPE::Default);
+	CreateComputeShader(SHADER_TYPE::SkinMesh);
 }
 
 void Shader::Uninit() {
@@ -28,8 +29,13 @@ void Shader::Uninit() {
 		p->Release();
 	}
 
+	for (ID3D11ComputeShader* p : mComputeShaderArray) {
+		p->Release();
+	}
+
 	std::vector<ID3D11VertexShader*>().swap(mVertexShaderArray);
 	std::vector<ID3D11PixelShader*>().swap(mPixelShaderArray);
+	std::vector<ID3D11ComputeShader*>().swap(mComputeShaderArray);
 }
 
 void Shader::Use(SHADER_TYPE type) {
@@ -107,6 +113,9 @@ void Shader::CreateComputeShader(SHADER_TYPE type) {
 
 	if (type == SHADER_TYPE::Default) {
 		cspass = "computeShader.cso";
+	}
+	else if (type == SHADER_TYPE::SkinMesh) {
+		cspass = "MeshAnimationCS.cso";
 	}
 
 	FILE* file;

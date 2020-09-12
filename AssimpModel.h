@@ -18,13 +18,12 @@ private:
 
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
-
-	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName, const aiScene* scene);
-	std::string determineTextureType(const aiScene* scene, aiMaterial* mat);
+	std::vector<Texture> loadcmatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene);
+	std::string determineTextureType(const aiScene* scene, aiMaterial* cmatrix);
 
 	void DrawConfig();
 
-	void CreateBone(aiNode* node, std::map <const std::string, BONE> tBone);
+	void CreateBone(aiNode* node, std::unordered_map <std::string, BONE> tBone);
 
 	int getTextureIndex(aiString* str);
 	ID3D11ShaderResourceView* getTextureFromModel(const aiScene* scene, int textureindex);
@@ -34,11 +33,11 @@ private:
 public:
 
 	AssimpModel() = delete;
-	AssimpModel(bool animation) : Animation(animation) {};
+	AssimpModel(bool anicmatrixion) : Anicmatrixion(anicmatrixion) {};
 
 	bool DisplayConfig = false;
 	bool DefaultTexture = true;
-	bool Animation = false;
+	bool Anicmatrixion = false;
 	int SelectTextureIndex = 0;
 
 	void Update(int frame);

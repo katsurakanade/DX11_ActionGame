@@ -12,7 +12,10 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <unordered_map>
+#include <memory>
 #include <utility>
+#include <functional>
 
 
 #pragma warning(push)

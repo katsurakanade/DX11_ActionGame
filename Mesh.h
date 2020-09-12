@@ -9,7 +9,6 @@ struct Texture {
 struct DEFORM_VERTEX {
 	aiVector3D Position;
 	aiVector3D Normal;
-
 	int mBoneNum;
 	std::string mBoneName[4];
 	float mBoneWeight[4];
@@ -21,16 +20,22 @@ struct BONE {
 	aiMatrix4x4 mOffsetMatirx;
 };
 
+struct COMPUTEMATRIX {
+	aiMatrix4x4 cmatrix[4];
+};
+
 class Mesh
 {
 private:
 
-	ID3D11Buffer* VertexBuffer, * IndexBuffer, * ColorBuffer;
+	//ID3D11Buffer* VertexBuffer, * IndexBuffer, * ColorBuffer;
 
 	bool SetupMesh();
-
+	void CreateComputeResource();
 
 public:
+	ID3D11Buffer* VertexBuffer, * IndexBuffer, * ColorBuffer;
+
 
 	std::string Name;
 	std::string TexturePass;
@@ -38,7 +43,8 @@ public:
 	std::vector <UINT> Indices;
 	std::vector <Texture> Textures;
 	std::vector <DEFORM_VERTEX> mDeformVertex;
-	std::map <const std::string, BONE> mBone;
+	std::vector <COMPUTEMATRIX> mComputeMatrix;
+	std::unordered_map <std::string, BONE> mBone;
 
 	bool Enable;
 
@@ -46,7 +52,7 @@ public:
 
 	MATERIAL Material;
 
-	Mesh(std::string name, std::vector<VERTEX_3D> vertices, std::vector<UINT> indices, std::vector <Texture> textures, MATERIAL material, std::vector <DEFORM_VERTEX> deform, std::map <const std::string, BONE> bone) {
+	Mesh(std::string name, std::vector<VERTEX_3D> vertices, std::vector<UINT> indices, std::vector <Texture> textures, MATERIAL material, std::vector <DEFORM_VERTEX> deform, std::unordered_map  <std::string, BONE> bone) {
 
 		this->Name = name;
 		this->Vertices = vertices;
@@ -58,6 +64,7 @@ public:
 
 		this->Enable = true;
 		this->SetupMesh();
+		//this->CreateComputeResource();
 
 		D3DXQuaternionIdentity(&Quaternion);
 

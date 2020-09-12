@@ -2,6 +2,9 @@
 #include "Renderer.h"
 #include "Mesh.h"
 #include "Debug.h"
+#include "Shader.h"
+
+//#define MESH_GPU
 
 bool Mesh::SetupMesh() {
 
@@ -50,20 +53,142 @@ bool Mesh::SetupMesh() {
 	return true;
 }
 
+void Mesh::CreateComputeResource() {
+
+#ifdef MESH_GPU
+
+	HRESULT hr;
+
+	//// Buffer
+	//hr = Renderer::CreateStructuredBuffer_DYN(sizeof(DEFORM_VERTEX), (UINT)mDeformVertex.size(), nullptr, &mpBuf);
+	//assert(SUCCEEDED(hr));
+	//hr = Renderer::CreateStructuredBuffer_DYN(sizeof(COMPUTEMATRIX), (UINT)Vertices.size(), nullptr, &mpBoneBuf);
+	//assert(SUCCEEDED(hr));
+	//hr = Renderer::CreateStructuredBuffer_DYN(sizeof(VERTEX_3D), (UINT)Vertices.size(), nullptr, &mpVerticesBuf);
+	//assert(SUCCEEDED(hr));
+
+	// Result Buffer
+	//hr = Renderer::CreateStructuredBuffer(sizeof(VERTEX_3D), (UINT)Vertices.size(), nullptr, &mpResultBuf);
+	//assert(SUCCEEDED(hr));
+	
+#endif // MESH_GPU
+
+}
+
 void Mesh::Update() {
 
-	D3D11_MAPPED_SUBRESOURCE ms;
-	Renderer::GetDeviceContext()->Map(VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
-	VERTEX_3D* vertex = (VERTEX_3D*)ms.pData;
+#ifdef MESH_GPU
+
+	HRESULT hr;
+
+	for (unsigned int v = 0; v < Vertices.size(); v++) {
+
+		DEFORM_VERTEX* deform = &mDeformVertex[v];
+		COMPUTEMATRIX cm;
+
+		std::string* str = deform->mBoneName;
+
+		cm.cmatrix[0] = mBone[str[0]].mMatrix;
+		cm.cmatrix[1] = mBone[str[1]].mMatrix;
+		cm.cmatrix[2] = mBone[str[2]].mMatrix;
+		cm.cmatrix[3] = mBone[str[3]].mMatrix;
+
+		mComputeMatrix.push_back(cm);
+	}
+
+	ID3D11Buffer* mpBuf = nullptr;
+	ID3D11Buffer* mpBoneBuf = nullptr;
+	ID3D11Buffer* mpVerticesBuf = nullptr;
+	ID3D11Buffer* resultbuffer = nullptr;;
+
+	ID3D11ShaderResourceView* mpBufSRV = nullptr;
+	ID3D11ShaderResourceView* mpBoneBufSRV = nullptr;
+	ID3D11ShaderResourceView* mpVerticesBufSRV = nullptr;
+	ID3D11UnorderedAccessView* mpBufUAV = nullptr;
+
+	hr = Renderer::CreateStructuredBuffer(sizeof(DEFORM_VERTEX), (UINT)mDeformVertex.size(), &mDeformVertex[0], &mpBuf);
+	assert(SUCCEEDED(hr));
+	hr = Renderer::CreateStructuredBuffer(sizeof(COMPUTEMATRIX), (UINT)Vertices.size(), &mComputeMatrix[0], &mpBoneBuf);
+	assert(SUCCEEDED(hr));
+	hr = Renderer::CreateStructuredBuffer(sizeof(VERTEX_3D), (UINT)Vertices.size(), &Vertices[0], &mpVerticesBuf);
+	assert(SUCCEEDED(hr));
+
+	hr = Renderer::CreateBufferSRV(mpBuf, &mpBufSRV);
+	assert(SUCCEEDED(hr));
+	hr = Renderer::CreateBufferSRV(mpBoneBuf, &mpBoneBufSRV);
+	assert(SUCCEEDED(hr));
+	hr = Renderer::CreateBufferSRV(mpVerticesBuf, &mpVerticesBufSRV);
+	assert(SUCCEEDED(hr));
+
+	hr = Renderer::CreateStructuredBuffer(sizeof(VERTEX_3D), (UINT)Vertices.size(), nullptr, &resultbuffer);
+	assert(SUCCEEDED(hr));
+
+	hr = Renderer::CreateBufferUAV(resultbuffer, &mpBufUAV);
+	assert(SUCCEEDED(hr));
+
+	ID3D11ShaderResourceView* pSRVs[3] = { mpBufSRV , mpBoneBufSRV, mpVerticesBufSRV };
+	Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[1], nullptr, 0);
+	Renderer::GetDeviceContext()->CSSetShaderResources(0, 3, pSRVs);
+	Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpBufUAV, nullptr);
+	Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
+
+	ID3D11Buffer* pBufDbg;
+
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	resultbuffer->GetDesc(&desc);
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	desc.Usage = D3D11_USAGE_STAGING;
+	desc.BindFlags = 0;
+	desc.MiscFlags = 0;
+	Renderer::GetDevice()->CreateBuffer(&desc, nullptr, &pBufDbg);
+	Renderer::GetDeviceContext()->CopyResource(pBufDbg, resultbuffer);
+
+	{
+
+		D3D11_MAPPED_SUBRESOURCE subRes;
+		VERTEX_3D* pBufType;
+		Renderer::GetDeviceContext()->Map(pBufDbg, 0, D3D11_MAP_READ, 0, &subRes);
+		pBufType = (VERTEX_3D*)subRes.pData;
+
+		{
+			D3D11_MAPPED_SUBRESOURCE ms;
+			Renderer::GetDeviceContext()->Map(VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
+			VERTEX_3D* vertex = (VERTEX_3D*)ms.pData;
+
+			for (unsigned int v = 0; v < Vertices.size(); v++) {
+				/*vertex[v].Position = pBufType[v].Position;
+				vertex[v].Normal = pBufType[v].Normal;
+				vertex[v].TexCoord = pBufType[v].TexCoord;
+				vertex[v].Diffuse = D3DXVECTOR4(1, 1, 1, 1);*/
+				DebugOutputString(std::to_string(pBufType[v].Position.x).c_str());
+				DebugOutputString(std::to_string(pBufType[v].Position.y).c_str());
+				DebugOutputString(std::to_string(pBufType[v].Position.z).c_str());
+			}
+
+			Renderer::GetDeviceContext()->Unmap(VertexBuffer, 0);
+		}
+
+		Renderer::GetDeviceContext()->Unmap(pBufDbg, 0);
+	}
+
+	pBufDbg->Release();
+
+#else
+
+	D3D11_MAPPED_SUBRESOURCE mse;
+	Renderer::GetDeviceContext()->Map(VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mse);
+	VERTEX_3D* vertex2 = (VERTEX_3D*)mse.pData;
 
 	for (unsigned int v = 0; v < Vertices.size(); v++) {
 
 		DEFORM_VERTEX* deform = &mDeformVertex[v];
 
-		aiMatrix4x4 matrix[4];
 		aiMatrix4x4 outMatrix;
+		aiMatrix4x4 matrix[4];
 
 		std::string* str = deform->mBoneName;
+
 		matrix[0] = mBone[str[0]].mMatrix;
 		matrix[1] = mBone[str[1]].mMatrix;
 		matrix[2] = mBone[str[2]].mMatrix;
@@ -97,7 +222,6 @@ void Mesh::Update() {
 
 		deform->Position *= outMatrix;
 
-		// ˆÚ“®¬•ªíœ
 		outMatrix.a4 = 0.0f;
 		outMatrix.b4 = 0.0f;
 		outMatrix.c4 = 0.0f;
@@ -107,22 +231,26 @@ void Mesh::Update() {
 		deform->Normal.z = Vertices[v].Normal.z;
 		deform->Normal *= outMatrix;
 
-		vertex[v].Position.x = deform->Position.x;
-		vertex[v].Position.y = deform->Position.y;
-		vertex[v].Position.z = deform->Position.z;
+		vertex2[v].Position.x = deform->Position.x;
+		vertex2[v].Position.y = deform->Position.y;
+		vertex2[v].Position.z = deform->Position.z;
 
-		vertex[v].Normal.x = deform->Normal.x;
-		vertex[v].Normal.y = deform->Normal.y;
-		vertex[v].Normal.z = deform->Normal.z;
+		vertex2[v].Normal.x = deform->Normal.x;
+		vertex2[v].Normal.y = deform->Normal.y;
+		vertex2[v].Normal.z = deform->Normal.z;
 
-		vertex[v].TexCoord.x = Vertices[v].TexCoord.x;
-		vertex[v].TexCoord.y = Vertices[v].TexCoord.y;
+		vertex2[v].TexCoord.x = Vertices[v].TexCoord.x;
+		vertex2[v].TexCoord.y = Vertices[v].TexCoord.y;
 
-		vertex[v].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
-
+		vertex2[v].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
+		/*DebugOutputString(std::to_string(vertex2[v].Position.x).c_str());
+		DebugOutputString(std::to_string(vertex2[v].Position.y).c_str());
+		DebugOutputString(std::to_string(vertex2[v].Position.z).c_str());*/
 	}
 
 	Renderer::GetDeviceContext()->Unmap(VertexBuffer, 0);
+
+#endif // MESH_GPU
 }
 
 void Mesh::Draw(){
