@@ -11,10 +11,11 @@ private:
 	bool mCanJump;
 	float mJumpVel = 0;
 	float mJumpTime = 0;
+	float mAnimationSpeed = 3.0f;
 
 	AssimpModel* mModel;
 
-	int mFrame = 0;
+	float mFrame = 0;
 
 	void SettingPanel();
 

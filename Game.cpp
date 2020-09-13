@@ -17,7 +17,15 @@ void Game::Init() {
 	skybox->SetModelTexture(1);
 
 	Level* level = AddGameObject<Level>(ObjectLayer);
-	Player* player = AddGameObject<Player>(ObjectLayer);
+
+	for (int i = 0; i < 5; i++) {
+		for (int k = 0; k < 5; k++) {
+			Player* player = AddGameObject<Player>(ObjectLayer);
+			player->Position = D3DXVECTOR3(10 * i, 12, 10 * k);
+		}
+	}
+
+	//Player* player = AddGameObject<Player>(ObjectLayer);
 	Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
 	/*GUI* gui = AddGameObject<GUI>(SpriteLayer);*/
 

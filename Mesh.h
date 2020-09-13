@@ -21,14 +21,12 @@ struct BONE {
 };
 
 struct COMPUTEMATRIX {
-	aiMatrix4x4 cmatrix[4];
+	aiMatrix4x4 outMatrix;
 };
 
 class Mesh
 {
 private:
-
-	//ID3D11Buffer* VertexBuffer, * IndexBuffer, * ColorBuffer;
 
 	bool SetupMesh();
 	void CreateComputeResource();
@@ -36,6 +34,14 @@ private:
 public:
 	ID3D11Buffer* VertexBuffer, * IndexBuffer, * ColorBuffer;
 
+	ID3D11Buffer* mpBuf = nullptr;
+	ID3D11Buffer* mpBoneBuf = nullptr;
+	ID3D11Buffer* mpVerticesBuf = nullptr;
+	ID3D11ShaderResourceView* mpBufSRV = nullptr;
+	ID3D11ShaderResourceView* mpBoneBufSRV = nullptr;
+	ID3D11ShaderResourceView* mpVerticesBufSRV = nullptr;
+	ID3D11Buffer* resultbuffer = nullptr;;
+	ID3D11UnorderedAccessView* mpBufUAV = nullptr;
 
 	std::string Name;
 	std::string TexturePass;
@@ -64,7 +70,7 @@ public:
 
 		this->Enable = true;
 		this->SetupMesh();
-		//this->CreateComputeResource();
+		this->CreateComputeResource();
 
 		D3DXQuaternionIdentity(&Quaternion);
 

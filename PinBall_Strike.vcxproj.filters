@@ -290,13 +290,13 @@
     <ClInclude Include="AudioListener.h">
       <Filter>ヘッダー ファイル\Static</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>ヘッダー ファイル\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>ヘッダー ファイル\Static</Filter>
     </ClInclude>
     <ClInclude Include="AssimpModel.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

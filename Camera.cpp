@@ -43,6 +43,11 @@ void Camera::Update() {
 
 	ImGui::SliderFloat3(u8"コントロール", mControllerPosition, -200.0f, 200.0f, "%.0f", 2.0f);
 
+	ImGui::SliderFloat3(u8"座標", Position, -200.0f, 200.0f, "%.0f", 2.0f);
+
+	ImGui::SliderFloat3(u8"視点", mTarget, -200.0f, 200.0f, "%.0f", 2.0f);
+
+
 	ImGui::End();
 
 	//if (Input::GetKeyPress(DIK_C)) {

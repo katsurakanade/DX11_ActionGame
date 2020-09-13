@@ -14,6 +14,7 @@ private:
 	static Asset* mAsset;
 
 	static bool mDisableLighting;
+	static bool mUsingGPU;
 
 public:
 
@@ -43,5 +44,11 @@ public:
 	static void UseLighting(bool val) {
 		mDisableLighting = val;
 	}
+
+	static void UseGPUCompute(bool val) {
+		mUsingGPU = val;
+	}
+
+	static bool GetUsingGPU() { return mUsingGPU; };
 };
 

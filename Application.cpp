@@ -14,6 +14,7 @@
 Scene* Application::mScene;
 Asset* Application::mAsset;
 bool Application::mDisableLighting;
+bool Application::mUsingGPU;
 std::map<std::string, std::string> StaticManger::StateMap;
 
 bool Application::Init() {
@@ -77,6 +78,7 @@ void Application::System() {
 		ImGui::Checkbox(u8"線描画モード", &Renderer::mLineMode);
 		ImGui::Checkbox(u8"Gizmosモード", &Renderer::mGizmosMode);
 		ImGui::Checkbox(u8"ライト閉め", &mDisableLighting);
+		ImGui::Checkbox(u8"GPUで計算する", &mUsingGPU);
 		ImGui::End();
 	}
 }
