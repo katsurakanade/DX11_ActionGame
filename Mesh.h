@@ -21,7 +21,8 @@ struct BONE {
 };
 
 struct COMPUTEMATRIX {
-	aiMatrix4x4 outMatrix;
+	aiMatrix4x4 cmatrix[4];
+	float mBoneWeight[4];
 };
 
 class Mesh
@@ -31,11 +32,17 @@ private:
 	bool SetupMesh();
 	void CreateComputeResource();
 
+	void Process(VERTEX_3D* target,int index);
+
+	void FillComputeMatrix();
+	void FillVertex();
+
 public:
+
 	ID3D11Buffer* VertexBuffer, * IndexBuffer, * ColorBuffer;
 
 	ID3D11Buffer* mpBuf = nullptr;
-	ID3D11Buffer* mpBoneBuf = nullptr;
+	ID3D11Buffer* mpComputeBuf = nullptr;
 	ID3D11Buffer* mpVerticesBuf = nullptr;
 	ID3D11ShaderResourceView* mpBufSRV = nullptr;
 	ID3D11ShaderResourceView* mpBoneBufSRV = nullptr;

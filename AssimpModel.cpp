@@ -16,6 +16,12 @@ void AssimpModel::Load(std::string FileName) {
 
 }
 
+void AssimpModel::LoadAnimation(std::string Filename,std::string name) {
+
+	mAnimation[name] = aiImportFile(Filename.c_str(), aiProcess_ConvertToLeftHanded);
+	assert(mAnimation[name]);
+}
+
 void AssimpModel::Unload() {
 
 	for (int i = 0; i < mMeshes.size(); i++)
@@ -33,6 +39,7 @@ void AssimpModel::Unload() {
 
 	mTexturesSelect.clear();
 	mTexturesSelect.shrink_to_fit();
+
 
 }
 
@@ -76,13 +83,13 @@ void AssimpModel::DrawConfig() {
 	ImGui::End();
 }
 
-void AssimpModel::Update(int frame){
+void AssimpModel::Update(const char* animationname,int frame){
 
-	if (!mScene->HasAnimations()) {
+	if (!mAnimation[animationname]->HasAnimations()) {
 		return;
 	}
 
-	aiAnimation* anicmatrixion = mScene->mAnimations[0];
+	aiAnimation* anicmatrixion = mAnimation[animationname]->mAnimations[0];
 
 	for (unsigned int c = 0; c < anicmatrixion->mNumChannels; c++) {
 		aiNodeAnim* node = anicmatrixion->mChannels[c];

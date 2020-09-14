@@ -17,7 +17,7 @@ void Skybox::Init() {
 	}
 
 	Position = D3DXVECTOR3(0, 0, 0); 
-	Rotation = D3DXVECTOR3(1.5, 0, 1.5);
+	Rotation = D3DXVECTOR3(2.1f, 0.4f, 0.0f);
 	Scale = D3DXVECTOR3(1000.0f, 1000.0f, 1000.0f);
 
 	mModel->DisplayConfig = false;
@@ -30,10 +30,6 @@ void Skybox::Uninit() {
 void Skybox::Update() {
 
 	Position = Application::GetScene()->GetGameObject<Camera>(CameraLayer)->Position;
-
-	Rotation.y += 0.0002f;
-	Rotation.x += 0.0002f;
-	Rotation.z += 0.0002f;
 
 }
 

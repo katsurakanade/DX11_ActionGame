@@ -13,6 +13,8 @@ private:
 	float mJumpTime = 0;
 	float mAnimationSpeed = 3.0f;
 
+	std::string mAnimationState = "Idle";
+
 	AssimpModel* mModel;
 
 	float mFrame = 0;

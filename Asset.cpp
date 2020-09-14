@@ -6,7 +6,6 @@
 
 void Asset::LoadSceneAsset(){
 
-
 	std::thread thread_loadmodel(&Asset::LoadModel,this);
 	std::thread thread_loadtexture(&Asset::LoadTexture, this);
 	std::thread thread_loadsound(&Asset::LoadSound, this);
@@ -71,16 +70,29 @@ void Asset::LoadModel() {
 
 	auto start = std::chrono::system_clock::now();
 
+	std::vector <std::string> animation;
+	std::vector <std::string> pass;
+
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
-		AddAssimpModelToList("asset\\model\\ball\\ball.obj", false);
+		AddAssimpModelToList("asset\\model\\ball\\ball.obj");
 		break;
 	case SCENE_ASSET::GAME:
-		AddAssimpModelToList("asset\\model\\ball\\ball.obj",false);
-		AddAssimpModelToList("asset\\model\\cube\\cube.obj", false);
-		AddAssimpModelToList("asset\\model\\mito\\mito.pmx", false);
-		AddAssimpModelToList("asset\\model\\human\\Human.fbx", true);
+
+		AddAssimpModelToList("asset\\model\\ball\\ball.obj");
+		AddAssimpModelToList("asset\\model\\cube\\cube.obj");
+		AddAssimpModelToList("asset\\model\\mito\\mito.pmx");
+
+		pass.push_back("asset\\model\\human\\Idle.fbx");
+		pass.push_back("asset\\model\\human\\Running.fbx");
+		pass.push_back("asset\\model\\human\\Jump.fbx");
+		animation.push_back("Idle");
+		animation.push_back("Running");
+		animation.push_back("Jump");
+		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
+
+
 		break;
 	case SCENE_ASSET::RESULT:
 		break;

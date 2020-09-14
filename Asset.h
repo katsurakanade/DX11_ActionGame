@@ -100,9 +100,20 @@ protected:
 	std::vector<ID3D11ShaderResourceView*> mTextureList;
 	std::vector<Sound*> mSoundList;
 
-	void AddAssimpModelToList(const char* value,bool animation) {
-		AssimpModel* md = new AssimpModel(animation);
+	void AddAssimpModelToList(const char* value) {
+		AssimpModel* md = new AssimpModel(false);
 		md->Load(value);
+		mAssimpModelList.push_back(md);
+	}
+
+	void AddAssimpModelToList(const char* value, std::vector<std::string> animationpass , std::vector<std::string> animationname) {
+		AssimpModel* md = new AssimpModel(true);
+		md->Load(value);
+
+		for (int i = 0; i < animationpass.size(); i++) {
+			md->LoadAnimation(animationpass[i],animationname[i]);
+		}
+
 		mAssimpModelList.push_back(md);
 	}
 

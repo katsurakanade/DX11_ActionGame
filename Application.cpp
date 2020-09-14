@@ -20,6 +20,7 @@ std::map<std::string, std::string> StaticManger::StateMap;
 bool Application::Init() {
 
 	mDisableLighting = false;
+	mUsingGPU = true;
 
 	Input::Init();
 	Renderer::Init();

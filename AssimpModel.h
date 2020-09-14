@@ -15,6 +15,7 @@ private:
 	std::vector<Mesh*> mMeshes;
 	std::vector<Texture> mTexturesLoaded;
 	std::vector<Texture> mTexturesSelect;
+	std::map < std::string, const aiScene*> mAnimation;
 
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
@@ -40,9 +41,10 @@ public:
 	bool Anicmatrixion = false;
 	int SelectTextureIndex = 0;
 
-	void Update(int frame);
+	void Update(const char* animationname,int frame);
 	void Draw(D3DXMATRIX root);
 	void Load(std::string FileName);
+	void LoadAnimation(std::string Filename, std::string name);
 	void Unload();
 
 	std::string GetDirectory() { return mDirectory; };

@@ -24,8 +24,8 @@ void Player::Init() {
 	GetComponent<BoxCollider>()->mPositionOffest = D3DXVECTOR3(0.0f, 4.25f, 0.0f);
 	GetComponent<BoxCollider>()->mScaleOffest = D3DXVECTOR3(2.5f, 9.0f, 2.5f);
 
-	//Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
-	//camera->SetFollowTarget(this);
+	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+	camera->SetFollowTarget(this);
 
 	for (Component* c : Components) {
 		c->SetUsePanel(true);
@@ -43,10 +43,23 @@ void Player::Unint() {
 void Player::Update() {
 
 	float speed = GetComponent<Physical>()->mSpeed;
+
+	mModel->Update(mAnimationState.c_str(), (int)mFrame);
 	
 	if (speed >= 1.5f) {
+		if (mAnimationState != "Running") {
+			mFrame = 0;
+			mAnimationState = "Running";
+		}
 		mFrame += speed * mAnimationSpeed * Time::GetDeltaTime();
-		mModel->Update((int)mFrame);
+	}
+
+	else{
+		if (mAnimationState != "Idle") {
+			mFrame = 0;
+			mAnimationState = "Idle";
+		}
+		mFrame += 50.0f * mAnimationSpeed * Time::GetDeltaTime();
 	}
 
 	SettingPanel();
