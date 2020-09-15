@@ -1,12 +1,3 @@
-//struct DEFORM_VERTEX
-//{
-//    float3 Position;
-//    float3 Normal;
-//    int mBoneNum;
-//    int mBoneName[4];
-//    float mBoneWeight[4];
-//};
-
 struct COMPUTEMATRIX
 {
     float4x4 cmatrix[4];
@@ -29,7 +20,6 @@ struct CSInput
     uint3 dispatch : SV_DispatchThreadID;
 };
 
-//StructuredBuffer<DEFORM_VERTEX> deform : register(t0);
 StructuredBuffer<COMPUTEMATRIX> computematrix : register(t0);
 StructuredBuffer<VERTEX_3D> v3d : register(t1);
 
@@ -46,6 +36,7 @@ void CSFunc(const CSInput input)
     COMPUTEMATRIX cm = computematrix[input.dispatch.x];
    
     float4x4 outMatrix;
+    
    
     outMatrix = cm.cmatrix[0] * cm.mBoneWeight[0] + cm.cmatrix[1] * cm.mBoneWeight[1] + cm.cmatrix[2] * cm.mBoneWeight[2] + cm.cmatrix[3] * cm.mBoneWeight[3];
     

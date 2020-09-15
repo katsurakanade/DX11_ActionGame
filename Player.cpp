@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "input.h"
 #include "Mathematics.h"
+#include "Animation.h"
 
 void Player::Init() {
 
@@ -20,6 +21,7 @@ void Player::Init() {
 
 	AddComponent<BoxCollider>();
 	AddComponent<Physical>();
+	mpAnination = AddComponent<Animation>();
 
 	GetComponent<BoxCollider>()->mPositionOffest = D3DXVECTOR3(0.0f, 4.25f, 0.0f);
 	GetComponent<BoxCollider>()->mScaleOffest = D3DXVECTOR3(2.5f, 9.0f, 2.5f);
@@ -31,12 +33,14 @@ void Player::Init() {
 		c->SetUsePanel(true);
 	}
 
+	mHp = mHpInit;
+
 	Resource::Init();
 
-	mHp = mHpInit;
 }
 
 void Player::Unint() {
+
 	Resource::Uninit();
 }
 
@@ -44,22 +48,16 @@ void Player::Update() {
 
 	float speed = GetComponent<Physical>()->mSpeed;
 
-	mModel->Update(mAnimationState.c_str(), (int)mFrame);
+	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetFrame());
 	
 	if (speed >= 1.5f) {
-		if (mAnimationState != "Running") {
-			mFrame = 0;
-			mAnimationState = "Running";
-		}
-		mFrame += speed * mAnimationSpeed * Time::GetDeltaTime();
+		mpAnination->SetState("Running");
+		mpAnination->SetCoefficient(speed);
 	}
 
 	else{
-		if (mAnimationState != "Idle") {
-			mFrame = 0;
-			mAnimationState = "Idle";
-		}
-		mFrame += 50.0f * mAnimationSpeed * Time::GetDeltaTime();
+		mpAnination->SetState("Idle");
+		mpAnination->SetCoefficient(10.0f);
 	}
 
 	SettingPanel();
@@ -74,8 +72,8 @@ void Player::Update() {
 	Skill(DIK_Q, DIK_W, DIK_E, DIK_R);
 
 	Resource::Update();
-}
 
+}
 
 void Player::Render() {
 
@@ -87,7 +85,7 @@ void Player::Render() {
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(&world);
 	
-	mModel->DisplayConfig = true;
+	//mModel->DisplayConfig = true;
 	mModel->Draw(world);
 	
 	GetComponent<BoxCollider>()->Render();

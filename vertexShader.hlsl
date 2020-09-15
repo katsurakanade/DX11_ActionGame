@@ -46,7 +46,6 @@ cbuffer LightBuffer : register( b4 )
 	LIGHT		Light;
 }
 
-
 void main(in VS_IN In, out PS_IN Out)
 {
 	matrix wvp;

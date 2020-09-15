@@ -110,8 +110,7 @@ public:
                 return (T*)obj;
             }
         }
-        return NULL;
+        return nullptr;
     };
 
-   
 };

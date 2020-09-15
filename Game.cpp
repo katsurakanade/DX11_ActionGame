@@ -18,8 +18,8 @@ void Game::Init() {
 
 	Level* level = AddGameObject<Level>(ObjectLayer);
 
-	//for (int i = 0; i < 10; i++) {
-	//	for (int k = 0; k < 10; k++) {
+	//for (int i = 0; i < 3; i++) {
+	//	for (int k = 0; k < 3; k++) {
 	//		Player* player = AddGameObject<Player>(ObjectLayer);
 	//		player->Position = D3DXVECTOR3(10 * i, 12, 10 * k);
 	//	}

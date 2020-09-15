@@ -75,7 +75,7 @@ void Mesh::CreateComputeResource() {
 
 }
 
-// Now Gpu Fast Than CPU 0.003 Sec
+// Now Gpu Fast Than CPU 0.009 Sec
 void Mesh::Update() {
 
 	// Using GPU
@@ -295,10 +295,14 @@ void Mesh::FillComputeMatrix() {
 	for (unsigned int v = 0; v < Vertices.size(); v++) {
 		DEFORM_VERTEX* deform = &mDeformVertex[v];
 		std::string* str = deform->mBoneName;
-		pBufType_cm[v].cmatrix[0] = mBone[str[0]].mMatrix;
-		pBufType_cm[v].cmatrix[1] = mBone[str[1]].mMatrix;
-		pBufType_cm[v].cmatrix[2] = mBone[str[2]].mMatrix;
-		pBufType_cm[v].cmatrix[3] = mBone[str[3]].mMatrix;
+
+		for (int i = 0; i < 4; i++) {
+			if (str[i] == "") {
+				continue;
+			}
+			pBufType_cm[v].cmatrix[i] = mBone[str[i]].mMatrix;
+		
+		}
 
 		pBufType_cm[v].mBoneWeight[0] = deform->mBoneWeight[0];
 		pBufType_cm[v].mBoneWeight[1] = deform->mBoneWeight[1];

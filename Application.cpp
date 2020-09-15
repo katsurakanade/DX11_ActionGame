@@ -28,6 +28,8 @@ bool Application::Init() {
 	AudioListener::SetVolume(1.0f);
 	StaticManger::Init();
 
+	Renderer::mGizmosMode = false;
+
 	mScene = new Game();
 	mScene->Init();
 

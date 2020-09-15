@@ -28,7 +28,7 @@ public:
     virtual void Uninit() = 0;
     virtual void Update() = 0;
 
-    virtual void DataPanel() = 0;
+    virtual void DataPanel() {};
 
     void SetUsePanel(bool val) { UsePanel = val; };
     bool GetUsePanel() { return UsePanel; };

@@ -31,6 +31,8 @@ void AssimpModel::Unload() {
 		mMeshes[i] = nullptr;
 	}
 
+	mScene->~aiScene();
+	
 	mMeshes.clear();
 	mMeshes.shrink_to_fit();
 
@@ -85,14 +87,15 @@ void AssimpModel::DrawConfig() {
 
 void AssimpModel::Update(const char* animationname,int frame){
 
-	if (!mAnimation[animationname]->HasAnimations()) {
+	if (animationname != "" && !mAnimation[animationname]->HasAnimations()) {
 		return;
 	}
 
-	aiAnimation* anicmatrixion = mAnimation[animationname]->mAnimations[0];
+	aiAnimation* animation = mAnimation[animationname]->mAnimations[0];
 
-	for (unsigned int c = 0; c < anicmatrixion->mNumChannels; c++) {
-		aiNodeAnim* node = anicmatrixion->mChannels[c];
+	for (unsigned int c = 0; c < animation->mNumChannels; c++) {
+
+		aiNodeAnim* node = animation->mChannels[c];
 
 		int f;
 		f = frame % node->mNumRotationKeys;
@@ -102,7 +105,6 @@ void AssimpModel::Update(const char* animationname,int frame){
 		aiVector3D pos = node->mPositionKeys[f].mValue;
 
 		for (Mesh* m : mMeshes) {
-			
 			BONE* bone = &m->mBone[node->mNodeName.C_Str()];
 			m->UpdateBoneMatrix(mScene->mRootNode, aiMatrix4x4());
 			bone->mAnimationMatrix = aiMatrix4x4(aiVector3D(1.0f, 1.0f, 1.0f), rot, pos);
