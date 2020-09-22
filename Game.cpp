@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Application.h"
 #include "Debug.h"
+#include "Particle.h"
 
 void Game::Init() {
 
@@ -18,15 +19,25 @@ void Game::Init() {
 
 	Level* level = AddGameObject<Level>(ObjectLayer);
 
-	//for (int i = 0; i < 3; i++) {
-	//	for (int k = 0; k < 3; k++) {
-	//		Player* player = AddGameObject<Player>(ObjectLayer);
-	//		player->Position = D3DXVECTOR3(10 * i, 12, 10 * k);
-	//	}
-	//}
+	/*for (int i = 0; i < 3; i++) {
+		for (int k = 0; k < 3; k++) {
+			Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
+			enemy->Position = D3DXVECTOR3(10 * i, 12, -30 + (10 * k));
+		}
+	}*/
 
 	Player* player = AddGameObject<Player>(ObjectLayer);
+	Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
+	enemy->AddGauge();
+
+	Wall* wall = AddGameObject<Wall>(ObjectLayer);
+	wall->Position = enemy->Position - D3DXVECTOR3(0, 0, 5);
+
 	Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
+
+	//Wall* wall = AddGameObject<Wall>(ObjectLayer);
+
+	//ParticleSystem* pc = AddGameObject<ParticleSystem>(SpriteLayer);
 	/*GUI* gui = AddGameObject<GUI>(SpriteLayer);*/
 
 	Fade* fade = AddGameObject<Fade>(FadeLayer);

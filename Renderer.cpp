@@ -18,6 +18,7 @@ ID3D11Buffer* Renderer::mViewBuffer = NULL;
 ID3D11Buffer* Renderer::mProjectionBuffer = NULL;
 ID3D11Buffer* Renderer::mMaterialBuffer = NULL;
 ID3D11Buffer* Renderer::mLightBuffer = NULL;
+ID3D11Buffer* Renderer::mCameraBuffer = NULL;
 
 ID3D11DepthStencilState* Renderer::mDepthStateEnable = NULL;
 ID3D11DepthStencilState* Renderer::mDepthStateDisable = NULL;
@@ -187,17 +188,17 @@ void Renderer::Init()
 	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mProjectionBuffer);
 	mImmediateContext->VSSetConstantBuffers(2, 1, &mProjectionBuffer);
 
-
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
-
 	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mMaterialBuffer);
 	mImmediateContext->VSSetConstantBuffers(3, 1, &mMaterialBuffer);
 
-
 	hBufferDesc.ByteWidth = sizeof(LIGHT);
-
 	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mLightBuffer);
 	mImmediateContext->VSSetConstantBuffers(4, 1, &mLightBuffer);
+
+	hBufferDesc.ByteWidth = sizeof(D3DXVECTOR4);
+	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mCameraBuffer);
+	mImmediateContext->VSSetConstantBuffers(5, 1, &mCameraBuffer);
 
 	// 入力レイアウト設定
 	mImmediateContext->IASetInputLayout(mVertexLayout);
@@ -483,6 +484,11 @@ void Renderer::SetMaterial(MATERIAL Material)
 
 	mImmediateContext->UpdateSubresource(mMaterialBuffer, 0, NULL, &Material, 0, 0);
 
+}
+
+void Renderer::SetCameraPosition(D3DXVECTOR3 CameraPosition)
+{
+	mImmediateContext->UpdateSubresource(mCameraBuffer, 0, NULL, &D3DXVECTOR4(CameraPosition.x, CameraPosition.y, CameraPosition.z, 1.0f), 0, 0);
 }
 
 void Renderer::SetLight(LIGHT Light)

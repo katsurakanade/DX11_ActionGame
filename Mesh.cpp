@@ -130,7 +130,7 @@ void Mesh::Update() {
 
 		}
 		auto end = std::chrono::system_clock::now();
-		Debug::OutputRuntime("GPU Skinning", end, start);
+		/*Debug::OutputRuntime("GPU Skinning", end, start);*/
 	}
 
 	// Using CPU
@@ -146,7 +146,7 @@ void Mesh::Update() {
 
 		Renderer::GetDeviceContext()->Unmap(VertexBuffer, 0);
 		auto end = std::chrono::system_clock::now();
-		Debug::OutputRuntime("CPU Skinning", end, start);
+		/*Debug::OutputRuntime("CPU Skinning", end, start);*/
 	}
 }
 
@@ -187,6 +187,26 @@ void Mesh::Close() {
 	IndexBuffer->Release();
 	ColorBuffer->Release();
 
+	if (mpBuf) {
+		mpBuf->Release();
+	}
+	if (mpComputeBuf) {
+		mpComputeBuf->Release();
+	}
+	if (mpVerticesBuf) {
+		mpVerticesBuf->Release();
+	}
+
+	if (mpBufSRV) {
+		mpBufSRV->Release();
+	}
+	if (mpBoneBufSRV) {
+		mpBoneBufSRV->Release();
+	}
+	if (mpVerticesBufSRV) {
+		mpVerticesBufSRV->Release();
+	}
+
 	Vertices.clear();
 	Vertices.shrink_to_fit();
 
@@ -217,6 +237,7 @@ void Mesh::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix) {
 	for (unsigned int n = 0; n < node->mNumChildren; n++) {
 		UpdateBoneMatrix(node->mChildren[n], world);
 	}
+
 }
 
 void Mesh::Process(VERTEX_3D* target , int index) {

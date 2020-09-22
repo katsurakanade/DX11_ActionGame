@@ -29,11 +29,14 @@ void Player::Init() {
 	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
 	camera->SetFollowTarget(this);
 
+	mHp = mHpInit;
+
+	mpAnination->SetState("Idle");
+	mpAnination->SetCoefficient(10.0f);
+
 	for (Component* c : Components) {
 		c->SetUsePanel(true);
 	}
-
-	mHp = mHpInit;
 
 	Resource::Init();
 
@@ -48,22 +51,27 @@ void Player::Update() {
 
 	float speed = GetComponent<Physical>()->mSpeed;
 
-	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetFrame());
+	/*mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetFrame());*/
+
+	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetNewState().c_str() , mpAnination->GetBlend(), mpAnination->GetFrame());
 	
-	if (speed >= 1.5f) {
-		mpAnination->SetState("Running");
-		mpAnination->SetCoefficient(speed);
+	if (mpAnination->GetState() == "Idle" && speed >= 1.5f) {
+		mpAnination->SetNewState("Running");
 	}
 
-	else{
-		mpAnination->SetState("Idle");
-		mpAnination->SetCoefficient(10.0f);
+	if (mpAnination->GetState() == "Running" && speed <= 1.0f) {
+		mpAnination->SetNewState("Idle");
+		mpAnination->SetCoefficient(20.0f);
+	}
+
+	if (mpAnination->GetNewState() == "Running") {
+		mpAnination->SetCoefficient(20.0);
 	}
 
 	SettingPanel();
 
 	// ƒWƒƒƒ“ƒv
-	//Jump(DIK_SPACE);
+	/*Jump(DIK_SPACE);*/
 
 	// ˆÚ“®
 	Movement(DIK_W, DIK_S, DIK_A, DIK_D);
@@ -104,9 +112,12 @@ void Player::SettingPanel() {
 
 void Player::Jump(BYTE keykode) {
 
+	
+
 	if (Input::GetKeyTrigger(keykode)) {
 		mCanJump = false;
 		mJumpVel = 0;
+		mpAnination->SetNewState("Jump");
 	}
 
 	if (mCanJump == false) {
@@ -130,10 +141,11 @@ void Player::Jump(BYTE keykode) {
 		GetComponent<Physical>()->AddForce(r * speed * mJumpVel);
 	}*/
 
-	if (Position.y > 1) {
+	if (Position.y > 1 && !mCanJump) {
 		mCanJump = true;
 		mJumpVel = 0;
 		mJumpTime = 0;
+		mpAnination->SetNewState("Idle");
 	}
 
 }
@@ -245,6 +257,8 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3) {
 
 	if (Input::GetKeyTrigger(keykode_0)) {
+		mpAnination->SetNewState("Attack");
+		mpAnination->SetCoefficient(50.0f);
 	}
 
 	if (Input::GetKeyTrigger(keykode_1)) {

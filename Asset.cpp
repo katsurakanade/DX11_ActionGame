@@ -34,7 +34,6 @@ void Asset::LoadSceneAsset(){
 
 void Asset::UnloadSceneAsset() {
 
-
 	for (AssimpModel* md : mAssimpModelList) {
 		if (md) {
 			md->Unload();
@@ -82,16 +81,20 @@ void Asset::LoadModel() {
 
 		AddAssimpModelToList("asset\\model\\ball\\ball.obj");
 		AddAssimpModelToList("asset\\model\\cube\\cube.obj");
-		AddAssimpModelToList("asset\\model\\mito\\mito.pmx");
 
 		pass.push_back("asset\\model\\human\\Idle.fbx");
 		pass.push_back("asset\\model\\human\\Running.fbx");
 		pass.push_back("asset\\model\\human\\Jump.fbx");
+		pass.push_back("asset\\model\\human\\Roll.fbx");
+		pass.push_back("asset\\model\\human\\Attack.fbx");
 		animation.push_back("Idle");
 		animation.push_back("Running");
 		animation.push_back("Jump");
-		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
+		animation.push_back("Roll");
+		animation.push_back("Attack");
 
+		AddAssimpModelToList("asset\\model\\enemy\\Enemy.fbx", pass, animation);
+		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
 
 		break;
 	case SCENE_ASSET::RESULT:
@@ -128,6 +131,10 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/white.png");
 		AddTextureToList("asset/texture/star.jpg");
 		AddTextureToList("asset/texture/sky.jpg");
+		AddTextureToList("asset/texture/bar_empty.png");
+		AddTextureToList("asset/texture/bar_fill.png");
+		AddTextureToList("asset/texture/explosion.png");
+		AddTextureToList("asset/texture/Particle.png");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;

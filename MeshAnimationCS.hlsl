@@ -22,13 +22,13 @@ struct CSInput
 
 StructuredBuffer<COMPUTEMATRIX> computematrix : register(t0);
 StructuredBuffer<VERTEX_3D> v3d : register(t1);
-
 RWStructuredBuffer<VERTEX_3D> BufOut : register(u0);
 
 #define size_x      1024
 #define size_y      1
 #define size_z      1
 
+// GPU スキンメッシュアニメーション
 [numthreads(size_x, size_y, size_z)]
 void CSFunc(const CSInput input)
 {
@@ -36,7 +36,6 @@ void CSFunc(const CSInput input)
     COMPUTEMATRIX cm = computematrix[input.dispatch.x];
    
     float4x4 outMatrix;
-    
    
     outMatrix = cm.cmatrix[0] * cm.mBoneWeight[0] + cm.cmatrix[1] * cm.mBoneWeight[1] + cm.cmatrix[2] * cm.mBoneWeight[2] + cm.cmatrix[3] * cm.mBoneWeight[3];
     
@@ -46,7 +45,7 @@ void CSFunc(const CSInput input)
     outMatrix._24 = 0.0f;
     outMatrix._34 = 0.0f;
 
-    float3 nor = mul(float4(v3d[input.dispatch.x].Normal, 1.0f), outMatrix);
+    float3 nor = mul(float4(v3d[input.dispatch.x].Normal, 0.0f), outMatrix);
     
     BufOut[input.dispatch.x].Position = pos;
     BufOut[input.dispatch.x].Normal = nor;

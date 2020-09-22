@@ -4,7 +4,6 @@
 #include "Scene.h"
 #include "input.h"
 
-
 void Sprite::Init() {
 
 	Name = "Sprite";

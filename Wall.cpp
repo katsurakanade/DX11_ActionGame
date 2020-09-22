@@ -11,7 +11,7 @@ void Wall::Init() {
 
 	Position = D3DXVECTOR3(0, 0, 0);
 	Rotation = D3DXVECTOR3(0, 0, 0);
-	Scale = D3DXVECTOR3(50.0f, 50.0f, 10.0f);
+	Scale = D3DXVECTOR3(3.0f, 3.0f, 3.0f);
 
 	D3DXQuaternionIdentity(&this->Quaternion);
 

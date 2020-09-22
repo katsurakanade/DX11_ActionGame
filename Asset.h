@@ -78,6 +78,10 @@ enum class TEXTURE_ENUM_GAME {
 	WHITE,
 	SKY,
 	STAR,
+	BAR_EMPTY,
+	BAR_FILL,
+	EXPLOSION,
+	PARTICLE,
 };
 
 enum class SOUND_ENUM_GAME {

@@ -75,4 +75,6 @@ void Camera::Render() {
 	D3DXMatrixPerspectiveFovLH(&projectionMatrix, 1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 10000.0f);
 
 	Renderer::SetProjectionMatrix(&projectionMatrix);
+
+	Renderer::SetCameraPosition(Position);
 }

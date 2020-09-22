@@ -5,6 +5,7 @@
 #include "Physical.h"
 #include "Level.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "GUI.h"
 #include "Wall.h"
 #include "Digit.h"

@@ -54,7 +54,7 @@ void Physical::Update() {
 }
 
 void Physical::AddForce(D3DXVECTOR3 force) {
-	mForce = force;
+	GetResource()->Position += force * 100.0f * Time::GetDeltaTime();
 }
 
 bool Physical::IsMoving() {

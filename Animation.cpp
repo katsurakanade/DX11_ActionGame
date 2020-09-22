@@ -3,12 +3,14 @@
 #include "Time.h"
 #include "Resource.h"
 #include "Animation.h"
+#include "Physical.h"
 
 void Animation::Init() {
 
 	mState = "Idle";
-	mOldState = "Idle";
+	mNewState = "Idle";
 	mFrame = 0;
+	mExitFlag = false;
 
 }
 
@@ -22,15 +24,20 @@ void Animation::Update() {
 		mFrame = 0;
 	}
 
-	if (mState != mOldState) {
-		mFrame = 0;
-	}
-
 	mFrame += mCoefficient * mAnimationSpeed * Time::GetDeltaTime();
 
-	mOldState = mState;
+	if (mState != mNewState) {
+		mBlend += 3.0f * Time::GetDeltaTime();
+	}
 
-	DataPanel();
+	if (mBlend >= 1.0f) {
+		mState = mNewState;
+		mBlend = 0.0f;
+	}
+
+	if (GetUsePanel()) {
+		DataPanel();
+	}
 }
 
 void Animation::DataPanel() {
@@ -40,6 +47,7 @@ void Animation::DataPanel() {
 		ImGui::Text("Frame : %f", mFrame);
 		ImGui::Text(u8"Ä¶‘¬“x : %f", (float)mCoefficient * (float)mAnimationSpeed);
 		ImGui::Text(u8"ó‘Ô : %s", mState.c_str());
+		ImGui::Text(u8"ó‘Ô(‹Œ) : %s", mNewState.c_str());
 		ImGui::TreePop();
 	}
 	ImGui::End();

@@ -68,6 +68,7 @@ void BoxCollider::Render() {
 
 	if (Renderer::mGizmosMode){
 
+
 		D3DXMATRIX world, scale, rot, trans;
 		D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
 		D3DXMatrixRotationYawPitchRoll(&rot, Rotation.y, Rotation.x, Rotation.z);
@@ -79,8 +80,8 @@ void BoxCollider::Render() {
 		Renderer::GetDeviceContext()->Map(mColorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
 		float* col = (float*)msr.pData;
 		col[0] = 1;
-		col[1] = 0;
-		col[2] = 0;
+		col[1] = 1;
+		col[2] = 1;
 		col[3] = 1;
 		Renderer::GetDeviceContext()->Unmap(mColorBuffer, 0);
 

@@ -117,6 +117,52 @@ void AssimpModel::Update(const char* animationname,int frame){
 	}
 }
 
+void AssimpModel::Update(const char* animationname1, const char* animationname2,float BlendRate, int frame) {
+
+	if (!mAnimation[animationname1]->HasAnimations()) {
+		return;
+	}
+
+	if (!mAnimation[animationname2]->HasAnimations()) {
+		return;
+	}
+
+	aiAnimation* animation_1 = mAnimation[animationname1]->mAnimations[0];
+	aiAnimation* animation_2 = mAnimation[animationname2]->mAnimations[0];
+
+	for (unsigned int c = 0; c < animation_1->mNumChannels; c++) {
+
+		aiNodeAnim* node_1 = animation_1->mChannels[c];
+		aiNodeAnim* node_2 = animation_2->mChannels[c];
+
+		int f;
+
+		f = frame % node_1->mNumRotationKeys;
+		aiQuaternion rot_1 = node_1->mRotationKeys[f].mValue;
+		f = frame % node_1->mNumPositionKeys;
+		aiVector3D pos_1 = node_1->mPositionKeys[f].mValue;
+
+		f = frame % node_2->mNumRotationKeys;
+		aiQuaternion rot_2 = node_2->mRotationKeys[f].mValue;
+		f = frame % node_2->mNumPositionKeys;
+		aiVector3D pos_2 = node_2->mPositionKeys[f].mValue;
+
+		aiVector3D pos = pos_1 * (1.0f - BlendRate) + pos_2 * BlendRate;
+		aiQuaternion rot;
+		aiQuaternion::Interpolate(rot, rot_1, rot_2, BlendRate);
+
+		for (Mesh* m : mMeshes) {
+			BONE* bone = &m->mBone[node_1->mNodeName.C_Str()];
+			bone->mAnimationMatrix = aiMatrix4x4(aiVector3D(1.0f, 1.0f, 1.0f), rot, pos);
+			m->UpdateBoneMatrix(mScene->mRootNode, aiMatrix4x4());
+		}
+	}
+
+	for (Mesh* m : mMeshes) {
+		m->Update();
+	}
+}
+
 void AssimpModel::Draw(D3DXMATRIX root) {
 
 	if (DisplayConfig) {
