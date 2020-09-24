@@ -43,6 +43,11 @@ public:
             c->Update();
         }
     };
+    virtual void FixedUpdate() {
+        for (Component* c : Components) {
+            c->FixedUpdate();
+        }
+    };
     virtual void Render() = 0;
 
     void SetActive(bool active) { this->Active = active; };

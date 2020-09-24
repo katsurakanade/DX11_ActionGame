@@ -11,12 +11,16 @@ void Shader::Init() {
 
 	mVertexShaderArray.resize(SHADER_MAX);
 	mPixelShaderArray.resize(SHADER_MAX);
-	mComputeShaderArray.resize(2);
+	mComputeShaderArray.resize(3);
 
-	CreateVertexShader(SHADER_TYPE::Default);
-	CreatePixelShader(SHADER_TYPE::Default);
+	CreateVertexShader(SHADER_TYPE_VSPS::Default);
+	CreatePixelShader(SHADER_TYPE_VSPS::Default);
+	CreateVertexShader(SHADER_TYPE_VSPS::Unlit);
+	CreatePixelShader(SHADER_TYPE_VSPS::Unlit);
+
 	CreateComputeShader(SHADER_TYPE::Default);
 	CreateComputeShader(SHADER_TYPE::SkinMesh);
+	CreateComputeShader(SHADER_TYPE::Particle);
 }
 
 void Shader::Uninit() {
@@ -38,19 +42,22 @@ void Shader::Uninit() {
 	std::vector<ID3D11ComputeShader*>().swap(mComputeShaderArray);
 }
 
-void Shader::Use(SHADER_TYPE type) {
+void Shader::Use(SHADER_TYPE_VSPS type) {
 
 	Renderer::GetDeviceContext()->VSSetShader(mVertexShaderArray[(int)type], NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(mPixelShaderArray[(int)type], NULL, 0);
 
 }
 
-void Shader::CreateVertexShader(SHADER_TYPE type) {
+void Shader::CreateVertexShader(SHADER_TYPE_VSPS type) {
 
 	const char* vspass = "";
 
-	if (type == SHADER_TYPE::Default) {
+	if (type == SHADER_TYPE_VSPS::Default) {
 		vspass = "vertexShader.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::Unlit) {
+		vspass = "UnlitVS.cso";
 	}
 
 	// 頂点シェーダ生成
@@ -83,11 +90,14 @@ void Shader::CreateVertexShader(SHADER_TYPE type) {
 
 }
 
-void Shader::CreatePixelShader(SHADER_TYPE type) {
+void Shader::CreatePixelShader(SHADER_TYPE_VSPS type) {
 	const char* pspass = "";
 
-	if (type == SHADER_TYPE::Default) {
+	if (type == SHADER_TYPE_VSPS::Default) {
 		pspass = "pixelShader.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::Unlit) {
+		pspass = "UnlitPS.cso";
 	}
 
 	// ピクセルシェーダ生成
@@ -116,6 +126,9 @@ void Shader::CreateComputeShader(SHADER_TYPE type) {
 	}
 	else if (type == SHADER_TYPE::SkinMesh) {
 		cspass = "MeshAnimationCS.cso";
+	}
+	else if (type == SHADER_TYPE::Particle) {
+		cspass = "ParticleCS.cso";
 	}
 
 	FILE* file;

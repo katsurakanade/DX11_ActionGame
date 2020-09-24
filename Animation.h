@@ -14,18 +14,19 @@ private:
 	float mBlend;
 
 	void DataPanel();
+	bool DebugPanel = false;
 
 public:
-
-	bool mExitFlag;
 
 	void Init();
 	void Uninit();
 	void Update();
+	void FixedUpdate();
 
 	void SetCoefficient(float val) { mCoefficient = val; };
 	void SetState(std::string str) { mState = str; };
 	void SetNewState(std::string str) { mNewState = str; };
+	void SetNewStateOneTime(std::string str) { mNewState = str;};
 
 	std::string GetState() { return mState; };
 	std::string GetNewState() { return mNewState; };

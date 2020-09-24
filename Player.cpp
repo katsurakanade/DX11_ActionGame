@@ -6,6 +6,11 @@
 #include "input.h"
 #include "Mathematics.h"
 #include "Animation.h"
+#include "Particle.h"
+#include "Shader.h"
+
+float count;
+bool start;
 
 void Player::Init() {
 
@@ -49,9 +54,11 @@ void Player::Unint() {
 
 void Player::Update() {
 
-	float speed = GetComponent<Physical>()->mSpeed;
+	if (start) {
+		count += 1.0f;
+	}
 
-	/*mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetFrame());*/
+	float speed = GetComponent<Physical>()->mSpeed;
 
 	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetNewState().c_str() , mpAnination->GetBlend(), mpAnination->GetFrame());
 	
@@ -65,19 +72,22 @@ void Player::Update() {
 	}
 
 	if (mpAnination->GetNewState() == "Running") {
-		mpAnination->SetCoefficient(20.0);
+		mpAnination->SetCoefficient(20.0f);
 	}
 
 	SettingPanel();
-
-	// ジャンプ
-	/*Jump(DIK_SPACE);*/
 
 	// 移動
 	Movement(DIK_W, DIK_S, DIK_A, DIK_D);
 
 	// スキル
 	Skill(DIK_Q, DIK_W, DIK_E, DIK_R);
+
+	if (count >= 120.0f) {
+		mpAnination->SetNewState("Idle");
+		count = 0.0f;
+		start = false;
+	}
 
 	Resource::Update();
 
@@ -93,10 +103,13 @@ void Player::Render() {
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(&world);
 	
-	//mModel->DisplayConfig = true;
+	Shader::Use(SHADER_TYPE_VSPS::Default);
+
+	mModel->DisplayConfig = true;
 	mModel->Draw(world);
 	
 	GetComponent<BoxCollider>()->Render();
+
 }
 
 void Player::SettingPanel() {
@@ -111,8 +124,6 @@ void Player::SettingPanel() {
 }
 
 void Player::Jump(BYTE keykode) {
-
-	
 
 	if (Input::GetKeyTrigger(keykode)) {
 		mCanJump = false;
@@ -256,9 +267,13 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 
 void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3) {
 
-	if (Input::GetKeyTrigger(keykode_0)) {
-		mpAnination->SetNewState("Attack");
-		mpAnination->SetCoefficient(50.0f);
+	if (Input::GetKeyTrigger(keykode_0) && !start) {
+		count = 0.0f;
+		mpAnination->SetNewStateOneTime("Attack");
+		mpAnination->SetCoefficient(30.0f);
+		start = true;
+		/*ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(ObjectLayer);
+		pc->Position = Position;*/
 	}
 
 	if (Input::GetKeyTrigger(keykode_1)) {

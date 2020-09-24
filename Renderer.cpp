@@ -19,6 +19,7 @@ ID3D11Buffer* Renderer::mProjectionBuffer = NULL;
 ID3D11Buffer* Renderer::mMaterialBuffer = NULL;
 ID3D11Buffer* Renderer::mLightBuffer = NULL;
 ID3D11Buffer* Renderer::mCameraBuffer = NULL;
+ID3D11Buffer* Renderer::mParameterBuffer = NULL;
 
 ID3D11DepthStencilState* Renderer::mDepthStateEnable = NULL;
 ID3D11DepthStencilState* Renderer::mDepthStateDisable = NULL;
@@ -190,21 +191,29 @@ void Renderer::Init()
 
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mMaterialBuffer);
-	mImmediateContext->VSSetConstantBuffers(3, 1, &mMaterialBuffer);
+	mImmediateContext->PSSetConstantBuffers(3, 1, &mMaterialBuffer);
 
 	hBufferDesc.ByteWidth = sizeof(LIGHT);
 	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mLightBuffer);
-	mImmediateContext->VSSetConstantBuffers(4, 1, &mLightBuffer);
+	mImmediateContext->PSSetConstantBuffers(4, 1, &mLightBuffer);
 
 	hBufferDesc.ByteWidth = sizeof(D3DXVECTOR4);
 	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mCameraBuffer);
-	mImmediateContext->VSSetConstantBuffers(5, 1, &mCameraBuffer);
+	mImmediateContext->PSSetConstantBuffers(5, 1, &mCameraBuffer);
+
+	hBufferDesc.ByteWidth = sizeof(D3DXVECTOR4);
+	mD3DDevice->CreateBuffer(&hBufferDesc, NULL, &mParameterBuffer);
+	mImmediateContext->PSSetConstantBuffers(6, 1, &mParameterBuffer);
 
 	// 入力レイアウト設定
 	mImmediateContext->IASetInputLayout(mVertexLayout);
 
 	// シェーダ設定
-	Shader::Use(SHADER_TYPE::Default);
+	Shader::Use(SHADER_TYPE_VSPS::Default);
+
+	LIGHT light;
+	light.Enable = false;
+	SetLight(light);
 
 	// マテリアル初期化
 	MATERIAL material;
@@ -223,6 +232,8 @@ void Renderer::Uninit()
 	mProjectionBuffer->Release();
 	mLightBuffer->Release();
 	mMaterialBuffer->Release();
+	mCameraBuffer->Release();
+	mParameterBuffer->Release();
 
 	mVertexLayout->Release();
 	Shader::Uninit();
@@ -238,9 +249,8 @@ void Renderer::Uninit()
 void Renderer::Begin()
 {
 	// バックバッファクリア
-	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float ClearColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	mImmediateContext->ClearRenderTargetView(mRenderTargetView, ClearColor);
-
 	mImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 }
@@ -496,4 +506,9 @@ void Renderer::SetLight(LIGHT Light)
 
 	mImmediateContext->UpdateSubresource(mLightBuffer, 0, NULL, &Light, 0, 0);
 
+}
+
+void Renderer::SetParameter(D3DXVECTOR4 Parameter)
+{
+	mImmediateContext->UpdateSubresource(mParameterBuffer, 0, NULL, &Parameter, 0, 0);
 }

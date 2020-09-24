@@ -8,9 +8,10 @@ class Light : public Resource
 	
 private:
 
-	LIGHT* mSource;
 
 public:
+
+	LIGHT* mSource;
 
 	void Init();
 	void Uninit();

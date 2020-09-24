@@ -24,7 +24,7 @@ void AssimpModel::LoadAnimation(std::string Filename,std::string name) {
 
 void AssimpModel::Unload() {
 
-	for (int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
 		mMeshes[i]->Close();
 		delete mMeshes[i];
@@ -54,7 +54,7 @@ void AssimpModel::DrawConfig() {
 
 	ImGui::Text(u8"テクスチャ数 : %d ", mTexturesLoaded.size());
 	if (ImGui::TreeNode(u8"テクスチャファイル")) {
-		for (int i = 0; i < mTexturesLoaded.size(); i++) {
+		for (unsigned int i = 0; i < mTexturesLoaded.size(); i++) {
 			ImGui::Text(u8"タイプ : %s", mTexturesLoaded[i].type.c_str());
 			ImGui::Text(u8"パス : %s", mTexturesLoaded[i].path.c_str());
 			ImGui::Image(mTexturesLoaded[i].texture, ImVec2(100, 100));
@@ -66,7 +66,7 @@ void AssimpModel::DrawConfig() {
 	ImGui::Text(u8"メッシュ数 : %d", mMeshes.size());
 	if (ImGui::TreeNode(u8"メッシュ情報")) {
 
-		for (int i = 0; i < mMeshes.size(); i++) {
+		for (unsigned int i = 0; i < mMeshes.size(); i++) {
 			if (ImGui::TreeNode(mMeshes[i]->Name.c_str())) {
 				ImGui::Checkbox(u8"表示", &mMeshes[i]->Enable);
 				ImGui::ColorEdit4(u8"カラー", mMeshes[i]->col);
@@ -119,6 +119,7 @@ void AssimpModel::Update(const char* animationname,int frame){
 
 void AssimpModel::Update(const char* animationname1, const char* animationname2,float BlendRate, int frame) {
 
+
 	if (!mAnimation[animationname1]->HasAnimations()) {
 		return;
 	}
@@ -169,8 +170,8 @@ void AssimpModel::Draw(D3DXMATRIX root) {
 		DrawConfig();
 	}
 
-	for (int i = 0; i < mMeshes.size(); i++) {
-		for (int j = 0; j < mTexturesLoaded.size(); j++) {
+	for (unsigned int i = 0; i < mMeshes.size(); i++) {
+		for (unsigned int j = 0; j < mTexturesLoaded.size(); j++) {
 			if (mMeshes[i]->Textures[0].path == mTexturesLoaded[j].path) {
 
 				if (DefaultTexture) {
@@ -183,14 +184,14 @@ void AssimpModel::Draw(D3DXMATRIX root) {
 					}
 				}
 
-				D3DXMATRIX world, scale, rot, trans;
+				/*D3DXMATRIX world, scale, rot, trans;
 				D3DXMatrixScaling(&scale, mMeshes[i]->Scale.x, mMeshes[i]->Scale.y, mMeshes[i]->Scale.z);
 				D3DXQuaternionRotationYawPitchRoll(&mMeshes[i]->Quaternion, mMeshes[i]->Rotation.y, mMeshes[i]->Rotation.x, mMeshes[i]->Rotation.z);
 				D3DXMatrixRotationQuaternion(&rot, &mMeshes[i]->Quaternion);
 				D3DXMatrixTranslation(&trans, mMeshes[i]->Position.x, mMeshes[i]->Position.y, mMeshes[i]->Position.z);
 				world = scale * rot * trans;
 				world *= root;
-				Renderer::SetWorldMatrix(&world);
+				Renderer::SetWorldMatrix(&world);*/
 
 				if (mMeshes[i]->Enable){
 					mMeshes[i]->Draw();
@@ -256,15 +257,16 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 			vertex.TexCoord.y = (float)mesh->mTextureCoords[0][i].y;
 		}
 
-		vertex.Normal.x = mesh->mNormals->x;
-		vertex.Normal.y = mesh->mNormals->y;
-		vertex.Normal.z = mesh->mNormals->z;
+		vertex.Normal.x = mesh->mNormals[i].x;
+		vertex.Normal.y = mesh->mNormals[i].y;
+		vertex.Normal.z = mesh->mNormals[i].z;
 
 		vertex.Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 
 		vertices.push_back(vertex);
 	}
 
+	
 	// Index
 	for (UINT i = 0; i < mesh->mNumFaces; i++)
 	{
@@ -331,6 +333,7 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		}
 
 		CreateBone(scene->mRootNode, Bone);
+
 
 		return new Mesh(name, vertices, indices, textures, cmatrixerial, DeformVertex, Bone);
 	}
@@ -453,7 +456,7 @@ void AssimpModel::CreateBone(aiNode* node, std::unordered_map  <std::string, BON
 }
 
 void AssimpModel::SetColorAll(D3DXCOLOR col) {
-	for (int i = 0; i < mMeshes.size(); i++) {
+	for (unsigned int i = 0; i < mMeshes.size(); i++) {
 		mMeshes[i]->col[0] = col.r;
 		mMeshes[i]->col[1] = col.g;
 		mMeshes[i]->col[2] = col.b;

@@ -77,9 +77,9 @@ bool Physical::IsMoving() {
 void Physical::ProcessPostion() {
 
 	// d—Í
-	if (!IsGround) {
-		GetResource()->Position.y -= mGravity * Time::GetDeltaTime();
-	}
+	//if (!IsGround) {
+	//	GetResource()->Position.y -= mGravity * Time::GetDeltaTime();
+	//}
 
 	// ˆÚ“®‘¬“x
 	GetResource()->Position += mVelocity * mSpeed * Time::GetDeltaTime();

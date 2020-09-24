@@ -58,6 +58,13 @@ public:
 		}
 
 		for (int i = 0; i < EndLayer; i++) {
+			for (Resource* g : mGameObject[i])
+			{
+				g->FixedUpdate();
+			}
+		}
+
+		for (int i = 0; i < EndLayer; i++) {
 			mGameObject[i].remove_if([](Resource* obj) {return obj->Remove(); });
 		}
 

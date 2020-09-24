@@ -3,6 +3,7 @@
 #include "field.h"
 #include "Scene.h"
 #include "Application.h"
+#include "Shader.h"
 
 void Field::Init() {
 
@@ -65,6 +66,7 @@ void Field::Update() {
 
 void Field::Render() {
 
+
 	D3DXMATRIX world, scale, rot, trans;
 	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
 	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
@@ -79,13 +81,15 @@ void Field::Render() {
 
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
-	material.Ambient = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	material.Ambient = D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f);
 	material.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	Renderer::SetMaterial(material);
 
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
 
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	Shader::Use(SHADER_TYPE_VSPS::Unlit);
 
 	Renderer::GetDeviceContext()->Draw(4, 0);
 }

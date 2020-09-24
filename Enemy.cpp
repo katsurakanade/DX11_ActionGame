@@ -8,6 +8,7 @@
 #include "Physical.h"
 #include "Animation.h"
 #include "input.h"
+#include "Shader.h"
 
 int Enemy::ID;
 
@@ -98,7 +99,9 @@ void Enemy::Update() {
 		start = true;
 	}
 
-	mGauge->mFillAmount = mHp / mHpInit;
+	if (mGauge) {
+		mGauge->mFillAmount = mHp / mHpInit;
+	}
 
 	Resource::Update();
 }
@@ -113,10 +116,10 @@ void Enemy::Render() {
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(&world);
 
+	Shader::Use(SHADER_TYPE_VSPS::Default);
+
 	mModel->Draw(world);
 	
-	mGauge->Render();
-
 	GetComponent<BoxCollider>()->Render();
 }
 

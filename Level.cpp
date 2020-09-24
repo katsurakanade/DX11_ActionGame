@@ -16,7 +16,7 @@ void Level::Init() {
 	ground->Position = D3DXVECTOR3(0, 0, 0);
 	ground->Rotation = D3DXVECTOR3(0, 0, 0);
 	ground->Scale = D3DXVECTOR3(300, 1, 300);
-	ground->SetFront(D3DXVECTOR3(0, -1, 0));
+	ground->SetFront(D3DXVECTOR3(0, 1, 0));
 	ground->ResetPositionOffest();
 
 

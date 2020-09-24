@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "Scene.h"
 #include <vector>
+#include "Shader.h"
 
 
 void Effect::Init() {
@@ -96,10 +97,6 @@ void Effect::Update() {
 
 void Effect::Render() {
 
-	LIGHT light;
-	light.Enable = false;
-	Renderer::SetLight(light);
-
 	D3DXVECTOR2 frame = MakeFrame();
 
 	D3D11_MAPPED_SUBRESOURCE msr;
@@ -153,6 +150,8 @@ void Effect::Render() {
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
 
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	Shader::Use(SHADER_TYPE_VSPS::Unlit);
 
 	Renderer::GetDeviceContext()->Draw(4, 0);
 }

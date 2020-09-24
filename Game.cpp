@@ -4,6 +4,8 @@
 #include "Application.h"
 #include "Debug.h"
 #include "Particle.h"
+#include "Torus.h"
+#include "MeshField.h"
 
 void Game::Init() {
 
@@ -17,34 +19,29 @@ void Game::Init() {
 	Skybox* skybox = Application::GetScene()->AddGameObject<Skybox>(SpriteLayer);
 	skybox->SetModelTexture(1);
 
-	Level* level = AddGameObject<Level>(ObjectLayer);
-
-	/*for (int i = 0; i < 3; i++) {
-		for (int k = 0; k < 3; k++) {
-			Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
-			enemy->Position = D3DXVECTOR3(10 * i, 12, -30 + (10 * k));
-		}
-	}*/
+	/*Level* level = AddGameObject<Level>(ObjectLayer);*/
 
 	Player* player = AddGameObject<Player>(ObjectLayer);
 	Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
 	enemy->AddGauge();
 
-	Wall* wall = AddGameObject<Wall>(ObjectLayer);
-	wall->Position = enemy->Position - D3DXVECTOR3(0, 0, 5);
+	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
+
+	//Torus* t = AddGameObject<Torus>(ObjectLayer);
+	//t->Simple = true;
+	//t->Position = D3DXVECTOR3(10, 12, 0);
+
+	//Torus* t2 = AddGameObject<Torus>(ObjectLayer);
+	//t2->Simple = false;
+	//t2->Position = D3DXVECTOR3(0, 12, 0);
 
 	Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
-
-	//Wall* wall = AddGameObject<Wall>(ObjectLayer);
-
-	//ParticleSystem* pc = AddGameObject<ParticleSystem>(SpriteLayer);
-	/*GUI* gui = AddGameObject<GUI>(SpriteLayer);*/
 
 	Fade* fade = AddGameObject<Fade>(FadeLayer);
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));
 	mpFade = fade;
 
-	AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
+	//AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
 
 }
 

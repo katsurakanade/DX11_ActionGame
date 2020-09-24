@@ -72,6 +72,7 @@ enum class ASSIMP_MODEL_ENUM_GAME
 	CUBE,
 	ENEMY,
 	HUMAN,
+	TORUS,
 };
 
 enum class TEXTURE_ENUM_GAME {
@@ -82,6 +83,7 @@ enum class TEXTURE_ENUM_GAME {
 	BAR_FILL,
 	EXPLOSION,
 	PARTICLE,
+	WOOD,
 };
 
 enum class SOUND_ENUM_GAME {
@@ -114,7 +116,7 @@ protected:
 		AssimpModel* md = new AssimpModel(true);
 		md->Load(value);
 
-		for (int i = 0; i < animationpass.size(); i++) {
+		for (unsigned int i = 0; i < animationpass.size(); i++) {
 			md->LoadAnimation(animationpass[i],animationname[i]);
 		}
 

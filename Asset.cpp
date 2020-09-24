@@ -95,6 +95,7 @@ void Asset::LoadModel() {
 
 		AddAssimpModelToList("asset\\model\\enemy\\Enemy.fbx", pass, animation);
 		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
+		AddAssimpModelToList("asset\\model\\torus\\torus.obj");
 
 		break;
 	case SCENE_ASSET::RESULT:
@@ -129,12 +130,13 @@ void Asset::LoadTexture() {
 		break;
 	case SCENE_ASSET::GAME:
 		AddTextureToList("asset/texture/white.png");
-		AddTextureToList("asset/texture/star.jpg");
 		AddTextureToList("asset/texture/sky.jpg");
+		AddTextureToList("asset/texture/star.jpg");
 		AddTextureToList("asset/texture/bar_empty.png");
 		AddTextureToList("asset/texture/bar_fill.png");
 		AddTextureToList("asset/texture/explosion.png");
 		AddTextureToList("asset/texture/Particle.png");
+		AddTextureToList("asset/texture/Wood.jpg");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;

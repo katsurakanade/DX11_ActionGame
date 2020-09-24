@@ -14,7 +14,7 @@ void Camera::Init() {
 	Position = D3DXVECTOR3(0.0f, 10.0f, -40.0f);
 	mTarget = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 
-	mFollowPostionOffset = D3DXVECTOR3(0.0f, 3.0f, 14.0f);
+	mFollowPostionOffset = D3DXVECTOR3(0.0f, 3.0f, 5.0f);
 	mFollowProjectionOffset = D3DXVECTOR3(0.0f, 15.0f,14.0f);
 
 	mControllerPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -30,10 +30,8 @@ void Camera::Update() {
 		mTarget = mFollowTarget->Position + mFollowProjectionOffset;
 		if (!flag) {
 			Position = mTarget + mFollowPostionOffset + mControllerPosition;
-		}
-		
+		}		
 	}
-
 
 	ImGui::Begin(u8"カメラ");
 
@@ -49,16 +47,6 @@ void Camera::Update() {
 
 
 	ImGui::End();
-
-	//if (Input::GetKeyPress(DIK_C)) {
-	//	RotationAroundXZ(mFollowTarget->Position, 1.0f);
-	//	flag = true;
-	//}
-
-	//if (Input::GetKeyRelease(DIK_C)) {
-	//	flag = false;
-	//}
-
 	
 }
 
@@ -72,9 +60,10 @@ void Camera::Render() {
 
 	//プロジェクションマトリクス設定
 	D3DXMATRIX projectionMatrix;
-	D3DXMatrixPerspectiveFovLH(&projectionMatrix, 1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 10000.0f);
+	D3DXMatrixPerspectiveFovLH(&projectionMatrix, 1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 1000.0f);
 
 	Renderer::SetProjectionMatrix(&projectionMatrix);
 
 	Renderer::SetCameraPosition(Position);
+
 }

@@ -3,6 +3,7 @@
 #include "Skybox.h"
 #include "Application.h"
 #include "Scene.h"
+#include "Shader.h"
 
 void Skybox::Init() {
 
@@ -35,6 +36,8 @@ void Skybox::Update() {
 
 void Skybox::Render() {
 
+
+
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID;
@@ -55,6 +58,9 @@ void Skybox::Render() {
 
 	mModel->DefaultTexture = false;
 	mModel->SelectTextureIndex = TexutreIndex;
+
+	Shader::Use(SHADER_TYPE_VSPS::Unlit);
+
 	mModel->Draw(world);
 
 }

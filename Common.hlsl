@@ -1,4 +1,16 @@
 
+cbuffer WorldBuffer : register(b0)
+{
+    matrix World;
+}
+cbuffer ViewBuffer : register(b1)
+{
+    matrix View;
+}
+cbuffer ProjectionBuffer : register(b2)
+{
+    matrix Projection;
+}
 
 struct VS_IN
 {
@@ -24,14 +36,18 @@ struct MATERIAL
     float4 Specular;
     float4 Emission;
     float Shininess;
-    float3 Dummy; //16bit‹«ŠE—p
+    float3 Dummy;
 };
 
+cbuffer MaterialBuffer : register(b3)
+{
+    MATERIAL Material;
+}
 
 struct LIGHT
 {
     bool Enable;
-    bool3 Dummy; //16bit‹«ŠE—p
+    bool3 Dummy;
     float4 Direction;
     float4 Diffuse;
     float4 Ambient;
@@ -42,3 +58,14 @@ cbuffer LightBuffer : register(b4)
 {
     LIGHT Light;
 }
+
+cbuffer CameraBuffer : register(b5)
+{
+    float4 CameraPosition;
+}
+
+cbuffer ParameterBuffer : register(b6)
+{
+    float Parameter;
+}
+

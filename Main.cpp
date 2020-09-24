@@ -24,7 +24,7 @@ HINSTANCE GetHinstance() {
 	return g_hinstance;
 }
 
-#ifdef _DEBUG
+#ifdef _DEBUG1
 int main(){
 
 #else
