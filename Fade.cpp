@@ -18,7 +18,7 @@ void Fade::Init() {
 		sp->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::WHITE));
 	}
 	sp->SetSize(D3DXVECTOR3(1920.0f, 1080.0f, 0));
-	sp->SetPosition(D3DXVECTOR2(0, 0));
+	sp->SetPosition(D3DXVECTOR3(0, 0, 0));
 	sp->SetColor(D3DXVECTOR4(1, 1, 1, 1));
 
 	mSprite = sp;

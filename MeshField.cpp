@@ -5,6 +5,30 @@
 #include "Shader.h"
 #include <random>
 
+float HeightMap[21][21] = {
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
+};
+
 void MeshField::Init() {
 
 	Name = "MeshField";
@@ -15,7 +39,9 @@ void MeshField::Init() {
 
 	for (int x = 0; x <= 20; x++) {
 		for (int z = 0; z <= 20; z++) {
-			mVertex[x][z].Position = D3DXVECTOR3((x - 10) * 5.0f, dis(gen), (z - 10) * -5.0f);
+			/*float y = sinf(x * 0.3f) * 5.0f;*/
+			float y = HeightMap[x][z];
+			mVertex[x][z].Position = D3DXVECTOR3((x - 10) * 10.0f, y, (z - 10) * -10.0f);
 			mVertex[x][z].Normal = D3DXVECTOR3(0, 1, 0);
 			mVertex[x][z].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
 			mVertex[x][z].TexCoord = D3DXVECTOR2(x * 0.5f, z * 0.5f);
@@ -23,9 +49,15 @@ void MeshField::Init() {
 	}
 
 	for (int x = 1; x <= 19; x++) {
-
+		for (int z = 1; z <= 19; z++) {
+			D3DXVECTOR3 vx, vz, vn;
+			vx = mVertex[x + 1][z].Position - mVertex[x - 1][z].Position;
+			vz = mVertex[x][z - 1].Position - mVertex[x][z + 1].Position;
+			D3DXVec3Cross(&vn, &vz, &vx);
+			D3DXVec3Normalize(&vn, &vn);
+			mVertex[x][z].Normal = vn;
+		}
 	}
-
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -75,7 +107,7 @@ void MeshField::Init() {
 		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mIndexBuffer);
 	}
 
-	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::WOOD);
+	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS);
 
 	Position = D3DXVECTOR3(0.0f, 12.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -91,6 +123,20 @@ void MeshField::Unint() {
 
 void MeshField::Update() {
 
+	ImGui::Begin(u8"ínå`");
+	ImGui::PushItemWidth(25);
+	for (int x = 0; x < 21; x++) {
+		for (int z = 0; z < 21; z++) {
+			std::string str = "(" + std::to_string(x) + "," + std::to_string(z) + ")";
+			ImGui::SliderFloat(str.c_str(), &HeightMap[z][x], 0.0f, 10.0f,"%.1f");
+			ImGui::SameLine();
+		}
+		ImGui::NewLine();
+	}
+	if (ImGui::Button(u8"ïœçX")) {
+		ResetField();
+	}
+	ImGui::End();
 }
 
 void MeshField::Render() {
@@ -112,6 +158,7 @@ void MeshField::Render() {
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	material.Shininess = 225;
 	Renderer::SetMaterial(material);
 
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
@@ -127,4 +174,44 @@ void MeshField::Render() {
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
 	Renderer::GetDeviceContext()->DrawIndexed((22*2) * 20 - 2,0, 0);
+}
+
+void MeshField::ResetField() {
+
+	mVertexBuffer->Release();
+
+	for (int x = 0; x <= 20; x++) {
+		for (int z = 0; z <= 20; z++) {
+			/*float y = sinf(x * 0.3f) * 5.0f;*/
+			float y = HeightMap[x][z];
+			mVertex[x][z].Position = D3DXVECTOR3((x - 10) * 10.0f, y, (z - 10) * -10.0f);
+			mVertex[x][z].Normal = D3DXVECTOR3(0, 1, 0);
+			mVertex[x][z].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
+			mVertex[x][z].TexCoord = D3DXVECTOR2(x * 0.5f, z * 0.5f);
+		}
+	}
+
+	for (int x = 1; x <= 19; x++) {
+		for (int z = 1; z <= 19; z++) {
+			D3DXVECTOR3 vx, vz, vn;
+			vx = mVertex[x + 1][z].Position - mVertex[x - 1][z].Position;
+			vz = mVertex[x][z - 1].Position - mVertex[x][z + 1].Position;
+			D3DXVec3Cross(&vn, &vz, &vx);
+			D3DXVec3Normalize(&vn, &vn);
+			mVertex[x][z].Normal = vn;
+		}
+	}
+
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(VERTEX_3D) * 21 * 21;
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA sd;
+	ZeroMemory(&sd, sizeof(sd));
+	sd.pSysMem = mVertex;
+
+	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
 }

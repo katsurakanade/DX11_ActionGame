@@ -2,7 +2,7 @@
 
 #include "Resource.h"
 
-#define MAX_PARTICLE 512
+#define MAX_PARTICLE 10000
 
 struct Particle {
 	VERTEX_3D vertex[4];
@@ -10,6 +10,7 @@ struct Particle {
 
 struct ParticleCompute {
 	D3DXVECTOR3 pos[4];
+	D3DXVECTOR3 vel;
 };
 
 class ParticleSystem : public Resource
@@ -25,8 +26,6 @@ private:
 	bool start = false;
 
 	void CreateComputeResource();
-
-	
 
 public:
 

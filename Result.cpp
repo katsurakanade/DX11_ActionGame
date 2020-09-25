@@ -19,7 +19,7 @@ void Result::Init() {
 		logo->SetTexture(Application::GetAsset()->GetTexture(TEXTURE_ENUM::GAMEOVER));
 	}
 	logo->SetSize(D3DXVECTOR3(1280, 400, 0));
-	logo->SetPosition(D3DXVECTOR2(SCREEN_WIDTH / 2 - 550, SCREEN_HEIGHT / 2 - 550));
+	/*logo->SetPosition(D3DXVECTOR2(SCREEN_WIDTH / 2 - 550, SCREEN_HEIGHT / 2 - 550));*/
 
 	//Sprite* Button = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	//Button->Name = "Button";

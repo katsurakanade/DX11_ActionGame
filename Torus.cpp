@@ -6,18 +6,15 @@
 #include "input.h"
 #include "Shader.h"
 
-
-D3DXVECTOR3 Offset;
-
 void Torus::Init() {
 
 	Name = "Torus";
 
-	mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::TORUS);
+	mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::SWORD);
 
-	Position = D3DXVECTOR3(0, 12, 0);
-	Rotation = D3DXVECTOR3(1.2f, 0, 0);
-	Scale = D3DXVECTOR3(3.0f, 3.0f, 3.0f);
+	Position = D3DXVECTOR3(0, 20.0f, 0);
+	Rotation = D3DXVECTOR3(0, 0, 0);
+	Scale = D3DXVECTOR3(0.5f, 0.5f, 0.5f);
 
 	D3DXQuaternionIdentity(&this->Quaternion);
 
@@ -26,11 +23,9 @@ void Torus::Init() {
 
 	Resource::Init();
 
-	mCmodel = new CModel();
-	mCmodel->Load("asset\\model\\torus\\torus.obj");
 }
 
-void Torus::Unint() {
+void Torus::Uninit() {
 	mCmodel->Unload();
 	delete mCmodel;
 	Resource::Uninit();
@@ -61,16 +56,18 @@ void Torus::Update() {
 	if (Input::GetKeyPress(DIK_E))
 		Rotation.y += 5.0f * Time::GetDeltaTime();
 
-	ImGui::Begin(Name.c_str());
-	ImGui::SliderFloat3(u8"LightOffset", Offset, -10.0f, 10.0f);
-	ImGui::End();
 
 	Resource::Update();
+
+	ImGui::Begin(Name.c_str());
+	ImGui::SliderFloat3(u8"座標", Position, -1000.0f, 1000.0f, "%.0f", 5.0f);
+	ImGui::SliderFloat3(u8"回転", Rotation, -3.14f, 3.14f);
+	ImGui::SliderFloat3(u8"スケール", Scale, 0.1f, 10.0f);
+	ImGui::End();
 }
 
 void Torus::Render() {
 
-	//Renderer::SetCameraPosition(Position + Offset);
 
 	D3DXMATRIX world, scale, rot, trans;
 	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
@@ -82,11 +79,6 @@ void Torus::Render() {
 
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
-	if (Simple) {
-		mCmodel->Draw();
-	}
-	else if (!Simple) {
-		mModel->Draw(world);
-	}
+	mModel->Draw(world);
 
 }

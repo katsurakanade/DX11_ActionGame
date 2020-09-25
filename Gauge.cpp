@@ -57,13 +57,13 @@ void Gauge::SetGUI(int length) {
 	Sprite* hpbar_empty = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	hpbar_empty->Name = "hpbarGUI";
 	hpbar_empty->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
-	hpbar_empty->SetSize(D3DXVECTOR3((float)length, 100, 0));
-	hpbar_empty->SetPosition(D3DXVECTOR2(Position.x, Position.y));
+	hpbar_empty->SetSize(D3DXVECTOR3((float)length, 25, 0));
+	hpbar_empty->SetPosition(D3DXVECTOR3(Position.x, Position.y,1));
 
 	Sprite* hpbar_fill = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	hpbar_fill->Name = "hpbarfillGUI";
 	hpbar_fill->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
-	hpbar_fill->SetSize(D3DXVECTOR3((float)length, 100, 0));
+	hpbar_fill->SetSize(D3DXVECTOR3((float)length, 25, 0));
 	hpbar_fill->Position = D3DXVECTOR3(Position.x, Position.y, 0);
 	hpbar_fill->SetFillSprite(true);
 

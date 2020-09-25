@@ -9,7 +9,7 @@ private:
 	ID3D11Buffer* mVertexBuffer = NULL;
 	ID3D11Buffer* mColorBuffer = NULL;
 	ID3D11ShaderResourceView* mTexture = NULL;
-	D3DXVECTOR3 mSize = D3DXVECTOR3(150.0f,150.0f,0.0f);
+	D3DXVECTOR3 mSize = D3DXVECTOR3(64.0f,64.0f,0.0f);
 
 	bool mAnimation = false;
 	int mFramecount;
@@ -28,14 +28,15 @@ public:
 	void Render();
 
 	void SetTexture(ID3D11ShaderResourceView* value);
-	void SetSize(D3DXVECTOR3 value) { mSize = value; };
+	void SetSize(D3DXVECTOR3 value);
 
 	void SetAnimationSprite(bool val) { mAnimation = val; };
 	void SetFillSprite(bool val) { mFill = val; };
 	void SetFrame(int frame) { mFramecount = frame; };
 	void SetHW(int valx, int valy) { mWidth = valx; mHeight = valy; };
-	void SetPosition(D3DXVECTOR2 pos);
+	void SetPosition(D3DXVECTOR3 pos);
 	void SetColor(D3DXVECTOR4 col);
 
+	D3DXVECTOR3 GetSize() { return mSize; };
 };
 

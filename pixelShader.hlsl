@@ -23,17 +23,9 @@ void main(in PS_IN In , out float4 outDiffuse : SV_Target)
     float3 refv = reflect(Light.Direction.xyz, normal.xyz);
     float specular = -dot(eyev, refv);
     specular = saturate(specular);
-    specular = pow(specular, 30);
+    specular = pow(specular, Material.Shininess);
     outDiffuse.rgb += specular * Material.Specular.xyz;
     
-    // New Specular
-    //float specularStrength = 1.0f;
-    //float3 viewDir = normalize(CameraPosition.xyz - In.WorldPosition.xyz);
-    //float3 reflectDir = reflect(-Light.Direction.xyz, normal.xyz);
-    //float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    //float3 specular = specularStrength * spec;
-    //outDiffuse.rgb += specular * Material.Specular.xyz;
-
     //float rim = 1.0f + dot(eyev, normal.xyz);
     //rim = pow(rim, 2) * 0.3f;
     //outDiffuse.rgb += rim;

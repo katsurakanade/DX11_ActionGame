@@ -9,15 +9,14 @@
 
 std::random_device rd;
 std::default_random_engine gen = std::default_random_engine(rd());
-std::uniform_real_distribution<float> dis(0.1f, 0.5f);
-std::uniform_real_distribution<float> dis2(-1.0f, 1.0f);
+std::uniform_real_distribution<float> dis2(-5.0f, 5.0f);
 
 void ParticleSystem::Init() {
 
 	float col[4];
 
 	for (int i = 0; i < MAX_PARTICLE; i++) {
-		mVel[i] = D3DXVECTOR3(dis2(gen), dis(gen), dis2(gen));
+		mVel[i] = D3DXVECTOR3(dis2(gen), dis2(gen), dis2(gen));
 		mparticle[i].vertex[0].Position = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
 		mparticle[i].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		mparticle[i].vertex[0].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -71,7 +70,7 @@ void ParticleSystem::Init() {
 	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE);
 
 	Position = D3DXVECTOR3(0.0f, 5.0f, 0.0f);
-	Scale = D3DXVECTOR3(0.2f, 0.2f, 0.2f);
+	Scale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 
 	CreateComputeResource();
 
@@ -105,64 +104,92 @@ void ParticleSystem::CreateComputeResource(){
 
 void ParticleSystem::Update() {
 
-	//// Fill Data
-	//D3D11_MAPPED_SUBRESOURCE subRes;
-	//Renderer::GetDeviceContext()->Map(mpParticleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
-	//ParticleCompute* pBufType = (ParticleCompute*)subRes.pData;
-	//for (unsigned int v = 0; v < MAX_PARTICLE; v++) {
-	//	pBufType[v].pos[0] = mparticle[v].vertex[0].Position;
-	//	pBufType[v].pos[1] = mparticle[v].vertex[1].Position;
-	//	pBufType[v].pos[2] = mparticle[v].vertex[2].Position;
-	//	pBufType[v].pos[3] = mparticle[v].vertex[3].Position;
-	//}
-	//Renderer::GetDeviceContext()->Unmap(mpParticleBuffer, 0);
+	// Fill Data
+	{
+		D3D11_MAPPED_SUBRESOURCE subRes;
+		Renderer::GetDeviceContext()->Map(mpParticleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
+		ParticleCompute* pBufType = (ParticleCompute*)subRes.pData;
+		for (unsigned int v = 0; v < MAX_PARTICLE; v++) {
+			pBufType[v].vel = mVel[v];
+			pBufType[v].pos[0] = mparticle[v].vertex[0].Position;
+			pBufType[v].pos[1] = mparticle[v].vertex[1].Position;
+			pBufType[v].pos[2] = mparticle[v].vertex[2].Position;
+			pBufType[v].pos[3] = mparticle[v].vertex[3].Position;
+		}
+	
+		
+		Renderer::GetDeviceContext()->Unmap(mpParticleBuffer, 0);
+	}
 
-	//ID3D11ShaderResourceView* pSRVs[1] = { mpParticleSRV };
-	//Renderer::GetDeviceContext()->CSSetShaderResources(0, 1, pSRVs);
-	//Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[2], nullptr, 0);
-	//Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
 
-	//Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
+	ID3D11ShaderResourceView* pSRVs[1] = { mpParticleSRV };
+	Renderer::GetDeviceContext()->CSSetShaderResources(0, 1, pSRVs);
+	Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[2], nullptr, 0);
+	Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
 
-	//ID3D11Buffer* pBufDbg;
-	//D3D11_BUFFER_DESC desc;
-	//memset(&desc, 0, sizeof(desc));
-	//mpResultBuffer->GetDesc(&desc);
-	//desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-	//desc.Usage = D3D11_USAGE_STAGING;
-	//desc.BindFlags = 0;
-	//desc.MiscFlags = 0;
-	//Renderer::GetDevice()->CreateBuffer(&desc, nullptr, &pBufDbg);
-	//Renderer::GetDeviceContext()->CopyResource(pBufDbg, mpResultBuffer);
+	Renderer::GetDeviceContext()->Dispatch(128, 1, 1);
 
-	//{
-	//	D3D11_MAPPED_SUBRESOURCE subRes;
-	//	ParticleCompute* pBufType;
-	//	Renderer::GetDeviceContext()->Map(pBufDbg, 0, D3D11_MAP_READ, 0, &subRes);
-	//	pBufType = (ParticleCompute*)subRes.pData;
+	ID3D11Buffer* pBufDbg;
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	mpResultBuffer->GetDesc(&desc);
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	desc.Usage = D3D11_USAGE_STAGING;
+	desc.BindFlags = 0;
+	desc.MiscFlags = 0;
+	Renderer::GetDevice()->CreateBuffer(&desc, nullptr, &pBufDbg);
+	Renderer::GetDeviceContext()->CopyResource(pBufDbg, mpResultBuffer);
 
-	//	{
-	//		D3D11_MAPPED_SUBRESOURCE ms;
-	//		Renderer::GetDeviceContext()->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
-	//		Particle* particle = (Particle*)ms.pData;
+	{
+		D3D11_MAPPED_SUBRESOURCE subRes;
+		Renderer::GetDeviceContext()->Map(pBufDbg, 0, D3D11_MAP_READ, 0, &subRes);
+		ParticleCompute* pBufType = (ParticleCompute*)subRes.pData;
 
-	//		for (unsigned int v = 0; v < MAX_PARTICLE; v++) {
-	//			particle[v].vertex[0].Position = pBufType[v].pos[0];
-	//			particle[v].vertex[1].Position = pBufType[v].pos[1];
-	//			particle[v].vertex[2].Position = pBufType[v].pos[2];
-	//			particle[v].vertex[3].Position = pBufType[v].pos[3];
-	//			DebugOutputString(std::to_string(pBufType[v].pos[0].y).c_str());
-	//		}
+		for (unsigned int v = 0; v < MAX_PARTICLE; v++) {
+			mparticle[v].vertex[0].Position = pBufType[v].pos[0];
+			mparticle[v].vertex[1].Position = pBufType[v].pos[1];
+			mparticle[v].vertex[2].Position = pBufType[v].pos[2];
+			mparticle[v].vertex[3].Position = pBufType[v].pos[3];
+		}
 
-	//		Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
-	//	}
+		{
+			D3D11_MAPPED_SUBRESOURCE ms;
+			Renderer::GetDeviceContext()->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
+			Particle* particle = (Particle*)ms.pData;
 
-	//	Renderer::GetDeviceContext()->Unmap(pBufDbg, 0);
-	//	pBufDbg->Release();
+			for (unsigned int v = 0; v < MAX_PARTICLE; v++) {
+				particle[v].vertex[0].Position = pBufType[v].pos[0];
+				particle[v].vertex[1].Position = pBufType[v].pos[1];
+				particle[v].vertex[2].Position = pBufType[v].pos[2];
+				particle[v].vertex[3].Position = pBufType[v].pos[3];
 
-	//}
+				particle[v].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+				particle[v].vertex[0].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+				particle[v].vertex[0].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
 
-	D3D11_MAPPED_SUBRESOURCE msr;
+				particle[v].vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+				particle[v].vertex[1].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+				particle[v].vertex[1].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
+
+				particle[v].vertex[2].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+				particle[v].vertex[2].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+				particle[v].vertex[2].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
+
+				particle[v].vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+				particle[v].vertex[3].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+				particle[v].vertex[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
+			}
+
+			Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
+		}
+
+		Renderer::GetDeviceContext()->Unmap(pBufDbg, 0);
+		pBufDbg->Release();
+
+	}
+
+	// CPU
+	/*D3D11_MAPPED_SUBRESOURCE msr;
 	Renderer::GetDeviceContext()->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
 	Particle* vertex = (Particle*)msr.pData;
 
@@ -174,7 +201,7 @@ void ParticleSystem::Update() {
 		}
 	}
 
-	Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
+	Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);*/
 
 }
 

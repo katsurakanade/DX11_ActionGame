@@ -14,7 +14,7 @@ void Camera::Init() {
 	Position = D3DXVECTOR3(0.0f, 10.0f, -40.0f);
 	mTarget = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 
-	mFollowPostionOffset = D3DXVECTOR3(0.0f, 3.0f, 5.0f);
+	mFollowPostionOffset = D3DXVECTOR3(0.0f, 3.0f, 10.0f);
 	mFollowProjectionOffset = D3DXVECTOR3(0.0f, 15.0f,14.0f);
 
 	mControllerPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -48,6 +48,17 @@ void Camera::Update() {
 
 	ImGui::End();
 	
+
+	if (Input::GetKeyPress(DIK_C)) {
+
+		/*float tx = mFollowTarget->Position.x;
+		float ty = mFollowTarget->Position.z;
+		float x0 = Position.x;
+		float y0 = Position.z;
+
+		mControllerPosition.x = tx + (x0 - tx) * cos(D3DXToRadian(5.0f * Time::GetDeltaTime())) - (y0 - ty) * sin(D3DXToRadian(5.0f * Time::GetDeltaTime()));*/
+		//mControllerPosition.z = ty + (x0 - tx) * sin(D3DXToRadian(1.0f * Time::GetDeltaTime())) + (y0 - ty) * cos(D3DXToRadian(1.0f * Time::GetDeltaTime()));
+	}
 }
 
 void Camera::Render() {

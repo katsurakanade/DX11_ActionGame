@@ -96,6 +96,7 @@ void Asset::LoadModel() {
 		AddAssimpModelToList("asset\\model\\enemy\\Enemy.fbx", pass, animation);
 		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
 		AddAssimpModelToList("asset\\model\\torus\\torus.obj");
+		AddAssimpModelToList("asset\\model\\sword\\sword.obj");
 
 		break;
 	case SCENE_ASSET::RESULT:
@@ -104,12 +105,6 @@ void Asset::LoadModel() {
 		break;
 	}
 
-	//AddAssimpModelToList("asset\\model\\ball\\ball.obj",false);
-	//AddAssimpModelToList("asset\\model\\cube\\cube.obj", false);
-	//AddAssimpModelToList("asset\\model\\torus\\torus.obj", false);
-	//AddAssimpModelToList("asset\\model\\arrow\\arrow.obj", false);
-	//AddAssimpModelToList("asset\\model\\mito\\mito.pmx", false);
-	//AddAssimpModelToList("asset\\model\\human\\Human.fbx", true);
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Model Loaded", end, start);
@@ -132,36 +127,21 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/white.png");
 		AddTextureToList("asset/texture/sky.jpg");
 		AddTextureToList("asset/texture/star.jpg");
-		AddTextureToList("asset/texture/bar_empty.png");
-		AddTextureToList("asset/texture/bar_fill.png");
+		AddTextureToList("asset/texture/Hp_frame.png");
+		AddTextureToList("asset/texture/Hp_line.png");
 		AddTextureToList("asset/texture/explosion.png");
 		AddTextureToList("asset/texture/Particle.png");
-		AddTextureToList("asset/texture/Wood.jpg");
+		AddTextureToList("asset/texture/Grass.jpg");
+		AddTextureToList("asset/texture/Frame.png");
+		AddTextureToList("asset/texture/RoundFrame.png");
+		AddTextureToList("asset/texture/Sword_Icon.png");
+		AddTextureToList("asset/texture/Plant.png");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;
 	default:
 		break;
 	}
-
-	//AddTextureToList("asset/texture/number.png");
-	//AddTextureToList("asset/texture/Dirt.jpg");
-	//AddTextureToList("asset/texture/explosion.png");
-	//AddTextureToList("asset/texture/explosion2.png");
-	//AddTextureToList("asset/texture/Wizard.png");
-	//AddTextureToList("asset/texture/Samurai.png");
-	//AddTextureToList("asset/texture/Warrior.png");
-	//AddTextureToList("asset/texture/Elf.png");
-	//AddTextureToList("asset/texture/bar_empty.png");
-	//AddTextureToList("asset/texture/bar_fill.png");
-	//AddTextureToList("asset/texture/gameover.png");
-	//AddTextureToList("asset/texture/Clear.png");
-	//AddTextureToList("asset/texture/logo.png");
-	//AddTextureToList("asset/texture/white.png");
-	//AddTextureToList("asset/texture/star.jpg");
-	//AddTextureToList("asset/texture/sky.jpg");
-	//AddTextureToList("asset/texture/space_button.png");
-	//AddTextureToList("asset/texture/lightning.png");
 
 	auto end = std::chrono::system_clock::now();
 	Debug::OutputRuntime("Texture Loaded", end, start);

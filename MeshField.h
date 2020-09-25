@@ -13,6 +13,7 @@ private:
 
 	VERTEX_3D mVertex[21][21];
 
+	void ResetField();
 
 public:
 	void Init();

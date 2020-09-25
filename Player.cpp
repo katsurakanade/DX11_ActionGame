@@ -18,7 +18,7 @@ void Player::Init() {
 
 	mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN);
 
-	Position = D3DXVECTOR3(0, 12, 20);
+	Position = D3DXVECTOR3(0, 12, 0);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Scale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 
@@ -87,6 +87,11 @@ void Player::Update() {
 		mpAnination->SetNewState("Idle");
 		count = 0.0f;
 		start = false;
+	}
+
+	if (Input::GetKeyTrigger(DIK_C)) {
+		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+		pc->Position = Position;
 	}
 
 	Resource::Update();

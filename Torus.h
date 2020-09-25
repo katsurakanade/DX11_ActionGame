@@ -16,7 +16,7 @@ public:
 	bool Simple;
 
 	void Init();
-	void Unint();
+	void Uninit();
 	void Update();
 	void Render();
 };

@@ -1,6 +1,7 @@
 struct ParticleCompute
 {
-    float3 vertex[4];
+    float3 pos[4];
+    float3 vel;
 };
 
 struct CSInput
@@ -14,7 +15,7 @@ struct CSInput
 StructuredBuffer<ParticleCompute> particle : register(t0);
 RWStructuredBuffer<ParticleCompute> BufOut : register(u0);
 
-#define size_x      1024
+#define size_x      128
 #define size_y      1
 #define size_z      1
 
@@ -24,15 +25,15 @@ void CSFunc(const CSInput input)
     int index = input.dispatch.x;
     
     float3 result[4];
-    result[0] = particle[index].vertex[0];
-    result[1] = particle[index].vertex[1];
-    result[2] = particle[index].vertex[2];
-    result[3] = particle[index].vertex[3];
+    result[0] = particle[index].pos[0] + particle[index].vel;
+    result[1] = particle[index].pos[1] + particle[index].vel;
+    result[2] = particle[index].pos[2] + particle[index].vel;
+    result[3] = particle[index].pos[3] + particle[index].vel;
     
-    BufOut[index].vertex[0] = result[0];
-    BufOut[index].vertex[1] = result[1];
-    BufOut[index].vertex[2] = result[2];
-    BufOut[index].vertex[3] = result[3];
+    BufOut[index].pos[0] = result[0];
+    BufOut[index].pos[1] = result[1];
+    BufOut[index].pos[2] = result[2];
+    BufOut[index].pos[3] = result[3];
     
 
   
