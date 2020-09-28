@@ -3,33 +3,14 @@
 #include "MeshField.h"
 #include "Application.h"
 #include "Shader.h"
+#include "FileManger.h"
 #include <random>
 
-float HeightMap[21][21] = {
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-	{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f},
-};
+float MeshField::HeightMap[21][21];
 
 void MeshField::Init() {
+
+	FileManger::Read("terrain.dat", MeshField::HeightMap);
 
 	Name = "MeshField";
 
@@ -107,9 +88,9 @@ void MeshField::Init() {
 		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mIndexBuffer);
 	}
 
-	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS);
+	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS));
 
-	Position = D3DXVECTOR3(0.0f, 12.0f, 0.0f);
+	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
@@ -124,17 +105,27 @@ void MeshField::Unint() {
 void MeshField::Update() {
 
 	ImGui::Begin(u8"地形");
-	ImGui::PushItemWidth(25);
-	for (int x = 0; x < 21; x++) {
-		for (int z = 0; z < 21; z++) {
-			std::string str = "(" + std::to_string(x) + "," + std::to_string(z) + ")";
-			ImGui::SliderFloat(str.c_str(), &HeightMap[z][x], 0.0f, 10.0f,"%.1f");
-			ImGui::SameLine();
+	ImGui::PushItemWidth(30);
+	if (ImGui::TreeNode(u8"マップデータ")) {
+		for (int x = 0; x < 21; x++) {
+			for (int z = 0; z < 21; z++) {
+				std::string str =  std::to_string(x) + "," + std::to_string(z);
+				ImGui::SliderFloat(str.c_str(), &HeightMap[z][x], -20.0f, 20.0f, "%.1f");
+				ImGui::SameLine();
+			}
+			ImGui::NewLine();
 		}
-		ImGui::NewLine();
+		ImGui::TreePop();
 	}
 	if (ImGui::Button(u8"変更")) {
 		ResetField();
+	}
+	if (ImGui::Button(u8"セーフ")) {
+		FileManger::Write("terrain.dat", MeshField::HeightMap);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(u8"ロード")) {
+		FileManger::Read("terrain.dat", MeshField::HeightMap);
 	}
 	ImGui::End();
 }
@@ -161,7 +152,7 @@ void MeshField::Render() {
 	material.Shininess = 225;
 	Renderer::SetMaterial(material);
 
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
+	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture[0]);
 
 	if (!Renderer::mLineMode) {
 		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -174,6 +165,7 @@ void MeshField::Render() {
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
 	Renderer::GetDeviceContext()->DrawIndexed((22*2) * 20 - 2,0, 0);
+
 }
 
 void MeshField::ResetField() {
@@ -214,4 +206,43 @@ void MeshField::ResetField() {
 	sd.pSysMem = mVertex;
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
+}
+
+float MeshField::GetHeight(D3DXVECTOR3 pos) {
+
+	int x, z;
+	x = pos.x / 10.0f + 10.0f;
+	z = pos.z / -10.0f + 10.0f;
+
+	D3DXVECTOR3 pos0, pos1, pos2, pos3;
+
+	pos0 = mVertex[x][z].Position;
+	pos1 = mVertex[x + 1][z].Position;
+	pos2 = mVertex[x][z+1].Position;
+	pos3 = mVertex[x + 1][z + 1].Position;
+
+	D3DXVECTOR3 v12, v1p, c;
+
+	v12 = pos2 - pos1;
+	v1p = pos - pos1;
+
+	D3DXVec3Cross(&c, &v12, &v1p);
+
+	float py;
+	D3DXVECTOR3 n;
+
+	if (c.y > 0.0f) {
+		D3DXVECTOR3 v10;
+		v10 = pos0 - pos1;
+		D3DXVec3Cross(&n, &v10, &v12);
+	}
+	else {
+		D3DXVECTOR3 v13;
+		v13 = pos3 - pos1;
+		D3DXVec3Cross(&n, &v12, &v13);
+	}
+
+	py = -((pos.x - pos1.x) * n.x + (pos.z - pos1.z) * n.z) / n.y + pos1.y;
+
+	return py;
 }

@@ -9,6 +9,7 @@
 #include "StaticManger.h"
 #include "psapi.h"
 #include "Debug.h"
+#include "FileManger.h"
 #include <thread>
 
 Scene* Application::mScene;

@@ -7,9 +7,10 @@ class MeshField : public Resource
 
 private:
 
+	static float HeightMap[21][21];
 	ID3D11Buffer* mVertexBuffer;
 	ID3D11Buffer* mIndexBuffer;
-	ID3D11ShaderResourceView* mTexture;
+	std::vector <ID3D11ShaderResourceView*> mTexture;
 
 	VERTEX_3D mVertex[21][21];
 
@@ -20,5 +21,7 @@ public:
 	void Unint();
 	void Update();
 	void Render();
+
+	float GetHeight(D3DXVECTOR3 pos);
 };
 

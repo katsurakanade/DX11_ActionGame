@@ -2,7 +2,7 @@
 
 #include "Resource.h"
 
-#define MAX_PARTICLE 10000
+#define MAX_PARTICLE 50000
 
 struct Particle {
 	VERTEX_3D vertex[4];
@@ -31,7 +31,7 @@ public:
 
 	Particle mparticle[MAX_PARTICLE];
 	ID3D11Buffer* mVertexBuffer;
-	ID3D11Buffer* mColorBuffer;
+
 
 	ID3D11Buffer* mpParticleBuffer;
 	ID3D11Buffer* mpVelBuffer;

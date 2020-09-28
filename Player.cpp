@@ -8,6 +8,7 @@
 #include "Animation.h"
 #include "Particle.h"
 #include "Shader.h"
+#include "MeshField.h"
 
 float count;
 bool start;
@@ -94,6 +95,10 @@ void Player::Update() {
 		pc->Position = Position;
 	}
 
+	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
+	Position.y = mf->GetHeight(Position) + mf->Position.y;
+	
+
 	Resource::Update();
 
 }
@@ -110,7 +115,7 @@ void Player::Render() {
 	
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
-	mModel->DisplayConfig = true;
+	//mModel->DisplayConfig = true;
 	mModel->Draw(world);
 	
 	GetComponent<BoxCollider>()->Render();
@@ -180,6 +185,8 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(sinf(-D3DX_PI * 0.75f) , 0, cosf(-D3DX_PI * 0.75f));
+
+		
 		}
 
 		else if (Input::GetKeyPress(keykodeR)) {
@@ -203,6 +210,7 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(0, 0, -1.0f);
 		}
+
 	}
 
 	else if (Input::GetKeyPress(keykodeB)) {

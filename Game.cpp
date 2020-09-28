@@ -27,22 +27,22 @@ void Game::Init() {
 
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 
-	Item* t = AddGameObject<Item>(ObjectLayer);
+	/*Item* t = AddGameObject<Item>(ObjectLayer);
 	t->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::SWORD));
 	t->Position = D3DXVECTOR3(10, 18, -50);
-	t->Scale = D3DXVECTOR3(0.5f, 0.5f, 0.5f);
+	t->Scale = D3DXVECTOR3(0.5f, 0.5f, 0.5f);*/
 
 	Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
 
-	for (int i = 0; i < 10; i++) {
-		Effect* plant = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
-		plant->Name = "Plant";
-		plant->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
-		plant->SetHW(1, 1);
-		plant->SetLoop(true);
-		plant->Position = D3DXVECTOR3(-30 +(i *5), 14, 0);
-		plant->Scale = D3DXVECTOR3(5.0f, 4.0f, 4.0f);
-	}
+	//for (int i = 0; i < 10; i++) {
+	//	Effect* plant = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
+	//	plant->Name = "Plant";
+	//	plant->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
+	//	plant->SetHW(1, 1);
+	//	plant->SetLoop(true);
+	//	plant->Position = D3DXVECTOR3(-30 +(i *5), 14, 0);
+	//	plant->Scale = D3DXVECTOR3(5.0f, 4.0f, 4.0f);
+	//}
 
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);

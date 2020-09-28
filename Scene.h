@@ -12,7 +12,7 @@
 #include "Asset.h"
 
 enum RenderLayer {
-	CameraLayer , ObjectLayer ,EffectLayer, SpriteLayer , SpriteLayer2, FadeLayer , EndLayer
+	CameraLayer , ObjectLayer ,EffectLayer, SpriteLayer , SpriteLayer2, ParticleLayer ,FadeLayer , EndLayer
 };
 
 class Scene {

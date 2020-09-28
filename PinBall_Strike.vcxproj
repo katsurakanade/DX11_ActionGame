@@ -33,6 +33,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="field.cpp" />
+    <ClCompile Include="FileManger.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gamemanger.cpp" />
     <ClCompile Include="Gauge.cpp" />
@@ -81,6 +82,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="field.h" />
+    <ClInclude Include="FileManger.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Gamemanger.h" />
     <ClInclude Include="Gauge.h" />
