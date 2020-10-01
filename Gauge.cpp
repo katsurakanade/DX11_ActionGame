@@ -27,7 +27,7 @@ void Gauge::Update() {
 	if (mType == GaugeType::GAUGE_GUI) {
 		std::vector <Sprite*> sp = Application::GetScene()->GetGameObjects<Sprite>(SpriteLayer);
 
-		for (int i = 0; i < sp.size(); i++) {
+		for (unsigned int i = 0; i < sp.size(); i++) {
 			if (sp[i]->Name == "hpbarfill") {
 				sp[i]->SetSize(D3DXVECTOR3(mGuiLength * mFillAmount, 100, 0));
 			}

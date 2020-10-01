@@ -82,9 +82,11 @@ void Player::Update() {
 	Movement(DIK_W, DIK_S, DIK_A, DIK_D);
 
 	// ƒXƒLƒ‹
-	Skill(DIK_Q, DIK_W, DIK_E, DIK_R);
+	Skill(DIK_1, DIK_2, DIK_3, DIK_4);
 
-	if (count >= 120.0f) {
+	CameraEditMode(DIK_R);
+
+	if (count >= 60.0f) {
 		mpAnination->SetNewState("Idle");
 		count = 0.0f;
 		start = false;
@@ -92,7 +94,14 @@ void Player::Update() {
 
 	if (Input::GetKeyTrigger(DIK_C)) {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = Position;
+		pc->Position = Position + D3DXVECTOR3(0,10,0);
+	}
+
+	if (Input::GetKeyTrigger(DIK_V)) {
+		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HAL));
+		pc->Position = Position + D3DXVECTOR3(0, 30, 0);
+		pc->Scale = D3DXVECTOR3(0.3f, 0.3f, 0.3f);
 	}
 
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
@@ -210,7 +219,7 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(0, 0, -1.0f);
 		}
-
+		
 	}
 
 	else if (Input::GetKeyPress(keykodeB)) {
@@ -249,6 +258,8 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(0, 0, 1.0);
 		}
+
+
 	}
 
 	else if (Input::GetKeyPress(keykodeL)) {
@@ -262,6 +273,8 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 		}
 		GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-1.0f, 0, 0);
+
+
 	}
 
 	else if (Input::GetKeyPress(keykodeR)) {
@@ -275,6 +288,8 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 		}
 		GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(1.0f, 0, 0);
+
+		
 	}
 }
 
@@ -301,4 +316,23 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 
 	}
 
+}
+
+void Player::CameraEditMode(BYTE keykode) {
+
+	if (Input::GetKeyTrigger(keykode)) {
+
+		Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+
+		if (camera->GetFollowTarget() == this) {
+			camera->SetFollowTarget(nullptr);
+			camera->Position = D3DXVECTOR3(camera->Position.x, 200, -200);
+		}
+
+		else {
+			Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+			camera->SetFollowTarget(this);
+		}
+	}
+	
 }

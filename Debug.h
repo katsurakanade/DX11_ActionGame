@@ -32,7 +32,7 @@ public:
 		DebugOutputString(str.c_str());
 	}
 
-	static std::string GetMemoryUsage() {
+	static float GetMemoryUsage() {
 
 		HANDLE hProc = GetCurrentProcess();
 		PROCESS_MEMORY_COUNTERS_EX pmc;
@@ -41,8 +41,8 @@ public:
 			(PROCESS_MEMORY_COUNTERS*)&pmc,
 			sizeof(pmc));
 		CloseHandle(hProc);
-		std::string str = std::to_string(pmc.PrivateUsage >> 10) + " KB";
-		return str;
+
+		return (float)(pmc.PrivateUsage >> 10);
 	}
 
 };

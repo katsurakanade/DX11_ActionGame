@@ -139,13 +139,13 @@ bool BoxCollider::Collision_Box_Enter(BoxCollider* target) {
 
 void BoxCollider::DataPanel() {
 
-	ImGui::Begin(GetResource()->Name.c_str());
+	/*ImGui::Begin(GetResource()->Name.c_str());
 	if (ImGui::TreeNode(u8"“–‚½‚è”»’è")) {
 		ImGui::Text("mTriggerFlag : %d", mTriggerFlag);
 		ImGui::Text("mStay : %d", mStay);
 		ImGui::TreePop();
 	}
-	ImGui::End();
+	ImGui::End();*/
 }
 
 

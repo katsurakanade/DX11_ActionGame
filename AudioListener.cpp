@@ -23,9 +23,9 @@ void AudioListener::Uninit() {
 		mMasteringVoice->DestroyVoice();
 	}
 
-	if (mXaudio) {
+	/*if (mXaudio) {
 		mXaudio->Release();
-	}
+	}*/
 
 	CoUninitialize();
 

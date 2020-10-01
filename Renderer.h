@@ -44,6 +44,10 @@ struct LIGHT
 	D3DXCOLOR	Ambient;
 };
 
+enum class BLEND_STATE {
+	NONE,ALPHA_BLEND
+};
+
 class Renderer
 {
 private:
@@ -66,6 +70,8 @@ private:
 
 	static ID3D11DepthStencilState* mDepthStateEnable;
 	static ID3D11DepthStencilState* mDepthStateDisable;
+
+	static ID3D11BlendState* mBlendState;
 
 
 public:
@@ -94,6 +100,7 @@ public:
 	static void SetCameraPosition(D3DXVECTOR3 CameraPosition);
 	static void SetLight(LIGHT Light);
 	static void SetParameter(D3DXVECTOR4 Parameter);
+	static void SetBlendState(BLEND_STATE state);
 
 	static ID3D11Device* GetDevice(void) { return mD3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(void) { return mImmediateContext; }

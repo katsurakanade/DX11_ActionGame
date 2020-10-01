@@ -37,6 +37,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gamemanger.cpp" />
     <ClCompile Include="Gauge.cpp" />
+    <ClCompile Include="Grass.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Gamemanger.h" />
     <ClInclude Include="Gauge.h" />
+    <ClInclude Include="Grass.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -335,7 +337,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Users\katsu\source\repos\katsurakanade\PinBall_Strike\imgui;C:\Users\katsu\source\repos\katsurakanade\PinBall_Strike\Lib\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Users\katsu\source\repos\katsurakanade\PinBall_Strike\imgui;C:\Users\katsu\source\repos\katsurakanade\PinBall_Strike\Lib\Assimp\include;C:\Users\katsu\source\repos\katsurakanade\PinBall_Strike\Lib\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>

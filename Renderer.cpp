@@ -23,6 +23,9 @@ ID3D11Buffer* Renderer::mParameterBuffer = NULL;
 
 ID3D11DepthStencilState* Renderer::mDepthStateEnable = NULL;
 ID3D11DepthStencilState* Renderer::mDepthStateDisable = NULL;
+
+ID3D11BlendState* Renderer::mBlendState;
+
 bool Renderer::mLineMode = false;
 bool Renderer::mGizmosMode = true;
 
@@ -131,9 +134,8 @@ void Renderer::Init()
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	ID3D11BlendState* blendState = NULL;
-	mD3DDevice->CreateBlendState(&blendDesc, &blendState);
-	mImmediateContext->OMSetBlendState(blendState, blendFactor, 0xffffffff);
+	mD3DDevice->CreateBlendState(&blendDesc, &mBlendState);
+	mImmediateContext->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
 
 	// 深度ステンシルステート設定
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -511,4 +513,29 @@ void Renderer::SetLight(LIGHT Light)
 void Renderer::SetParameter(D3DXVECTOR4 Parameter)
 {
 	mImmediateContext->UpdateSubresource(mParameterBuffer, 0, NULL, &Parameter, 0, 0);
+}
+
+void Renderer::SetBlendState(BLEND_STATE state) {
+	
+	if (state == BLEND_STATE::NONE) {
+		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		mImmediateContext->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
+	}
+
+	else if (state == BLEND_STATE::ALPHA_BLEND) {
+		D3D11_BLEND_DESC blendDesc;
+		ZeroMemory(&blendDesc, sizeof(blendDesc));
+		blendDesc.AlphaToCoverageEnable = FALSE;
+		blendDesc.IndependentBlendEnable = FALSE;
+		blendDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		mImmediateContext->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
+	}
 }

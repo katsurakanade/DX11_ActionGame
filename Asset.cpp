@@ -21,8 +21,9 @@ void Asset::LoadSceneAsset(){
 		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_TITLE::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_TITLE::SKY);
 		break;
 	case SCENE_ASSET::GAME:
-		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_GAME::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_GAME::STAR);
+		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_GAME::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_GAME::WHITE);
 		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_GAME::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_GAME::SKY);
+		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_GAME::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_GAME::STAR);
 		break;
 	case SCENE_ASSET::RESULT:
 		break;
@@ -136,6 +137,8 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/RoundFrame.png");
 		AddTextureToList("asset/texture/Sword_Icon.png");
 		AddTextureToList("asset/texture/Plant.png");
+		AddTextureToList("asset/texture/Dirt.jpg");
+		AddTextureToList("asset/texture/hal.png");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;

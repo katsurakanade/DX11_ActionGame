@@ -15,6 +15,10 @@ private:
 
 	static bool mDisableLighting;
 	static bool mUsingGPU;
+	static float mFrameTime[100];
+	static float mMemoryUsage[100];
+	static int mAnalysisCount;
+	static float mUpdateAnalysisTime;
 
 public:
 

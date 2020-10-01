@@ -89,6 +89,8 @@ enum class TEXTURE_ENUM_GAME {
 	ROUND_FRAME,
 	SWORD_ICON,
 	PLANT,
+	DIRT,
+	HAL,
 };
 
 enum class SOUND_ENUM_GAME {

@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Shader.h"
 #include "FileManger.h"
+#include "Grass.h"
 #include <random>
 
 float MeshField::HeightMap[21][21];
@@ -11,6 +12,7 @@ float MeshField::HeightMap[21][21];
 void MeshField::Init() {
 
 	FileManger::Read("terrain.dat", MeshField::HeightMap);
+	FileManger::ReadResource("grass.json");
 
 	Name = "MeshField";
 
@@ -88,7 +90,7 @@ void MeshField::Init() {
 		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mIndexBuffer);
 	}
 
-	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS));
+	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT));
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -104,12 +106,31 @@ void MeshField::Unint() {
 
 void MeshField::Update() {
 
-	ImGui::Begin(u8"地形");
+	ImGui::Begin(u8"地形ツール",nullptr, ImGuiWindowFlags_MenuBar);
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu(u8"マップ"))
+		{
+			if (ImGui::MenuItem(u8"Save")) {
+				FileManger::Write("terrain.dat", MeshField::HeightMap);
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu(u8"マップオブジェク"))
+		{
+			if (ImGui::MenuItem(u8"Save")) {
+				std::vector<Grass*> grasslist = Application::GetScene()->GetGameObjects<Grass>(EffectLayer);
+				FileManger::WriteResource("grass.json", grasslist);
+			}
+	
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
 	ImGui::PushItemWidth(30);
 	if (ImGui::TreeNode(u8"マップデータ")) {
 		for (int x = 0; x < 21; x++) {
 			for (int z = 0; z < 21; z++) {
-				std::string str =  std::to_string(x) + "," + std::to_string(z);
+				std::string str = std::to_string(x) + "," + std::to_string(z);
 				ImGui::SliderFloat(str.c_str(), &HeightMap[z][x], -20.0f, 20.0f, "%.1f");
 				ImGui::SameLine();
 			}
@@ -117,15 +138,35 @@ void MeshField::Update() {
 		}
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode(u8"マップオブジェクト追加")) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f, 0.5f, 0.0f, 1.0f });
+		if (ImGui::Button(u8"木")) {
+			Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
+			Grass* g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
+			g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
+			g->Position = p->Position;
+		}
+		ImGui::PopStyleColor();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode(u8"マップオブジェクトリスト")) {
+		std::vector<Grass*> grasslist = Application::GetScene()->GetGameObjects<Grass>(EffectLayer);
+		for (unsigned int i = 0; i < grasslist.size(); i++) {
+			if (ImGui::TreeNode(grasslist[i]->Name.c_str())) {
+				ImGui::PushItemWidth(1000);
+				ImGui::SliderFloat(u8"Y座標", &grasslist[i]->Position.y, -50.0f, 50.0f);
+				ImGui::SliderFloat(u8"回転Z", &grasslist[i]->Rotation.z, -3.14f, 3.14f);
+				ImGui::SliderFloat3(u8"スケール", grasslist[i]->Scale, 0.1f, 10.0f);
+				if (ImGui::Button(u8"削除")) {
+					grasslist[i]->Destroy();
+				}
+				ImGui::TreePop();
+			}
+		}
+		ImGui::TreePop();
+	}
 	if (ImGui::Button(u8"変更")) {
 		ResetField();
-	}
-	if (ImGui::Button(u8"セーフ")) {
-		FileManger::Write("terrain.dat", MeshField::HeightMap);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button(u8"ロード")) {
-		FileManger::Read("terrain.dat", MeshField::HeightMap);
 	}
 	ImGui::End();
 }
@@ -164,7 +205,9 @@ void MeshField::Render() {
 
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
+
 	Renderer::GetDeviceContext()->DrawIndexed((22*2) * 20 - 2,0, 0);
+	
 
 }
 

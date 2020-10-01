@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Scene.h"
 #include "input.h"
+#include "Shader.h"
 
 void Sprite::Init() {
 
@@ -137,6 +138,8 @@ void Sprite::Render() {
 
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	Shader::Use(SHADER_TYPE_VSPS::Unlit);
 
 	Renderer::GetDeviceContext()->Draw(4, 0);
 

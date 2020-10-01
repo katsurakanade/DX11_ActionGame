@@ -24,7 +24,6 @@ public:
     D3DXVECTOR3 Position;
     D3DXVECTOR3 Rotation;
     D3DXVECTOR3 Scale;
-
     std::string Name = "Object";
 
     virtual void Init() {

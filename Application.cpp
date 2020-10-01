@@ -16,6 +16,11 @@ Scene* Application::mScene;
 Asset* Application::mAsset;
 bool Application::mDisableLighting;
 bool Application::mUsingGPU;
+float Application::mFrameTime[100];
+float Application::mMemoryUsage[100];
+int Application::mAnalysisCount;
+float Application::mUpdateAnalysisTime;
+
 std::map<std::string, std::string> StaticManger::StateMap;
 
 bool Application::Init() {
@@ -81,16 +86,33 @@ void Application::Render() {
 
 void Application::System() {
 
-	std::string str = "Memory Usage : " + Debug::GetMemoryUsage();
+	std::string str = "Memory Usage : " + std::to_string(Debug::GetMemoryUsage()) + " KB";
+
+	mFrameTime[mAnalysisCount] = Time::GetDeltaTime();
+	mMemoryUsage[mAnalysisCount] = Debug::GetMemoryUsage();
 
 	{
 		ImGui::Begin(u8"システム");
 		ImGui::Text("Frame Time : %f", Time::GetDeltaTime());
+		ImGui::PlotLines("", mFrameTime, IM_ARRAYSIZE(mFrameTime));
 		ImGui::Text(str.c_str());
+		ImGui::PlotLines("", mMemoryUsage, IM_ARRAYSIZE(mMemoryUsage));
 		ImGui::Checkbox(u8"線描画モード", &Renderer::mLineMode);
 		ImGui::Checkbox(u8"Gizmosモード", &Renderer::mGizmosMode);
 		ImGui::Checkbox(u8"ライト閉め", &mDisableLighting);
 		ImGui::Checkbox(u8"GPUで計算する", &mUsingGPU);
 		ImGui::End();
 	}
+
+	if (mUpdateAnalysisTime > 100) {
+		mAnalysisCount++;
+		mUpdateAnalysisTime = 0.0f;
+	}
+
+	if (mAnalysisCount >= 100) {
+		mAnalysisCount = 0;
+	}
+
+	mUpdateAnalysisTime++;
+
 }
