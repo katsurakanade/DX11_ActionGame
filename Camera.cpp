@@ -48,26 +48,6 @@ void Camera::Update() {
 
 	ImGui::End();
 	
-
-	/*if (Input::GetKeyPress(DIK_Q)) {
-
-		float tx = mFollowTarget->Position.x;
-		float ty = mFollowTarget->Position.z;
-		float x0 = Position.x;
-		float y0 = Position.z;
-
-		mControllerPosition.x = tx + (x0 - tx) * cos(D3DXToRadian(5.0f * Time::GetDeltaTime())) - (y0 - ty) * sin(D3DXToRadian(5.0f * Time::GetDeltaTime()));
-	}
-
-	if (Input::GetKeyPress(DIK_E)) {
-
-		float tx = mFollowTarget->Position.x;
-		float ty = mFollowTarget->Position.z;
-		float x0 = Position.x;
-		float y0 = Position.z;
-
-		mControllerPosition.x = tx + (x0 - tx) * cos(D3DXToRadian(-5.0f * Time::GetDeltaTime())) - (y0 - ty) * sin(D3DXToRadian(-5.0f * Time::GetDeltaTime()));
-	}*/
 }
 
 void Camera::Render() {

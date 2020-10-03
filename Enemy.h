@@ -1,3 +1,6 @@
+/*
+敵クラス
+*/
 #pragma once
 
 #include "Resource.h"
@@ -8,34 +11,33 @@ class Animation;
 
 class Enemy : public Resource
 {
+
 private:
 
-	static int ID;
-
+	// モデル
 	AssimpModel* mModel;
+	// HP
 	float mHpInit;
 	float mHp;
-
+	// ゲージ
 	Gauge* mGauge;
-
+	// アニメーションポインタ
 	Animation* mpAnination;
 
-	float change;
-	int change_fr;
-	int arrow;
-	bool start = false;
-
-
 public:
+
 	void Init();
 	void Uninit();
 	void Update();
 	void Render();
 
+	// ゲージ追加
 	void AddGauge();
+	// 攻撃
 	void Attack();
+	// 移動
 	void Movement(int arrow);
-
+	// 向き
 	void LookAt();
 };
 

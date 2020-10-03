@@ -139,6 +139,8 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/Plant.png");
 		AddTextureToList("asset/texture/Dirt.jpg");
 		AddTextureToList("asset/texture/hal.png");
+		AddTextureToList("asset/texture/stone.png");
+		AddTextureToList("asset/texture/fog.png");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;

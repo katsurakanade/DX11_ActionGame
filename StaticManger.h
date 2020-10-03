@@ -1,3 +1,7 @@
+/*
+スタティックマネージャー
+(ゲームのグローバル情報用)
+*/
 #pragma once
 
 #include "main.h"
@@ -6,7 +10,8 @@ class StaticManger
 {
 
 public:
-	// Key,Value
+
+	// 汎用
 	static std::map<std::string, std::string> StateMap;
 
 	static void Init() {
@@ -14,7 +19,7 @@ public:
 	};
 
 	static void Uninit() {
-		//StateMap.erase(StateMap.begin(), StateMap.end());
+		StateMap.erase(StateMap.begin(), StateMap.end());
 	}
 };
 

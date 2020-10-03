@@ -1,3 +1,7 @@
+/*
+ゲームシーンクラス
+*/
+
 #pragma once
 
 #include "Scene.h"
@@ -7,7 +11,6 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "GUI.h"
-#include "Wall.h"
 #include "Digit.h"
 
 class Game : public Scene

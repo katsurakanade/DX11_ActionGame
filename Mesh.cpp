@@ -87,7 +87,7 @@ void Mesh::Update() {
 
 		ID3D11ShaderResourceView* pSRVs[2] = { mpBoneBufSRV, mpVerticesBufSRV };
 		Renderer::GetDeviceContext()->CSSetShaderResources(0, 2, pSRVs);
-		Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[1], nullptr, 0);
+		Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[0], nullptr, 0);
 		Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpBufUAV, 0);
 
 		Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);

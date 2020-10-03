@@ -1,3 +1,7 @@
+/*
+ライトクラス
+*/
+
 #pragma once
 
 #include "Resource.h"
@@ -8,16 +12,18 @@ class Light : public Resource
 	
 private:
 
+	// ソース
+	LIGHT* mSource;
 
 public:
 
-	LIGHT* mSource;
 
 	void Init();
 	void Uninit();
 	void Update();
 	void Render();
 
+	// Getter
 	LIGHT* GetSource() { return mSource; };
 };
 

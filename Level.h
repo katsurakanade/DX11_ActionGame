@@ -1,3 +1,7 @@
+/*
+ƒŒƒxƒ‹ƒNƒ‰ƒX
+*/
+
 #pragma once
 
 #include "Resource.h"

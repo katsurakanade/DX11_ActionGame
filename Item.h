@@ -1,10 +1,16 @@
+/*
+アイテムクラス
+*/
+
 #pragma once
 #include "Resource.h"
+
 class Item : public Resource
 {
 
 private:
 
+	// モデル
 	AssimpModel* mModel;
 
 public:
@@ -14,7 +20,7 @@ public:
 	void Update();
 	void Render();
 
+	// Setter
 	void SetModel(AssimpModel* model) { mModel = model; };
 
 };
-

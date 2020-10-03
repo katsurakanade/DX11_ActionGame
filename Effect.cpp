@@ -62,7 +62,7 @@ void Effect::Init() {
 
 	Renderer::GetDevice()->CreateBuffer(&cbd, &sd, &mColorBuffer);
 
-	mTexture = Application::GetAsset()->GetTexture(TEXTURE_ENUM::EXP2);
+	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::EXPLOSION);
 	mFramecount = 0;
 
 	Position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);

@@ -3,18 +3,17 @@
 #include "Scene.h"
 #include "Application.h"
 #include "Enemy.h"
-#include "Ball.h"
 #include "Player.h"
 #include "Physical.h"
 #include "Animation.h"
 #include "input.h"
 #include "Shader.h"
+#include "Collision.h"
 
-int Enemy::ID;
 
 void Enemy::Init() {
 
-	Name = "Enemy_" + std::to_string(ID);
+	Name = "Enemy";
 
 	mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ENEMY);
 
@@ -35,10 +34,6 @@ void Enemy::Init() {
 
 	Resource::Init();
 
-	change = 0;
-	change_fr = rand() % (250 - 0 + 50) + 50;
-
-	ID++;
 }
 
 void Enemy::AddGauge() {
@@ -65,7 +60,6 @@ void Enemy::Uninit() {
 
 void Enemy::Update() {
 
-	change++;
 
 	float speed = GetComponent<Physical>()->mSpeed;
 
@@ -82,21 +76,6 @@ void Enemy::Update() {
 
 	if (mpAnination->GetNewState() == "Running") {
 		mpAnination->SetCoefficient(20.0);
-	}
-
-	if (change > change_fr) {
-		arrow = rand() % (5 - 0+ 1) + 0;
-		change_fr = rand() % (250 - 0 + 50) + 50;
-		change = 0;
-	}
-
-	if (start) {
-		//Movement(arrow);
-		LookAt();
-	}
-
-	if (Input::GetKeyTrigger(DIK_K)) {
-		start = true;
 	}
 
 	if (mGauge) {

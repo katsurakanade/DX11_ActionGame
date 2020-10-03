@@ -1,3 +1,6 @@
+/*
+ファイルIOクラス
+*/
 #pragma once
 
 #include "Grass.h"
@@ -19,8 +22,9 @@ public:
 	// マップIO
 	static void Read(const char* pass, float output[21][21]);
 	static void Write(const char* pass, float output[21][21]);
-	static void ReadResource(const char* pass);
 
+	// リソースIO
+	static void ReadResource(const char* pass);
 	template <typename T> 
 	static void WriteResource(const char* pass, std::vector <T*> resource) {
 		std::string filename = pass;
@@ -35,6 +39,7 @@ public:
 
 				json data;
 				data["Name"] = resource[i]->Name;
+				data["Tag"] = resource[i]->Tag;
 				data["Position"]["x"] = resource[i]->Position.x;
 				data["Position"]["y"] = resource[i]->Position.y;
 				data["Position"]["z"] = resource[i]->Position.z;

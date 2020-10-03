@@ -1,3 +1,7 @@
+/*
+タイトルシーンクラス
+*/
+
 #pragma once
 
 #include "Scene.h"

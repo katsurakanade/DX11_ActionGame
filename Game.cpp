@@ -28,9 +28,8 @@ void Game::Init() {
 
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 
-	Gamemanger* manger = AddGameObject<Gamemanger>(ObjectLayer);
-
-	
+	ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+	pc->Position = player->Position;
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);
 
@@ -38,8 +37,8 @@ void Game::Init() {
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));
 	mpFade = fade;
 
-	//AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
 
+	//AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
 
 }
 

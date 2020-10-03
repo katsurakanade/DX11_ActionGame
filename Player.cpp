@@ -4,11 +4,11 @@
 #include "Scene.h"
 #include "Player.h"
 #include "input.h"
-#include "Mathematics.h"
 #include "Animation.h"
 #include "Particle.h"
 #include "Shader.h"
 #include "MeshField.h"
+#include "Collision.h"
 
 float count;
 bool start;
@@ -43,6 +43,7 @@ void Player::Init() {
 	for (Component* c : Components) {
 		c->SetUsePanel(true);
 	}
+
 
 	Resource::Init();
 
@@ -94,20 +95,17 @@ void Player::Update() {
 
 	if (Input::GetKeyTrigger(DIK_C)) {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = Position + D3DXVECTOR3(0,10,0);
+		pc->Position = Position;
 	}
 
 	if (Input::GetKeyTrigger(DIK_V)) {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HAL));
 		pc->Position = Position + D3DXVECTOR3(0, 30, 0);
-		pc->Scale = D3DXVECTOR3(0.3f, 0.3f, 0.3f);
 	}
 
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
 	
-
 	Resource::Update();
 
 }
@@ -137,48 +135,46 @@ void Player::SettingPanel() {
 	ImGui::SliderFloat3(u8"座標", Position, -1000.0f, 1000.0f, "%.0f", 5.0f);
 	ImGui::SliderFloat3(u8"回転", Rotation, -3.14f, 3.14f);
 	ImGui::SliderFloat3(u8"スケール", Scale, 0.1f, 10.0f);
-	ImGui::Text(u8"ジャンプ可能 %d ", mCanJump);
-	ImGui::Text(u8"ジャンプ速度 %f", mJumpVel);
 	ImGui::End();
 }
 
-void Player::Jump(BYTE keykode) {
-
-	if (Input::GetKeyTrigger(keykode)) {
-		mCanJump = false;
-		mJumpVel = 0;
-		mpAnination->SetNewState("Jump");
-	}
-
-	if (mCanJump == false) {
-		Position.y = 50 * sin(2.0f * 3.14f / 40.0f * mJumpTime);
-		mJumpTime++;
-	}
-
-	/*float speed = GetComponent<Physical>()->mSpeed;
-
-	if (speed <= 0.1f) {
-		GetComponent<Physical>()->AddForce(D3DXVECTOR3(0, 15.0f, 0) * mJumpVel);
-	}
-
-	else {
-		D3DXVECTOR3 forward;
-		D3DXVec3Normalize(&forward, &-GetForward());
-		D3DXVECTOR3 dir = (forward)+D3DXVECTOR3(0, -1.0f, 0);
-		D3DXVECTOR3 r;
-		GetReflectVector(&r, dir, D3DXVECTOR3(0, 15.0f, 0));
-		r.z = 0;
-		GetComponent<Physical>()->AddForce(r * speed * mJumpVel);
-	}*/
-
-	if (Position.y > 1 && !mCanJump) {
-		mCanJump = true;
-		mJumpVel = 0;
-		mJumpTime = 0;
-		mpAnination->SetNewState("Idle");
-	}
-
-}
+//void Player::Jump(BYTE keykode) {
+//
+//	if (Input::GetKeyTrigger(keykode)) {
+//		mCanJump = false;
+//		mJumpVel = 0;
+//		mpAnination->SetNewState("Jump");
+//	}
+//
+//	if (mCanJump == false) {
+//		Position.y = 50 * sin(2.0f * 3.14f / 40.0f * mJumpTime);
+//		mJumpTime++;
+//	}
+//
+//	/*float speed = GetComponent<Physical>()->mSpeed;
+//
+//	if (speed <= 0.1f) {
+//		GetComponent<Physical>()->AddForce(D3DXVECTOR3(0, 15.0f, 0) * mJumpVel);
+//	}
+//
+//	else {
+//		D3DXVECTOR3 forward;
+//		D3DXVec3Normalize(&forward, &-GetForward());
+//		D3DXVECTOR3 dir = (forward)+D3DXVECTOR3(0, -1.0f, 0);
+//		D3DXVECTOR3 r;
+//		GetReflectVector(&r, dir, D3DXVECTOR3(0, 15.0f, 0));
+//		r.z = 0;
+//		GetComponent<Physical>()->AddForce(r * speed * mJumpVel);
+//	}*/
+//
+//	if (Position.y > 1 && !mCanJump) {
+//		mCanJump = true;
+//		mJumpVel = 0;
+//		mJumpTime = 0;
+//		mpAnination->SetNewState("Idle");
+//	}
+//
+//}
 
 void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykodeL) {
 

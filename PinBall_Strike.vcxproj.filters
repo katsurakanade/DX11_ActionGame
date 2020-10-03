@@ -87,16 +87,10 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Wall.cpp">
-      <Filter>ソース ファイル\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Physical.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
     <ClCompile Include="Level.cpp">
-      <Filter>ソース ファイル\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Ball.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
     <ClCompile Include="GUI.cpp">
@@ -111,9 +105,6 @@
     <ClCompile Include="Title.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Arrow.cpp">
-      <Filter>ソース ファイル\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Gauge.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
@@ -121,9 +112,6 @@
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Fade.cpp">
-      <Filter>ソース ファイル\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Gamemanger.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Digit.cpp">
@@ -161,12 +149,6 @@
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>ソース ファイル\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Torus.cpp">
-      <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
       <Filter>ソース ファイル\Resource</Filter>
@@ -233,9 +215,6 @@
     <ClInclude Include="Resource.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Wall.h">
-      <Filter>ヘッダー ファイル\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
@@ -246,9 +225,6 @@
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
-      <Filter>ヘッダー ファイル\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Ball.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
     <ClInclude Include="GUI.h">
@@ -263,13 +239,7 @@
     <ClInclude Include="Title.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Arrow.h">
-      <Filter>ヘッダー ファイル\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Gauge.h">
-      <Filter>ヘッダー ファイル\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Gamemanger.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
@@ -282,9 +252,6 @@
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
-      <Filter>ヘッダー ファイル\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="Mathematics.h">
       <Filter>ヘッダー ファイル\Static</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
@@ -326,13 +293,7 @@
     <ClInclude Include="Animation.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Item.h">
-      <Filter>ヘッダー ファイル\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Torus.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
@@ -356,9 +317,6 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="MeshAnimationCS.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
-    <FxCompile Include="computeShader.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="vertexShader.hlsl">

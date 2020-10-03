@@ -12,7 +12,7 @@
 #include "FileManger.h"
 #include <thread>
 
-Scene* Application::mScene;
+Scene* Application::mScene = nullptr;
 Asset* Application::mAsset;
 bool Application::mDisableLighting;
 bool Application::mUsingGPU;

@@ -1,3 +1,7 @@
+/*
+タイムクラス
+*/
+
 #pragma once
 
 #include "main.h"
@@ -11,6 +15,7 @@ private:
 	
 public:
 
+	// DeltaTime取得
 	static float GetDeltaTime() { return (float)mDelta.count(); };
 
 	static void Tick() {

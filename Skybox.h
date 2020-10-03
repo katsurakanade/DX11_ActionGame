@@ -1,3 +1,6 @@
+/*
+スカイボックスクラス
+*/
 #pragma once
 
 #include "AssimpModel.h"
@@ -7,9 +10,10 @@ class Skybox :public Resource
 {
 
 private:
-
+	
+	// モデル
 	AssimpModel* mModel;
-
+	// テクスチャインデックス
 	int TexutreIndex = 4;
 
 public:
@@ -19,6 +23,7 @@ public:
 	void Update();
 	void Render();
 
+	// Setter
 	void SetModelTexture(int val) {
 		TexutreIndex = val;
 	}

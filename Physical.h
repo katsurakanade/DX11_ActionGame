@@ -1,8 +1,11 @@
+/*
+物理クラス
+*/
+
 #pragma once
 
 #include "Component.h"
 
-// 物理クラス : リソースクラス
 class Physical : public Component
 {
 
@@ -18,7 +21,7 @@ private:
 	const float mGravity;
 	// 座標処理
 	void ProcessPostion();
-	// データパネル
+	// ForDebug
 	void DataPanel();
 
 public:
@@ -38,12 +41,15 @@ public:
 	void Uninit();
 	void Update();
 
+	// 力追加
 	void AddForce(D3DXVECTOR3 force);
 
+	// 速度減衰
 	void SpeedDown(float value) {
 		mSpeed -= value;
 	}
-
+	
+	// Getter
 	bool GetIsGround() { return IsGround; };
 
 

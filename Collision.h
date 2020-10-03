@@ -1,3 +1,7 @@
+/*
+箱当たり判定クラス
+*/
+
 #pragma once
 
 #include "Component.h"
@@ -6,17 +10,24 @@ class BoxCollider : public Component
 {
 private:
 
-	ID3D11Buffer* mVertexBuffer = NULL;
-	ID3D11Buffer* mIndexBuffer = NULL;
-	ID3D11Buffer* mColorBuffer = NULL;
+	// バッファ
+	ID3D11Buffer* mVertexBuffer = nullptr;
+	ID3D11Buffer* mIndexBuffer = nullptr;
+	ID3D11Buffer* mColorBuffer = nullptr;
+
+	// サイス
 	D3DXVECTOR3 mSize = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+
+	// Triggerフラグ
 	bool mStay = false;
 	bool mTriggerFlag = false;
 
+	// ForDebug
 	void DataPanel();
 
 public:
 
+	// 偏移量
 	D3DXVECTOR3 mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 mScaleOffest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
@@ -25,9 +36,12 @@ public:
 	void Update();
 	void Render();
 
+	// 滞在
 	bool Collision_Box_Stay(BoxCollider* target);
+	// あたり
 	bool Collision_Box_Enter(BoxCollider* target);
 
+	// Getter
 	bool GetTrigger() { return mTriggerFlag; };
 };
 

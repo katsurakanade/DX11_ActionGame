@@ -11,14 +11,13 @@ void Shader::Init() {
 
 	mVertexShaderArray.resize(SHADER_MAX);
 	mPixelShaderArray.resize(SHADER_MAX);
-	mComputeShaderArray.resize(3);
+	mComputeShaderArray.resize(2);
 
 	CreateVertexShader(SHADER_TYPE_VSPS::Default);
 	CreatePixelShader(SHADER_TYPE_VSPS::Default);
 	CreateVertexShader(SHADER_TYPE_VSPS::Unlit);
 	CreatePixelShader(SHADER_TYPE_VSPS::Unlit);
 
-	CreateComputeShader(SHADER_TYPE::Default);
 	CreateComputeShader(SHADER_TYPE::SkinMesh);
 	CreateComputeShader(SHADER_TYPE::Particle);
 }
@@ -121,10 +120,7 @@ void Shader::CreateComputeShader(SHADER_TYPE type) {
 
 	const char* cspass = "";
 
-	if (type == SHADER_TYPE::Default) {
-		cspass = "computeShader.cso";
-	}
-	else if (type == SHADER_TYPE::SkinMesh) {
+	if (type == SHADER_TYPE::SkinMesh) {
 		cspass = "MeshAnimationCS.cso";
 	}
 	else if (type == SHADER_TYPE::Particle) {

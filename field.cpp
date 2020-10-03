@@ -44,7 +44,7 @@ void Field::Init() {
 	
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
 
-	mTexture = Application::GetAsset()->GetTexture(TEXTURE_ENUM::DIRT);
+	//mTexture = Application::GetAsset()->GetTexture(TEXTURE_ENUM::DIRT);
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

@@ -55,14 +55,19 @@ void FileManger::ReadResource(const char* pass) {
 
 	if (file.is_open()) {
 		file >> length;
+
+		if (length <= 0) {
+			return;
+		}
 		
 		for (int i = 0; i < length; i++) {
 
 			json data;
-			Resource* g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
+			Grass* g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
 			D3DXVECTOR3 pos,rot,scl;
 			file >> data;
 			g->Name = data["Name"];
+			g->Tag = data["Tag"];
 			g->Position.x = data["Position"]["x"];
 			g->Position.y = data["Position"]["y"];
 			g->Position.z = data["Position"]["z"];
@@ -72,6 +77,14 @@ void FileManger::ReadResource(const char* pass) {
 			g->Scale.x = data["Scale"]["x"];
 			g->Scale.y = data["Scale"]["y"];
 			g->Scale.z = data["Scale"]["z"];
+
+			if (g->Tag == "Grass") {
+				g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
+			}
+
+			else if (g->Tag == "Stone") {
+				g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::STONE));
+			}
 		}
 
 		file.close();

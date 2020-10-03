@@ -1,58 +1,22 @@
-#pragma 
+/*
+アセットクラス
+*/
+
+#pragma once
 
 #include "AssimpModel.h"
 #include "AudioListener.h"
 
+// シーン
 enum class SCENE_ASSET {
 	TITLE,GAME,RESULT
 };
-
-enum class ASSIMP_MODEL_ENUM
-{
-	BALL,
-	CUBE,
-	TORUS,
-	ARROW,
-	ENEMY,
-	HUMAN,
-};
-
-enum TEXTURE_ENUM {
-	NUMBER,
-	DIRT,
-	EXP,
-	EXP2,
-	WIZARD,
-	SAMURAI,
-	WARRIOR,
-	ELF,
-	BAR_EMPTY,
-	BAR_FILL,
-	GAMEOVER,
-	CLEAR,
-	//LOGO,
-	//WHITE,
-	//STAR,
-	//SKY,
-	//SPACEBUTTON,
-	LIGHTNING,
-};
-
-enum class SOUND_ENUM {
-	BGM_01,
-	BGM_02,
-	BGM_03,
-	SE_01,
-	SE_02,
-	SE_03,
-	SE_04,
-};
-
+// タイトル_モデル
 enum class ASSIMP_MODEL_ENUM_TITLE
 {
 	BALL,
 };
-
+// タイトル_テクスチャ
 enum class TEXTURE_ENUM_TITLE {
 	LOGO,
 	WHITE,
@@ -60,12 +24,12 @@ enum class TEXTURE_ENUM_TITLE {
 	STAR,
 	SPACEBUTTON,
 };
-
+// タイトル_サウンド
 enum class SOUND_ENUM_TITLE {
 	BGM_01,
 	SE_01,
 };
-
+// ゲーム_モデル
 enum class ASSIMP_MODEL_ENUM_GAME
 {
 	BALL,
@@ -75,7 +39,7 @@ enum class ASSIMP_MODEL_ENUM_GAME
 	TORUS,
 	SWORD,
 };
-
+// ゲーム_テクスチャ
 enum class TEXTURE_ENUM_GAME {
 	WHITE,
 	SKY,
@@ -91,8 +55,10 @@ enum class TEXTURE_ENUM_GAME {
 	PLANT,
 	DIRT,
 	HAL,
+	STONE,
+	FOG,
 };
-
+// ゲーム_サウンド
 enum class SOUND_ENUM_GAME {
 	BGM_02,
 };
@@ -102,23 +68,28 @@ class Asset
 
 private:
 
+	// サウンド用
 	HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD* pChunkSize, DWORD* pChunkDataPosition);
 	HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset);
-
+	// シーン
 	SCENE_ASSET mScene;
 
 protected:
 
+	// モデル
 	std::vector<AssimpModel*> mAssimpModelList;
+	// テクスチャ
 	std::vector<ID3D11ShaderResourceView*> mTextureList;
+	// サウンド
 	std::vector<Sound*> mSoundList;
 
+	// モデル追加
 	void AddAssimpModelToList(const char* value) {
 		AssimpModel* md = new AssimpModel(false);
 		md->Load(value);
 		mAssimpModelList.push_back(md);
 	}
-
+	// モデル追加(アニメーションあり)
 	void AddAssimpModelToList(const char* value, std::vector<std::string> animationpass , std::vector<std::string> animationname) {
 		AssimpModel* md = new AssimpModel(true);
 		md->Load(value);
@@ -129,13 +100,13 @@ protected:
 
 		mAssimpModelList.push_back(md);
 	}
-
+	// テクスチャ追加
 	void AddTextureToList(const char* value) {
 		ID3D11ShaderResourceView* tex;
 		D3DX11CreateShaderResourceViewFromFile(Renderer::GetDevice(),value,NULL,NULL,&tex,NULL);
 		mTextureList.push_back(tex);
 	}
-
+	// サウンド追加
 	void AddSoundToList(const char* value) {
 
 		Sound* sound = new Sound();
@@ -184,6 +155,7 @@ protected:
 		mSoundList.emplace_back(sound);
 	}
 
+	// ロード
 	void LoadModel();
 	void LoadTexture();
 	void LoadSound();
@@ -193,15 +165,16 @@ public:
 	Asset() = delete;
 	Asset(SCENE_ASSET scene) : mScene(scene) {};
 
+	// ロードシーンアセット
 	void LoadSceneAsset();
+	// アンロードシーンアセット
 	void UnloadSceneAsset();
 	
+	// Getter
 	SCENE_ASSET GetScene() { return mScene; };
-
 	AssimpModel* GetAssimpModel(int index) { return mAssimpModelList[(int)index]; };
 	ID3D11ShaderResourceView* GetTexture(int index) { return mTextureList[index]; };
 	Sound* GetSound(int index) { return mSoundList[(int)index]; };
-
 	std::vector<Sound*> GetSoundList(){ return mSoundList; };
 };
 

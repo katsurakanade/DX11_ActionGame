@@ -1,3 +1,7 @@
+/*
+アプリケーションクラス
+*/
+
 #pragma once
 
 #include "Scene.h"
@@ -10,11 +14,15 @@ class Application
 
 private:
 
+	// シーン
 	static Scene* mScene;
+	// シーンアセット
 	static Asset* mAsset;
 
+	// フラグ
 	static bool mDisableLighting;
 	static bool mUsingGPU;
+	// ForDebug
 	static float mFrameTime[100];
 	static float mMemoryUsage[100];
 	static int mAnalysisCount;
@@ -26,12 +34,19 @@ public:
 	static void Uninit();
 	static void Update();
 	static void Render();
-	static Scene* GetScene() { return mScene; };
-	static Asset* GetAsset() { return mAsset; };
+
+	// Setter
 	static void SetAsset(Asset* asset) { mAsset = asset; };
 
+	// Getter
+	static Scene* GetScene() { return mScene; };
+	static Asset* GetAsset() { return mAsset; };
+	static bool GetUsingGPU() { return mUsingGPU; };
+
+	// ForDebug
 	static void System();
 
+	// シーン遷移
 	template <typename T>
 	static void SwitchScene() {
 
@@ -45,14 +60,14 @@ public:
 		scene->Init();
 	}
 
+	// フラグSetter
 	static void UseLighting(bool val) {
 		mDisableLighting = val;
 	}
-
 	static void UseGPUCompute(bool val) {
 		mUsingGPU = val;
 	}
 
-	static bool GetUsingGPU() { return mUsingGPU; };
+	
 };
 

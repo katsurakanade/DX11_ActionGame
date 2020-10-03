@@ -1,3 +1,6 @@
+/*
+リソースクラス
+*/
 #pragma once
 
 #include "main.h"
@@ -10,21 +13,30 @@ class Resource {
 
 private:
 
+    // 生きている 
     bool Alive = true;
+    // 有効
     bool Active = true;
 
 protected:
 
+    // 回転計算用
     D3DXQUATERNION Quaternion;
-
+    // コンポーネント
     std::vector <Component*> Components;
   
 public:
     
+    // 座標
     D3DXVECTOR3 Position;
+    // 回転
     D3DXVECTOR3 Rotation;
+    // スケール
     D3DXVECTOR3 Scale;
+    // 名前
     std::string Name = "Object";
+    // タグ
+    std::string Tag = "Untagged";
 
     virtual void Init() {
         for (Component* c : Components) {
@@ -49,11 +61,9 @@ public:
     };
     virtual void Render() = 0;
 
-    void SetActive(bool active) { this->Active = active; };
+    // 削除
     void Destroy() { this->Alive = false; };
-
-    bool GetActive() { return this->Active; };
-
+    // 削除（内部用）
     bool Remove() {
         if (!Alive) {
             Uninit();
@@ -65,6 +75,11 @@ public:
         }
     }
 
+    // Setter
+    void SetActive(bool active) { this->Active = active; };
+
+    // Getter
+    bool GetActive() { return this->Active; };
     D3DXVECTOR3 GetForward() {
 
         D3DXMATRIX rot;
@@ -79,6 +94,7 @@ public:
         return forward;
     }
 
+    // 回転（回転軸指定）
     void RotationAroundXZ(D3DXVECTOR3 target,float force) {
         float tx = target.x;
         float ty = target.z;
@@ -88,7 +104,6 @@ public:
         Position.x = tx + (x0 - tx) * cos(D3DXToRadian(force)) - (y0 - ty) * sin(D3DXToRadian(force));
         Position.z = ty + (x0 - tx) * sin(D3DXToRadian(force)) + (y0 - ty) * cos(D3DXToRadian(force));
     }
-
     void RotationAroundXY(D3DXVECTOR3 target, float force) {
         float tx = target.x;
         float ty = target.y;

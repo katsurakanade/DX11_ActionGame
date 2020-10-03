@@ -1,3 +1,6 @@
+/*
+デバッグクラス
+*/
 #pragma once
 
 #include "main.h"
@@ -32,6 +35,7 @@ public:
 		DebugOutputString(str.c_str());
 	}
 
+	// 使用メモリGetter(KB)
 	static float GetMemoryUsage() {
 
 		HANDLE hProc = GetCurrentProcess();

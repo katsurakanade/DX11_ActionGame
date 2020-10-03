@@ -50,6 +50,8 @@
 #define SCREEN_WIDTH		(1920)
 #define SCREEN_HEIGHT	(1080)
 
+// Getter
 HWND GetWindow();
 HINSTANCE GetHinstance();
+// ForDebug
 void DebugOutputString(const char* str, ...);

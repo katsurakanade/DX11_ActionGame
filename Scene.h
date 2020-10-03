@@ -1,3 +1,7 @@
+/*
+シーンクラス
+*/
+
 #pragma once
 #include <list>
 #include <typeinfo>
@@ -7,10 +11,10 @@
 #include "Effect.h"
 #include "Light.h"
 #include "Fade.h"
-#include "Gamemanger.h"
 #include "Time.h"
 #include "Asset.h"
 
+// レイヤー
 enum RenderLayer {
 	CameraLayer , ObjectLayer ,EffectLayer, SpriteLayer , SpriteLayer2, ParticleLayer ,FadeLayer , EndLayer
 };
@@ -19,12 +23,16 @@ class Scene {
 
 protected:
 
+	// オブジェクト
 	std::list<Resource*> mGameObject[EndLayer];
 
+	// ゲームクリア用
 	bool mSwitchFlag = false;
 	bool mClear = false;
 
+	// フェイドポインタ
 	Fade* mpFade;
+	// シーンアセット
 	Asset* mAsset;
 
 public:
@@ -133,7 +141,8 @@ public:
 		return objects;
 	};
 
+	// Setter
 	void SetSwitchFlag(bool val) { mSwitchFlag = val; };
-
+	// Getter
 	Asset* GetAsset() { return mAsset; };
 };

@@ -7,11 +7,10 @@
 #include "Shader.h"
 #include <random>
 
-std::random_device rnd;
 
 void Grass::Init() {
 
-	Name = "Grass_" + std::to_string(rnd());
+
 
 	VERTEX_3D vertex[4];
 	float col[4];
@@ -65,7 +64,7 @@ void Grass::Init() {
 
 	Renderer::GetDevice()->CreateBuffer(&cbd, &sd, &mColorBuffer);
 
-	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT);
+	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HAL);
 
 	Position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

@@ -12,8 +12,8 @@
 std::random_device rd;
 std::default_random_engine gen = std::default_random_engine(rd());
 std::uniform_real_distribution<float> dis(0.1f, 1.0f);
-std::uniform_real_distribution<float> dis2(-1.0f, 1.0f);
-std::uniform_real_distribution<float> dis3(-10.0f, 10.0f);
+std::uniform_real_distribution<float> dis2(-0.1f, 0.1f);
+std::uniform_real_distribution<float> dis3(-1000.0f, 1000.0f);
 std::uniform_real_distribution<float> dis4(PARTICLE_LIFE_MAX / 2, PARTICLE_LIFE_MAX);
 
 void ParticleSystem::Init() {
@@ -94,9 +94,14 @@ void ParticleSystem::CreateComputeResource(){
 	hr = Renderer::CreateStructuredBuffer_DYN(sizeof(ParticleCompute), (UINT)MAX_PARTICLE, nullptr, &mpParticleBuffer);
 	assert(SUCCEEDED(hr));
 
+	hr = Renderer::CreateStructuredBuffer_DYN(sizeof(TimeCompute), (UINT)MAX_PARTICLE, nullptr, &mpTimeBuffer);
+	assert(SUCCEEDED(hr));
+
 	// SRV
 	hr = Renderer::CreateBufferSRV(mpParticleBuffer, &mpParticleSRV);
 	assert(SUCCEEDED(hr)); 
+	hr = Renderer::CreateBufferSRV(mpTimeBuffer, &mpTimeSRV);
+	assert(SUCCEEDED(hr));
 	
 	// Output
 	hr = Renderer::CreateStructuredBuffer(sizeof(ParticleCompute), (UINT)MAX_PARTICLE, nullptr, &mpResultBuffer);
@@ -116,6 +121,7 @@ void ParticleSystem::Update() {
 		ParticleCompute* pBufType = (ParticleCompute*)subRes.pData;
 		for (unsigned int v = 0; v < MAX_PARTICLE; v++) {
 			pBufType[v].vel = mVel[v];
+			pBufType[v].col = mparticle[v].vertex[0].Diffuse;
 			pBufType[v].life = mlife[v];
 			pBufType[v].pos[0] = mparticle[v].vertex[0].Position;
 			pBufType[v].pos[1] = mparticle[v].vertex[1].Position;
@@ -125,12 +131,23 @@ void ParticleSystem::Update() {
 		Renderer::GetDeviceContext()->Unmap(mpParticleBuffer, 0);
 	}
 
-	ID3D11ShaderResourceView* pSRVs[1] = { mpParticleSRV };
-	Renderer::GetDeviceContext()->CSSetShaderResources(0, 1, pSRVs);
-	Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[2], nullptr, 0);
+	{
+		D3D11_MAPPED_SUBRESOURCE subRes;
+		Renderer::GetDeviceContext()->Map(mpTimeBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
+		TimeCompute* pBufType = (TimeCompute*)subRes.pData;
+		for (unsigned int v = 0; v < MAX_PARTICLE; v++) {
+			pBufType[v].DeltaTime = Time::GetDeltaTime();
+			pBufType[v].Time = mKillFrame;
+		}
+		Renderer::GetDeviceContext()->Unmap(mpTimeBuffer, 0);
+	}
+
+	ID3D11ShaderResourceView* pSRVs[2] = { mpParticleSRV,mpTimeSRV };
+	Renderer::GetDeviceContext()->CSSetShaderResources(0, 2, pSRVs);
+	Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[1], nullptr, 0);
 	Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
 
-	Renderer::GetDeviceContext()->Dispatch(512, 1, 1);
+	Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
 
 	ID3D11Buffer* pBufDbg;
 	D3D11_BUFFER_DESC desc;
@@ -169,19 +186,19 @@ void ParticleSystem::Update() {
 				particle[v].vertex[3].Position = pBufType[v].pos[3];
 
 				particle[v].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-				particle[v].vertex[0].Diffuse = mparticle[v].vertex[0].Diffuse;
+				particle[v].vertex[0].Diffuse = pBufType[v].col;
 				particle[v].vertex[0].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
 
 				particle[v].vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-				particle[v].vertex[1].Diffuse = mparticle[v].vertex[1].Diffuse;
+				particle[v].vertex[1].Diffuse = pBufType[v].col;
 				particle[v].vertex[1].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
 
 				particle[v].vertex[2].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-				particle[v].vertex[2].Diffuse = mparticle[v].vertex[2].Diffuse;
+				particle[v].vertex[2].Diffuse = pBufType[v].col;
 				particle[v].vertex[2].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
 
 				particle[v].vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-				particle[v].vertex[3].Diffuse = mparticle[v].vertex[3].Diffuse;
+				particle[v].vertex[3].Diffuse = pBufType[v].col;
 				particle[v].vertex[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
 				
 			}
@@ -209,9 +226,9 @@ void ParticleSystem::Update() {
 
 	mKillFrame += 1.0f;
 
-	if (mKillFrame > PARTICLE_LIFE_MAX) {
+	/*if (mKillFrame > PARTICLE_LIFE_MAX) {
 		this->Destroy();
-	}
+	}*/
 
 }
 

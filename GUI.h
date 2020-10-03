@@ -1,3 +1,6 @@
+/*
+GUIクラス
+*/
 #pragma once
 
 #include "Resource.h"
@@ -8,6 +11,7 @@ class GUI : public Resource
 {
 private:
 
+	// オブジェクトポインタ
 	Player* mpPlayer;
 	Gauge* mpPlayerHP;
 	Digit* mpPlayerHPDigit;

@@ -83,10 +83,6 @@ void Sprite::Update() {
 
 void Sprite::Render() {
 
-	//LIGHT light;
-	//light.Enable = false;
-	//Renderer::SetLight(light);
-
 	Renderer::SetWorldViewProjection2D();
 
 	if (mAnimation) {

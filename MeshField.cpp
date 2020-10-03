@@ -8,6 +8,7 @@
 #include <random>
 
 float MeshField::HeightMap[21][21];
+std::random_device rnd;
 
 void MeshField::Init() {
 
@@ -107,6 +108,7 @@ void MeshField::Unint() {
 void MeshField::Update() {
 
 	ImGui::Begin(u8"地形ツール",nullptr, ImGuiWindowFlags_MenuBar);
+	ImGui::PushItemWidth(30);
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu(u8"マップ"))
 		{
@@ -126,7 +128,6 @@ void MeshField::Update() {
 		}
 		ImGui::EndMenuBar();
 	}
-	ImGui::PushItemWidth(30);
 	if (ImGui::TreeNode(u8"マップデータ")) {
 		for (int x = 0; x < 21; x++) {
 			for (int z = 0; z < 21; z++) {
@@ -140,11 +141,23 @@ void MeshField::Update() {
 	}
 	if (ImGui::TreeNode(u8"マップオブジェクト追加")) {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f, 0.5f, 0.0f, 1.0f });
-		if (ImGui::Button(u8"木")) {
+		if (ImGui::Button(u8"草")) {
 			Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 			Grass* g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
+			g->Name = "Grass_" + std::to_string(rnd());
+			g->Tag = "Grass";
 			g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
 			g->Position = p->Position;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(u8"岩")) {
+			Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
+			Grass* g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
+			g->Name = "Stone_" + std::to_string(rnd());
+			g->Tag = "Stone";
+			g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::STONE));
+			g->Position = p->Position;
+			g->Scale = D3DXVECTOR3(5, 5, 1);
 		}
 		ImGui::PopStyleColor();
 		ImGui::TreePop();
@@ -154,8 +167,8 @@ void MeshField::Update() {
 		for (unsigned int i = 0; i < grasslist.size(); i++) {
 			if (ImGui::TreeNode(grasslist[i]->Name.c_str())) {
 				ImGui::PushItemWidth(1000);
-				ImGui::SliderFloat(u8"Y座標", &grasslist[i]->Position.y, -50.0f, 50.0f);
-				ImGui::SliderFloat(u8"回転Z", &grasslist[i]->Rotation.z, -3.14f, 3.14f);
+				ImGui::SliderFloat3(u8"座標", grasslist[i]->Position, -5000.0f, 5000.0f,"%.1f",10.0f);
+				ImGui::SliderFloat3(u8"回転", grasslist[i]->Rotation, -3.14f, 3.14f);
 				ImGui::SliderFloat3(u8"スケール", grasslist[i]->Scale, 0.1f, 10.0f);
 				if (ImGui::Button(u8"削除")) {
 					grasslist[i]->Destroy();

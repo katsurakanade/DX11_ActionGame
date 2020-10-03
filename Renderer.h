@@ -1,3 +1,7 @@
+/*
+レンダラークラス
+*/
+
 #pragma once
 
 // 頂点構造体
@@ -35,6 +39,7 @@ struct DX11_SUBSET
 	DX11_MODEL_MATERIAL	Material;
 };
 
+// ライト構造体
 struct LIGHT
 {
 	BOOL		Enable;
@@ -44,6 +49,7 @@ struct LIGHT
 	D3DXCOLOR	Ambient;
 };
 
+// ブレンド状態
 enum class BLEND_STATE {
 	NONE,ALPHA_BLEND
 };
@@ -60,6 +66,7 @@ private:
 	static ID3D11RenderTargetView* mRenderTargetView;
 	static ID3D11DepthStencilView* mDepthStencilView;
 
+	// バッファ
 	static ID3D11Buffer* mWorldBuffer;
 	static ID3D11Buffer* mViewBuffer;
 	static ID3D11Buffer* mProjectionBuffer;
@@ -79,18 +86,22 @@ public:
 	static void Uninit();
 	static void Begin();
 	static void End();
-
+		
+	// 描画モード
 	static bool mLineMode;
 	static bool mGizmosMode;
 
+	// バッファ生成
 	static HRESULT CreateStructuredBuffer(UINT elementSize,UINT count,void* pInitData,ID3D11Buffer** ppBufferOut);
 	static HRESULT CreateStructuredBuffer_DYN(UINT elementSize, UINT count, void* pInitData, ID3D11Buffer** ppBufferOut);
 	static HRESULT CreateBufferSRV(ID3D11Buffer* pBuffer, ID3D11ShaderResourceView** ppSRVOut);
 	static HRESULT CreateBufferUAV(ID3D11Buffer* pBuffer, ID3D11UnorderedAccessView** ppUAVOut);
 
+	// Compute Shader
 	static void RunComputeShader(ID3D11ComputeShader* pComputeShader,UINT numViews,ID3D11ShaderResourceView** pSRVs,ID3D11Buffer* pCBCS,void* pCSData,DWORD numDataBytes,ID3D11UnorderedAccessView* pUAV,UINT x,UINT y,UINT z);
 	static ID3D11Buffer* CreateAndCopyToBuffer(ID3D11Buffer* pBuffer);
 
+	// Setter
 	static void SetDepthEnable(bool Enable);
 	static void SetWorldViewProjection2D();
 	static void SetWorldMatrix(D3DXMATRIX* WorldMatrix);
@@ -102,6 +113,7 @@ public:
 	static void SetParameter(D3DXVECTOR4 Parameter);
 	static void SetBlendState(BLEND_STATE state);
 
+	// Getter
 	static ID3D11Device* GetDevice(void) { return mD3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(void) { return mImmediateContext; }
 	static ID3D11RenderTargetView* GetRenderTargetView() { return mRenderTargetView; };
