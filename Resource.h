@@ -37,6 +37,8 @@ public:
     std::string Name = "Object";
     // タグ
     std::string Tag = "Untagged";
+    // タイプ
+    std::string Type = "Object";
 
     virtual void Init() {
         for (Component* c : Components) {

@@ -16,14 +16,6 @@ void Physical::Uninit() {
 
 void Physical::Update() {
 
-	/*std::vector <Wall*> grounds = Application::GetScene()->GetGameObjects<Wall>(ObjectLayer);
-
-	for (Wall* wall : grounds) {
-		if (GetResource()->GetComponent<BoxCollider>()->Collision_Box_Stay(wall->GetComponent<BoxCollider>())) {
-			IsGround = true;
-		}
-	}*/
-
 	if (IsMoving()) {
 
 		if (mAcceleration > 0) {

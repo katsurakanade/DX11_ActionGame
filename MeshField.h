@@ -6,22 +6,23 @@
 
 #include "Resource.h"
 
+
 class MeshField : public Resource
 {
 
 private:
 
 	// マップ
-	static float HeightMap[21][21];
+	static float HeightMap[FIELD_X][FIELD_X];
 	// バッファ
 	ID3D11Buffer* mVertexBuffer;
 	ID3D11Buffer* mIndexBuffer;
 	// テクスチャ
 	std::vector <ID3D11ShaderResourceView*> mTexture;
 	// 頂点
-	VERTEX_3D mVertex[21][21];
+	VERTEX_3D mVertex[FIELD_X][FIELD_X];
 	// リセット
-	void ResetField();
+	//void ResetField();
 
 public:
 

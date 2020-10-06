@@ -54,4 +54,4 @@ void Digit::MakeSprite(int fig,D3DXVECTOR2 size) {
 
 		mNumberSprite[i] = sp;
 	}
-}
+} 

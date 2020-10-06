@@ -53,6 +53,7 @@
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Physical.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Props.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Physical.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Props.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Result.h" />

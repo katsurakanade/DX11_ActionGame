@@ -26,10 +26,11 @@ void Game::Init() {
 	//Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
 	//enemy->AddGauge();
 
-	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
-
 	ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-	pc->Position = player->Position;
+	pc->Position = D3DXVECTOR3(0, 250, 0);
+	pc->Create(-1000, 1000, -0.1f, 0.1f, 0.5f);
+
+	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);
 

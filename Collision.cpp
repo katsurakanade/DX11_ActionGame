@@ -3,13 +3,14 @@
 #include "Resource.h"
 #include "Collision.h"
 #include "Application.h"
+#include "Shader.h"
 
+// ‰Šú‰»
 void BoxCollider::Init() {
 
 	Name = "Field";
 
 	VERTEX_3D vertex[8];
-
 	vertex[0].Position = D3DXVECTOR3(Position.x - (mSize.x / 2), Position.y + (mSize.y / 2), Position.z + (mSize.z / 2));
 	vertex[1].Position = D3DXVECTOR3(Position.x + (mSize.x / 2), Position.y + (mSize.y / 2),Position.z + (mSize.z / 2));
 	vertex[2].Position = D3DXVECTOR3(Position.x - (mSize.x / 2), Position.y + (mSize.y / 2), Position.z - (mSize.z / 2));
@@ -51,10 +52,12 @@ void BoxCollider::Init() {
 void BoxCollider::Uninit() {
 
 	mVertexBuffer->Release();
+	mColorBuffer->Release();
 }
 
 void BoxCollider::Update(){
 
+	
 	Position = GetResource()->Position + (mPositionOffest);
 	Rotation = GetResource()->Rotation;
 	Scale = GetResource()->Scale + (mScaleOffest);
@@ -67,7 +70,6 @@ void BoxCollider::Update(){
 void BoxCollider::Render() {
 
 	if (Renderer::mGizmosMode){
-
 
 		D3DXMATRIX world, scale, rot, trans;
 		D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
@@ -84,7 +86,6 @@ void BoxCollider::Render() {
 		col[2] = 1;
 		col[3] = 1;
 		Renderer::GetDeviceContext()->Unmap(mColorBuffer, 0);
-
 		Renderer::GetDeviceContext()->PSSetConstantBuffers(0, 1, &mColorBuffer);
 
 		UINT stride = sizeof(VERTEX_3D);
@@ -92,6 +93,8 @@ void BoxCollider::Render() {
 		Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 
 		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+
+		Shader::Use(SHADER_TYPE_VSPS::Unlit);
 
 		Renderer::GetDeviceContext()->Draw(8, 0);
 
@@ -139,13 +142,7 @@ bool BoxCollider::Collision_Box_Enter(BoxCollider* target) {
 
 void BoxCollider::DataPanel() {
 
-	/*ImGui::Begin(GetResource()->Name.c_str());
-	if (ImGui::TreeNode(u8"“–‚½‚è”»’è")) {
-		ImGui::Text("mTriggerFlag : %d", mTriggerFlag);
-		ImGui::Text("mStay : %d", mStay);
-		ImGui::TreePop();
-	}
-	ImGui::End();*/
+	
 }
 
 

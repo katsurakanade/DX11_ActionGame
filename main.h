@@ -17,6 +17,9 @@
 #include <utility>
 #include <functional>
 
+
+
+
 #pragma warning(push)
 #pragma warning(disable:4005)
 
@@ -46,9 +49,11 @@
 #pragma comment (lib, "d3dx11.lib")
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "gdiplus.lib")
 
 #define SCREEN_WIDTH		(1920)
 #define SCREEN_HEIGHT	(1080)
+#define FIELD_X 101
 
 // Getter
 HWND GetWindow();

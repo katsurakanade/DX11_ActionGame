@@ -75,7 +75,6 @@ void Mesh::CreateComputeResource() {
 
 }
 
-// Now Gpu Fast Than CPU 0.009 Sec
 void Mesh::Update() {
 
 	// Using GPU

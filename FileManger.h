@@ -10,6 +10,13 @@
 
 using json = nlohmann::json;
 
+typedef struct
+{
+	BYTE b;
+	BYTE g;
+	BYTE r;
+}RGB;
+
 class FileManger
 {
 
@@ -20,8 +27,10 @@ private:
 public:
 
 	// マップIO
-	static void Read(const char* pass, float output[21][21]);
-	static void Write(const char* pass, float output[21][21]);
+	static void Read(const char* pass, float output[FIELD_X][FIELD_X]);
+	static void Write(const char* pass, float output[FIELD_X][FIELD_X]);
+
+	static void ReadImageMap(const char* pass, float output[FIELD_X][FIELD_X]);
 
 	// リソースIO
 	static void ReadResource(const char* pass);
@@ -39,6 +48,7 @@ public:
 
 				json data;
 				data["Name"] = resource[i]->Name;
+				data["Type"] = resource[i]->Type;
 				data["Tag"] = resource[i]->Tag;
 				data["Position"]["x"] = resource[i]->Position.x;
 				data["Position"]["y"] = resource[i]->Position.y;

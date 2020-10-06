@@ -98,6 +98,7 @@ void Asset::LoadModel() {
 		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
 		AddAssimpModelToList("asset\\model\\torus\\torus.obj");
 		AddAssimpModelToList("asset\\model\\sword\\sword.obj");
+		AddAssimpModelToList("asset\\model\\rock\\rock.obj");
 
 		break;
 	case SCENE_ASSET::RESULT:

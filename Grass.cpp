@@ -10,8 +10,6 @@
 
 void Grass::Init() {
 
-
-
 	VERTEX_3D vertex[4];
 	float col[4];
 

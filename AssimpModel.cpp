@@ -266,7 +266,6 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		vertices.push_back(vertex);
 	}
 
-	
 	// Index
 	for (UINT i = 0; i < mesh->mNumFaces; i++)
 	{

@@ -7,7 +7,7 @@
 #include "Resource.h"
 
 // 最大数
-#define MAX_PARTICLE 100000
+#define MAX_PARTICLE 50000
 
 // パーティクル
 struct Particle {
@@ -69,6 +69,8 @@ public:
 	void Uninit();
 	void Update();
 	void Render();
+
+	void Create(float min, float max, float speed_min, float speed_max,float size);
 
 	// Setter
 	void SetTexture(ID3D11ShaderResourceView* tex) { mTexture = tex; };

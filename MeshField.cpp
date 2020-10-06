@@ -5,15 +5,17 @@
 #include "Shader.h"
 #include "FileManger.h"
 #include "Grass.h"
+#include "Props.h"
 #include <random>
 
-float MeshField::HeightMap[21][21];
+float MeshField::HeightMap[FIELD_X][FIELD_X];
 std::random_device rnd;
 
 void MeshField::Init() {
 
-	FileManger::Read("terrain.dat", MeshField::HeightMap);
 	FileManger::ReadResource("grass.json");
+	FileManger::ReadResource("rock.json");
+	FileManger::ReadImageMap("asset/texture/map.bmp",MeshField::HeightMap);
 
 	Name = "MeshField";
 
@@ -21,9 +23,8 @@ void MeshField::Init() {
 	std::default_random_engine gen = std::default_random_engine(rd());
 	std::uniform_real_distribution<float> dis(0.1f, 0.5f);
 
-	for (int x = 0; x <= 20; x++) {
-		for (int z = 0; z <= 20; z++) {
-			/*float y = sinf(x * 0.3f) * 5.0f;*/
+	for (int x = 0; x <= FIELD_X - 1; x++) {
+		for (int z = 0; z <= FIELD_X - 1; z++) {
 			float y = HeightMap[x][z];
 			mVertex[x][z].Position = D3DXVECTOR3((x - 10) * 10.0f, y, (z - 10) * -10.0f);
 			mVertex[x][z].Normal = D3DXVECTOR3(0, 1, 0);
@@ -32,8 +33,8 @@ void MeshField::Init() {
 		}
 	}
 
-	for (int x = 1; x <= 19; x++) {
-		for (int z = 1; z <= 19; z++) {
+	for (int x = 1; x <= FIELD_X - 2; x++) {
+		for (int z = 1; z <= FIELD_X - 2; z++) {
 			D3DXVECTOR3 vx, vz, vn;
 			vx = mVertex[x + 1][z].Position - mVertex[x - 1][z].Position;
 			vz = mVertex[x][z - 1].Position - mVertex[x][z + 1].Position;
@@ -46,7 +47,7 @@ void MeshField::Init() {
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(VERTEX_3D) * 21 * 21;
+	bd.ByteWidth = sizeof(VERTEX_3D) * FIELD_X * FIELD_X;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
@@ -58,29 +59,29 @@ void MeshField::Init() {
 
 	// Index Buffer
 	{
-		unsigned int index[(22 * 2) * 20 - 2];
+		unsigned int index[((FIELD_X+1) * 2) * (FIELD_X-1) - 2];
 		int i = 0;
-		for (int x = 0; x < 20; x++) {
-			for (int z = 0; z < 21; z++) {
-				index[i] = x * 21 + z;
+		for (int x = 0; x < FIELD_X - 1; x++) {
+			for (int z = 0; z < FIELD_X; z++) {
+				index[i] = x * FIELD_X + z;
 				i++;
-				index[i] = (x + 1) * 21 + z;
+				index[i] = (x + 1) * FIELD_X + z;
 				i++;
 			}
-			if (x == 19) {
+			if (x == FIELD_X-2) {
 				break;
 			}
 
-			index[i] = (x + 1) * 21 + 20;
+			index[i] = (x + 1) * FIELD_X + (FIELD_X - 1);
 			i++;
-			index[i] = (x + 1) * 21;
+			index[i] = (x + 1) * FIELD_X;
 			i++;
 		}
 
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(unsigned int) * ((22*2) * 20 - 2);
+		bd.ByteWidth = sizeof(unsigned int) * (((FIELD_X + 1)*2) * (FIELD_X - 1) - 2);
 		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 
@@ -92,6 +93,7 @@ void MeshField::Init() {
 	}
 
 	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT));
+	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS));
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -113,7 +115,7 @@ void MeshField::Update() {
 		if (ImGui::BeginMenu(u8"マップ"))
 		{
 			if (ImGui::MenuItem(u8"Save")) {
-				FileManger::Write("terrain.dat", MeshField::HeightMap);
+				
 			}
 			ImGui::EndMenu();
 		}
@@ -122,23 +124,25 @@ void MeshField::Update() {
 			if (ImGui::MenuItem(u8"Save")) {
 				std::vector<Grass*> grasslist = Application::GetScene()->GetGameObjects<Grass>(EffectLayer);
 				FileManger::WriteResource("grass.json", grasslist);
+				std::vector<Props*> propslist = Application::GetScene()->GetGameObjects<Props>(ObjectLayer);
+				FileManger::WriteResource("rock.json", propslist);
 			}
 	
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
 	}
-	if (ImGui::TreeNode(u8"マップデータ")) {
-		for (int x = 0; x < 21; x++) {
-			for (int z = 0; z < 21; z++) {
-				std::string str = std::to_string(x) + "," + std::to_string(z);
-				ImGui::SliderFloat(str.c_str(), &HeightMap[z][x], -20.0f, 20.0f, "%.1f");
-				ImGui::SameLine();
-			}
-			ImGui::NewLine();
-		}
-		ImGui::TreePop();
-	}
+	//if (ImGui::TreeNode(u8"マップデータ")) {
+	//	for (int x = 0; x < 21; x++) {
+	//		for (int z = 0; z < 21; z++) {
+	//			std::string str = std::to_string(x) + "," + std::to_string(z);
+	//			ImGui::SliderFloat(str.c_str(), &HeightMap[z][x], -20.0f, 20.0f, "%.1f");
+	//			ImGui::SameLine();
+	//		}
+	//		ImGui::NewLine();
+	//	}
+	//	ImGui::TreePop();
+	//}
 	if (ImGui::TreeNode(u8"マップオブジェクト追加")) {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f, 0.5f, 0.0f, 1.0f });
 		if (ImGui::Button(u8"草")) {
@@ -146,24 +150,27 @@ void MeshField::Update() {
 			Grass* g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
 			g->Name = "Grass_" + std::to_string(rnd());
 			g->Tag = "Grass";
+			g->Type = "BillBoard";			
 			g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
 			g->Position = p->Position;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button(u8"岩")) {
 			Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
-			Grass* g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
-			g->Name = "Stone_" + std::to_string(rnd());
-			g->Tag = "Stone";
-			g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::STONE));
-			g->Position = p->Position;
-			g->Scale = D3DXVECTOR3(5, 5, 1);
+			Props* rock = Application::GetScene()->AddGameObject<Props>(ObjectLayer);
+			rock->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
+			rock->Name = "Rock_" + std::to_string(rnd());
+			rock->Tag = "Rock";
+			rock->Type = "Object";
+			rock->Position = p->Position;
+			rock->Scale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 		}
 		ImGui::PopStyleColor();
 		ImGui::TreePop();
 	}
 	if (ImGui::TreeNode(u8"マップオブジェクトリスト")) {
 		std::vector<Grass*> grasslist = Application::GetScene()->GetGameObjects<Grass>(EffectLayer);
+		std::vector<Props*> propslist = Application::GetScene()->GetGameObjects<Props>(ObjectLayer);
 		for (unsigned int i = 0; i < grasslist.size(); i++) {
 			if (ImGui::TreeNode(grasslist[i]->Name.c_str())) {
 				ImGui::PushItemWidth(1000);
@@ -176,10 +183,22 @@ void MeshField::Update() {
 				ImGui::TreePop();
 			}
 		}
+		for (unsigned int i = 0; i < propslist.size(); i++) {
+			if (ImGui::TreeNode(propslist[i]->Name.c_str())) {
+				ImGui::PushItemWidth(1000);
+				ImGui::SliderFloat3(u8"座標", propslist[i]->Position, -5000.0f, 5000.0f, "%.1f", 10.0f);
+				ImGui::SliderFloat3(u8"回転", propslist[i]->Rotation, -3.14f, 3.14f);
+				ImGui::SliderFloat3(u8"スケール", propslist[i]->Scale, 0.1f, 10.0f);
+				if (ImGui::Button(u8"削除")) {
+					propslist[i]->Destroy();
+				}
+				ImGui::TreePop();
+			}
+		}
 		ImGui::TreePop();
 	}
 	if (ImGui::Button(u8"変更")) {
-		ResetField();
+		//ResetField();
 	}
 	ImGui::End();
 }
@@ -218,51 +237,49 @@ void MeshField::Render() {
 
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
-
-	Renderer::GetDeviceContext()->DrawIndexed((22*2) * 20 - 2,0, 0);
+	Renderer::GetDeviceContext()->DrawIndexed(((FIELD_X + 1)*2) * (FIELD_X - 1) -2,0, 0);
 	
-
 }
 
-void MeshField::ResetField() {
-
-	mVertexBuffer->Release();
-
-	for (int x = 0; x <= 20; x++) {
-		for (int z = 0; z <= 20; z++) {
-			/*float y = sinf(x * 0.3f) * 5.0f;*/
-			float y = HeightMap[x][z];
-			mVertex[x][z].Position = D3DXVECTOR3((x - 10) * 10.0f, y, (z - 10) * -10.0f);
-			mVertex[x][z].Normal = D3DXVECTOR3(0, 1, 0);
-			mVertex[x][z].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
-			mVertex[x][z].TexCoord = D3DXVECTOR2(x * 0.5f, z * 0.5f);
-		}
-	}
-
-	for (int x = 1; x <= 19; x++) {
-		for (int z = 1; z <= 19; z++) {
-			D3DXVECTOR3 vx, vz, vn;
-			vx = mVertex[x + 1][z].Position - mVertex[x - 1][z].Position;
-			vz = mVertex[x][z - 1].Position - mVertex[x][z + 1].Position;
-			D3DXVec3Cross(&vn, &vz, &vx);
-			D3DXVec3Normalize(&vn, &vn);
-			mVertex[x][z].Normal = vn;
-		}
-	}
-
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(VERTEX_3D) * 21 * 21;
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA sd;
-	ZeroMemory(&sd, sizeof(sd));
-	sd.pSysMem = mVertex;
-
-	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
-}
+//void MeshField::ResetField() {
+//
+//	mVertexBuffer->Release();
+//
+//	for (int x = 0; x <= 20; x++) {
+//		for (int z = 0; z <= 20; z++) {
+//			/*float y = sinf(x * 0.3f) * 5.0f;*/
+//			float y = HeightMap[x][z];
+//			mVertex[x][z].Position = D3DXVECTOR3((x - 10) * 10.0f, y, (z - 10) * -10.0f);
+//			mVertex[x][z].Normal = D3DXVECTOR3(0, 1, 0);
+//			mVertex[x][z].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
+//			mVertex[x][z].TexCoord = D3DXVECTOR2(x * 0.5f, z * 0.5f);
+//		}
+//	}
+//
+//	for (int x = 1; x <= 19; x++) {
+//		for (int z = 1; z <= 19; z++) {
+//			D3DXVECTOR3 vx, vz, vn;
+//			vx = mVertex[x + 1][z].Position - mVertex[x - 1][z].Position;
+//			vz = mVertex[x][z - 1].Position - mVertex[x][z + 1].Position;
+//			D3DXVec3Cross(&vn, &vz, &vx);
+//			D3DXVec3Normalize(&vn, &vn);
+//			mVertex[x][z].Normal = vn;
+//		}
+//	}
+//
+//	D3D11_BUFFER_DESC bd;
+//	ZeroMemory(&bd, sizeof(bd));
+//	bd.Usage = D3D11_USAGE_DEFAULT;
+//	bd.ByteWidth = sizeof(VERTEX_3D) * 21 * 21;
+//	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//	bd.CPUAccessFlags = 0;
+//
+//	D3D11_SUBRESOURCE_DATA sd;
+//	ZeroMemory(&sd, sizeof(sd));
+//	sd.pSysMem = mVertex;
+//
+//	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
+//}
 
 float MeshField::GetHeight(D3DXVECTOR3 pos) {
 

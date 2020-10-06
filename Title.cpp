@@ -15,11 +15,11 @@ void Title::Init() {
 	Skybox* skybox = Application::GetScene()->AddGameObject<Skybox>(SpriteLayer);
 	skybox->SetModelTexture(1);
 
-	Sprite* logo = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
-	logo->Name = "TitleLogo";
-	logo->SetTexture(mAsset->GetTexture((int)TEXTURE_ENUM_TITLE::LOGO));
-	logo->SetSize(D3DXVECTOR3(1000, 500, 0));
-	logo->SetPosition(D3DXVECTOR3(SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 - 550,1));
+	//Sprite* logo = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
+	//logo->Name = "TitleLogo";
+	//logo->SetTexture(mAsset->GetTexture((int)TEXTURE_ENUM_TITLE::LOGO));
+	//logo->SetSize(D3DXVECTOR3(1000, 500, 0));
+	//logo->SetPosition(D3DXVECTOR3(SCREEN_WIDTH / 2 - 500, SCREEN_HEIGHT / 2 - 550,1));
 
 	Sprite* Button = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	Button->Name = "Button";

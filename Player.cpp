@@ -93,18 +93,16 @@ void Player::Update() {
 		start = false;
 	}
 
-	if (Input::GetKeyTrigger(DIK_C)) {
-		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = Position;
-	}
-
-	if (Input::GetKeyTrigger(DIK_V)) {
-		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = Position + D3DXVECTOR3(0, 30, 0);
-	}
 
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
+
+	if (Input::GetKeyTrigger(DIK_C)) {
+		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+		pc->Position = Position + D3DXVECTOR3(0, mf->GetHeight(Position) * 2, 0);
+		pc->Create(-1000, 1000, -1.0f, 1.0f, 0.3f);
+		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+	}
 	
 	Resource::Update();
 

@@ -38,6 +38,7 @@ enum class ASSIMP_MODEL_ENUM_GAME
 	HUMAN,
 	TORUS,
 	SWORD,
+	ROCK,
 };
 // ゲーム_テクスチャ
 enum class TEXTURE_ENUM_GAME {

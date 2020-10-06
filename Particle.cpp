@@ -24,12 +24,19 @@ void ParticleSystem::Init() {
 
 	Name = "ParticleSystem";
 
+}
+
+void ParticleSystem::Create(float min, float max,float speed_min, float speed_max,float size) {
+
+	std::uniform_real_distribution<float> rndpos(min, max);
+	std::uniform_real_distribution<float> rndvel(speed_min, speed_max);
+
 	for (int i = 0; i < MAX_PARTICLE; i++) {
 
-		mVel[i] = D3DXVECTOR3(dis2(gen), dis2(gen), dis2(gen));
+		mVel[i] = D3DXVECTOR3(rndvel(gen), rndvel(gen), rndvel(gen));
 		mlife[i] = dis4(gen);
 
-		D3DXVECTOR3 pos = D3DXVECTOR3(dis3(gen), dis3(gen), dis3(gen));
+		D3DXVECTOR3 pos = Position +  D3DXVECTOR3(rndpos(gen), rndpos(gen), rndpos(gen));
 
 		mparticle[i].vertex[0].Position = D3DXVECTOR3(-1.0f, 1.0f, 0.0f) + pos;
 		mparticle[i].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -68,10 +75,9 @@ void ParticleSystem::Init() {
 	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE);
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	Scale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	Scale = D3DXVECTOR3(size, size, size);
 
 	CreateComputeResource();
-
 }
 
 void ParticleSystem::Uninit() {

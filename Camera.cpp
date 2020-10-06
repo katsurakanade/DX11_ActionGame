@@ -9,6 +9,7 @@ bool flag = false;
 
 void Camera::Init() {
 
+	// 初期化
 	Name = "Camera";
 
 	Position = D3DXVECTOR3(0.0f, 10.0f, -40.0f);
@@ -26,6 +27,7 @@ void Camera::Uninit() {
 
 void Camera::Update() {
 
+	// 追跡
 	if (mFollowTarget) {
 		mTarget = mFollowTarget->Position + mFollowProjectionOffset;
 		if (!flag) {
@@ -52,13 +54,10 @@ void Camera::Update() {
 
 void Camera::Render() {
 
-	//ビューマトリクス設定
-	
 	D3DXMatrixLookAtLH(&mViewMatrix, &Position, &mTarget, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 
 	Renderer::SetViewMatrix(&mViewMatrix);
 
-	//プロジェクションマトリクス設定
 	D3DXMATRIX projectionMatrix;
 	D3DXMatrixPerspectiveFovLH(&projectionMatrix, 1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 1000.0f);
 

@@ -11,7 +11,7 @@ void main(in PS_IN In , out float4 outDiffuse : SV_Target)
     light = saturate(light);
     
     outDiffuse = g_Texture.Sample(g_SamplerState, In.TexCoord);
-    outDiffuse += /*Material.Ambient **/ Light.Ambient;
+    outDiffuse += Material.Ambient * Light.Ambient;
     outDiffuse *= Material.Diffuse;
     
     outDiffuse.rgb *= In.Diffuse.rgb * light;
@@ -26,16 +26,9 @@ void main(in PS_IN In , out float4 outDiffuse : SV_Target)
     specular = pow(specular, Material.Shininess);
     outDiffuse.rgb += specular * Material.Specular.xyz;
     
-    //float rim = 1.0f + dot(eyev, normal.xyz);
-    //rim = pow(rim, 2) * 0.3f;
-    //outDiffuse.rgb += rim;
+    float rim = 1.0f + dot(eyev, normal.xyz);
+    rim = pow(rim, 2) * 0.1f;
+    outDiffuse.rgb += rim;
     
-    // Material
-    
-    //Rim
-    //float rimStrength = 0.1f;
-    //float3 rimDot = 1.0f - dot(eyev, normal.xyz);
-    //rimDot = pow(max(rimDot, 0.0), 2) * rimStrength;
-    //outDiffuse.rgb += rimDot;
-
+ 
 }
