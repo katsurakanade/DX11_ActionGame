@@ -20,6 +20,8 @@ float Application::mFrameTime[100];
 float Application::mMemoryUsage[100];
 int Application::mAnalysisCount;
 float Application::mUpdateAnalysisTime;
+std::random_device Application::RandomDevice;
+std::default_random_engine Application::RandomGen = std::default_random_engine(RandomDevice());
 
 std::map<std::string, std::string> StaticManger::StateMap;
 

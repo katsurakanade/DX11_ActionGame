@@ -26,12 +26,7 @@ void Props::Uninit() {
 
 void Props::Update() {
 
-	if (Input::GetKeyTrigger(DIK_P)) {
-		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = Position;
-		pc->Create(0, 0, -50.0f, 50.0f,0.03f);
-		pc->SetTexture(mModel->GetMeshes()[0]->Textures[0].texture);
-	}
+	
 
 	Resource::Update();
 }

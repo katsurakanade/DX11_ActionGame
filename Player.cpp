@@ -9,6 +9,9 @@
 #include "Shader.h"
 #include "MeshField.h"
 #include "Collision.h"
+#include "item.h"
+#include "Missile.h"
+#include <random>
 
 float count;
 bool start;
@@ -54,6 +57,9 @@ void Player::Unint() {
 	Resource::Uninit();
 }
 
+std::random_device rddd;
+std::default_random_engine gendd = std::default_random_engine(rddd());
+
 void Player::Update() {
 
 	if (start) {
@@ -93,15 +99,36 @@ void Player::Update() {
 		start = false;
 	}
 
-
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
 
 	if (Input::GetKeyTrigger(DIK_C)) {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = Position + D3DXVECTOR3(0, mf->GetHeight(Position) * 2, 0);
-		pc->Create(-1000, 1000, -1.0f, 1.0f, 0.3f);
+		pc->Position = Position;
+		ParitcleSetting* setting = new ParitcleSetting;
+		setting->Amount = 50000;
+		setting->PostionMinMax = D3DXVECTOR2(-100, 100);
+		setting->SpeedMinMax = D3DXVECTOR2(-1.0f, 1.0f);
+		setting->Size = 0.2f;
+		pc->Create(setting);
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+		delete setting;
+	}
+
+	if (Input::GetKeyTrigger(DIK_V)) {
+
+		Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
+
+		std::uniform_real_distribution<float> rndx(Position.x - 30, Position.x + 30);
+		std::uniform_real_distribution<float> rndy(Position.y + 10, Position.y + 50);
+		std::uniform_real_distribution<float> rndz(Position.z - 100, Position.z - 50);
+
+		Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
+		ms->Position = Position;
+		ms->p0 = Position;
+		D3DXVECTOR3 mid = D3DXVECTOR3(rndx(gendd), ms->p0.y, rndz(gendd));
+		ms->p1 = mid;
+
 	}
 	
 	Resource::Update();
@@ -136,43 +163,6 @@ void Player::SettingPanel() {
 	ImGui::End();
 }
 
-//void Player::Jump(BYTE keykode) {
-//
-//	if (Input::GetKeyTrigger(keykode)) {
-//		mCanJump = false;
-//		mJumpVel = 0;
-//		mpAnination->SetNewState("Jump");
-//	}
-//
-//	if (mCanJump == false) {
-//		Position.y = 50 * sin(2.0f * 3.14f / 40.0f * mJumpTime);
-//		mJumpTime++;
-//	}
-//
-//	/*float speed = GetComponent<Physical>()->mSpeed;
-//
-//	if (speed <= 0.1f) {
-//		GetComponent<Physical>()->AddForce(D3DXVECTOR3(0, 15.0f, 0) * mJumpVel);
-//	}
-//
-//	else {
-//		D3DXVECTOR3 forward;
-//		D3DXVec3Normalize(&forward, &-GetForward());
-//		D3DXVECTOR3 dir = (forward)+D3DXVECTOR3(0, -1.0f, 0);
-//		D3DXVECTOR3 r;
-//		GetReflectVector(&r, dir, D3DXVECTOR3(0, 15.0f, 0));
-//		r.z = 0;
-//		GetComponent<Physical>()->AddForce(r * speed * mJumpVel);
-//	}*/
-//
-//	if (Position.y > 1 && !mCanJump) {
-//		mCanJump = true;
-//		mJumpVel = 0;
-//		mJumpTime = 0;
-//		mpAnination->SetNewState("Idle");
-//	}
-//
-//}
 
 void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykodeL) {
 

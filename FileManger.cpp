@@ -8,6 +8,8 @@ using namespace std;
 #include <gdiplus.h>
 #include <iostream>
 #include <fstream>
+#include <codecvt>
+#include <locale>
 
 using json = nlohmann::json;
 
@@ -94,23 +96,6 @@ void FileManger::ReadResource(const char* pass) {
 				}
 			}
 
-			// ビルボードの場合
-			/*if (data["Tag"] == "Grass") {
-				g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
-				g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
-				g->Name = data["Name"];
-				g->Tag = data["Tag"];
-				g->Position.x = data["Position"]["x"];
-				g->Position.y = data["Position"]["y"];
-				g->Position.z = data["Position"]["z"];
-				g->Rotation.x = data["Rotation"]["x"];
-				g->Rotation.y = data["Rotation"]["y"];
-				g->Rotation.z = data["Rotation"]["z"];
-				g->Scale.x = data["Scale"]["x"];
-				g->Scale.y = data["Scale"]["y"];
-				g->Scale.z = data["Scale"]["z"];
-			}*/
-
 			// Propsの場合
 			else if (data["Type"] == "Object") {
 
@@ -147,7 +132,7 @@ void FileManger::ReadImageMap(const char* pass, float output[FIELD_X][FIELD_X]) 
 	ULONG_PTR gdiplustoken;
 	GdiplusStartup(&gdiplustoken, &gdiplusstartupinput, NULL);
 
-	std::wstring infilename(L"asset/texture/map.bmp");
+	std::wstring infilename = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(pass);
 
 	Gdiplus::Bitmap* bmp = new Gdiplus::Bitmap(infilename.c_str());
 	UINT height = bmp->GetHeight();

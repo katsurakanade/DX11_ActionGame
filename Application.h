@@ -9,6 +9,7 @@
 #include "Game.h"
 #include "Result.h"
 
+
 class Application
 {
 
@@ -34,6 +35,9 @@ public:
 	static void Uninit();
 	static void Update();
 	static void Render();
+
+	static std::random_device RandomDevice;
+	static std::default_random_engine RandomGen;
 
 	// Setter
 	static void SetAsset(Asset* asset) { mAsset = asset; };

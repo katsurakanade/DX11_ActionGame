@@ -23,6 +23,8 @@ private:
 	Gauge* mGauge;
 	// アニメーションポインタ
 	Animation* mpAnination;
+	// 動き始める
+	bool mStart;
 
 public:
 

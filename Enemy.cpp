@@ -9,7 +9,12 @@
 #include "input.h"
 #include "Shader.h"
 #include "Collision.h"
+#include "MeshField.h"
+#include <random>
 
+float timer;
+int arrow;
+std::uniform_int_distribution<int> rndarrow(0, 8);
 
 void Enemy::Init() {
 
@@ -81,6 +86,24 @@ void Enemy::Update() {
 	if (mGauge) {
 		mGauge->mFillAmount = mHp / mHpInit;
 	}
+
+	if (Input::GetKeyTrigger(DIK_H)) {
+		mStart = true;
+	}
+
+	timer += 1;
+
+	if (timer >= 100.0f) {
+		arrow = rndarrow(Application::RandomGen);
+		timer = 0;
+	}
+
+	if (mStart) {
+		Movement(arrow);
+	}
+
+	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
+	Position.y = mf->GetHeight(Position) + mf->Position.y;
 
 	Resource::Update();
 }

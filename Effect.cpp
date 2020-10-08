@@ -10,6 +10,7 @@
 
 void Effect::Init() {
 
+	// 初期化
 	VERTEX_3D vertex[4];
 	float col[4];
 
@@ -77,8 +78,10 @@ void Effect::Uninit() {
 	mColorBuffer->Release();
 }
 
+
 void Effect::Update() {
 
+	// アニメーション
 	if (!mLoop) {
 		mWaitframe++;
 
@@ -87,8 +90,9 @@ void Effect::Update() {
 			mWaitframe = 0;
 		}
 
+		// 削除
 		if (mFramecount >= mWidth * mHeight) {
-			Destroy();
+			//Destroy();
 			return;
 		}
 	}
@@ -97,6 +101,7 @@ void Effect::Update() {
 
 void Effect::Render() {
 
+	// テクスチャ座標取得
 	D3DXVECTOR2 frame = MakeFrame();
 
 	D3D11_MAPPED_SUBRESOURCE msr;

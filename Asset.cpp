@@ -131,7 +131,7 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/star.jpg");
 		AddTextureToList("asset/texture/Hp_frame.png");
 		AddTextureToList("asset/texture/Hp_line.png");
-		AddTextureToList("asset/texture/explosion.png");
+		AddTextureToList("asset/texture/explosion2.png");
 		AddTextureToList("asset/texture/Particle.png");
 		AddTextureToList("asset/texture/Grass.jpg");
 		AddTextureToList("asset/texture/Frame.png");
@@ -141,7 +141,7 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/Dirt.jpg");
 		AddTextureToList("asset/texture/hal.png");
 		AddTextureToList("asset/texture/stone.png");
-		AddTextureToList("asset/texture/fog.png");
+		AddTextureToList("asset/texture/fireball.png");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;

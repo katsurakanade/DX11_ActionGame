@@ -41,7 +41,8 @@ enum class ASSIMP_MODEL_ENUM_GAME
 	ROCK,
 };
 // ゲーム_テクスチャ
-enum class TEXTURE_ENUM_GAME {
+enum class TEXTURE_ENUM_GAME
+{
 	WHITE,
 	SKY,
 	STAR,

@@ -50,6 +50,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshField.cpp" />
+    <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Physical.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshField.h" />
+    <ClInclude Include="Missile.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Physical.h" />
     <ClInclude Include="Player.h" />

@@ -16,6 +16,7 @@ void Physical::Uninit() {
 
 void Physical::Update() {
 
+	// ˆÚ“®’†
 	if (IsMoving()) {
 
 		if (mAcceleration > 0) {
@@ -35,6 +36,7 @@ void Physical::Update() {
 		}
 	}
 
+	// À•Wˆ—
 	ProcessPostion();
 
 	IsGround = false;

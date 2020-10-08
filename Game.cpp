@@ -23,12 +23,18 @@ void Game::Init() {
 	skybox->SetModelTexture(2);
 
 	Player* player = AddGameObject<Player>(ObjectLayer);
-	//Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
-	//enemy->AddGauge();
 
-	ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+	Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
+	//enemy->AddGauge();
+	enemy->Position = D3DXVECTOR3(0, 0, -150);
+
+	//Item* item = AddGameObject<Item>(ObjectLayer);
+	//item->SetModel(mAsset->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::CUBE));
+	//item->Position = D3DXVECTOR3(0, 0, -50);
+
+	/*ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 	pc->Position = D3DXVECTOR3(0, 250, 0);
-	pc->Create(-1000, 1000, -0.1f, 0.1f, 0.5f);
+	pc->Create(-1000, 1000, -0.1f, 0.1f, 0.5f);*/
 
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 
