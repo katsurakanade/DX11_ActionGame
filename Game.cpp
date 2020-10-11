@@ -6,7 +6,6 @@
 #include "Particle.h"
 #include "Item.h"
 #include "MeshField.h"
-#include "field.h"
 #include "Grass.h"
 
 
@@ -25,16 +24,8 @@ void Game::Init() {
 	Player* player = AddGameObject<Player>(ObjectLayer);
 
 	Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
-	//enemy->AddGauge();
+	enemy->AddGauge();
 	enemy->Position = D3DXVECTOR3(0, 0, -150);
-
-	//Item* item = AddGameObject<Item>(ObjectLayer);
-	//item->SetModel(mAsset->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::CUBE));
-	//item->Position = D3DXVECTOR3(0, 0, -50);
-
-	/*ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-	pc->Position = D3DXVECTOR3(0, 250, 0);
-	pc->Create(-1000, 1000, -0.1f, 0.1f, 0.5f);*/
 
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 
@@ -45,7 +36,7 @@ void Game::Init() {
 	mpFade = fade;
 
 
-	//AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
+	AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
 
 }
 

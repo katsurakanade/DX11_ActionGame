@@ -5,8 +5,6 @@
 #include "Scene.h"
 #include "Camera.h"
 
-bool flag = false;
-
 void Camera::Init() {
 
 	// èâä˙âª
@@ -30,9 +28,7 @@ void Camera::Update() {
 	// í«ê’
 	if (mFollowTarget) {
 		mTarget = mFollowTarget->Position + mFollowProjectionOffset;
-		if (!flag) {
-			Position = mTarget + mFollowPostionOffset + mControllerPosition;
-		}		
+		Position = mTarget + mFollowPostionOffset + mControllerPosition;
 	}
 
 	ImGui::Begin(u8"ÉJÉÅÉâ");

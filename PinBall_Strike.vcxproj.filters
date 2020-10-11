@@ -75,9 +75,6 @@
     <ClCompile Include="Effect.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="field.cpp">
-      <Filter>ソース ファイル\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
@@ -89,9 +86,6 @@
     </ClCompile>
     <ClCompile Include="Physical.cpp">
       <Filter>ソース ファイル\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
     <ClCompile Include="GUI.cpp">
       <Filter>ソース ファイル\Resource</Filter>
@@ -206,9 +200,6 @@
     <ClInclude Include="Collision.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="field.h">
-      <Filter>ヘッダー ファイル\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
@@ -229,9 +220,6 @@
     </ClInclude>
     <ClInclude Include="Physical.h">
       <Filter>ヘッダー ファイル\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
     <ClInclude Include="GUI.h">
       <Filter>ヘッダー ファイル\Resource</Filter>

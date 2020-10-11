@@ -6,10 +6,10 @@
 
 void Asset::LoadSceneAsset(){
 
+	// アセットロード
 	std::thread thread_loadmodel(&Asset::LoadModel,this);
 	std::thread thread_loadtexture(&Asset::LoadTexture, this);
 	std::thread thread_loadsound(&Asset::LoadSound, this);
-
 	thread_loadmodel.join();
 	thread_loadtexture.join();
 	thread_loadsound.join();
@@ -73,6 +73,7 @@ void Asset::LoadModel() {
 	std::vector <std::string> animation;
 	std::vector <std::string> pass;
 
+	// シーンことロード
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
@@ -116,6 +117,7 @@ void Asset::LoadTexture() {
 
 	auto start = std::chrono::system_clock::now();
 
+	// シーンことロード
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
@@ -157,7 +159,7 @@ void Asset::LoadSound() {
 
 	auto start = std::chrono::system_clock::now();
 
-
+	// シーンことロード
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
@@ -172,13 +174,7 @@ void Asset::LoadSound() {
 	default:
 		break;
 	}
-	/*AddSoundToList("asset/sound/bgm.wav");
-	AddSoundToList("asset/sound/bgm2.wav");
-	AddSoundToList("asset/sound/bgm3.wav");
-	AddSoundToList("asset/sound/switch.wav");
-	AddSoundToList("asset/sound/CollisionWall.wav");
-	AddSoundToList("asset/sound/Explosion.wav");
-	AddSoundToList("asset/sound/razer.wav");*/
+
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Sound Loaded", end, start);

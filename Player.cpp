@@ -47,7 +47,6 @@ void Player::Init() {
 		c->SetUsePanel(true);
 	}
 
-
 	Resource::Init();
 
 }
@@ -56,9 +55,6 @@ void Player::Unint() {
 
 	Resource::Uninit();
 }
-
-std::random_device rddd;
-std::default_random_engine gendd = std::default_random_engine(rddd());
 
 void Player::Update() {
 
@@ -102,19 +98,21 @@ void Player::Update() {
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
 
+	// パーティクル生成（テスト用）
 	if (Input::GetKeyTrigger(DIK_C)) {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = Position;
+		pc->Position = this->Position;
 		ParitcleSetting* setting = new ParitcleSetting;
 		setting->Amount = 50000;
 		setting->PostionMinMax = D3DXVECTOR2(-100, 100);
 		setting->SpeedMinMax = D3DXVECTOR2(-1.0f, 1.0f);
+		setting->LifeMinMax = D3DXVECTOR2(60.0f, 300.0f);
 		setting->Size = 0.2f;
 		pc->Create(setting);
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 		delete setting;
 	}
-
+	// ファイアボール生成（テスト用）
 	if (Input::GetKeyTrigger(DIK_V)) {
 
 		Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
@@ -126,7 +124,7 @@ void Player::Update() {
 		Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
 		ms->Position = Position;
 		ms->p0 = Position;
-		D3DXVECTOR3 mid = D3DXVECTOR3(rndx(gendd), ms->p0.y, rndz(gendd));
+		D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), ms->p0.y, rndz(Application::RandomGen));
 		ms->p1 = mid;
 
 	}
@@ -147,7 +145,7 @@ void Player::Render() {
 	
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
-	//mModel->DisplayConfig = true;
+	mModel->DisplayConfig = true;
 	mModel->Draw(world);
 	
 	GetComponent<BoxCollider>()->Render();
@@ -179,7 +177,7 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(sinf(-D3DX_PI * 0.75f) , 0, cosf(-D3DX_PI * 0.75f));
 
-		
+	
 		}
 
 		else if (Input::GetKeyPress(keykodeR)) {
@@ -284,8 +282,6 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 		mpAnination->SetNewStateOneTime("Attack");
 		mpAnination->SetCoefficient(30.0f);
 		start = true;
-		/*ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(ObjectLayer);
-		pc->Position = Position;*/
 	}
 
 	if (Input::GetKeyTrigger(keykode_1)) {

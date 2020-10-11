@@ -25,7 +25,6 @@ void Item::Uninit() {
 
 void Item::Update() {
 
-	//Rotation.y += 10.0f * Time::GetDeltaTime();
 
 	ImGui::Begin(Name.c_str());
 	ImGui::SliderFloat3(u8"ç¿ïW", Position, -1000.0f, 1000.0f, "%.0f", 5.0f);

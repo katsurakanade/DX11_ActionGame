@@ -85,6 +85,7 @@ void Sprite::Render() {
 
 	Renderer::SetWorldViewProjection2D();
 
+	// アニメーション
 	if (mAnimation) {
 
 		D3DXVECTOR2 frame = MakeFrame();

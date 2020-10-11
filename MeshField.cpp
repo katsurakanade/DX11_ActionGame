@@ -12,12 +12,15 @@ float MeshField::HeightMap[FIELD_X][FIELD_X];
 
 void MeshField::Init() {
 
+	// マップ上のオブジェクトロード
 	FileManger::ReadResource("grass.json");
 	FileManger::ReadResource("rock.json");
+	// マップロード（画像）
 	FileManger::ReadImageMap("asset/texture/map.bmp",MeshField::HeightMap);
 
 	Name = "MeshField";
 
+	// 頂点
 	for (int x = 0; x <= FIELD_X - 1; x++) {
 		for (int z = 0; z <= FIELD_X - 1; z++) {
 			float y = HeightMap[x][z];
@@ -28,6 +31,7 @@ void MeshField::Init() {
 		}
 	}
 
+	// 法線
 	for (int x = 1; x <= FIELD_X - 2; x++) {
 		for (int z = 1; z <= FIELD_X - 2; z++) {
 			D3DXVECTOR3 vx, vz, vn;
@@ -87,6 +91,7 @@ void MeshField::Init() {
 		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mIndexBuffer);
 	}
 
+	// 画像
 	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT));
 	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS));
 
@@ -107,13 +112,6 @@ void MeshField::Update() {
 	ImGui::Begin(u8"地形ツール",nullptr, ImGuiWindowFlags_MenuBar);
 	ImGui::PushItemWidth(30);
 	if (ImGui::BeginMenuBar()) {
-		if (ImGui::BeginMenu(u8"マップ"))
-		{
-			if (ImGui::MenuItem(u8"Save")) {
-				
-			}
-			ImGui::EndMenu();
-		}
 		if (ImGui::BeginMenu(u8"マップオブジェク"))
 		{
 			if (ImGui::MenuItem(u8"Save")) {
@@ -180,9 +178,6 @@ void MeshField::Update() {
 			}
 		}
 		ImGui::TreePop();
-	}
-	if (ImGui::Button(u8"変更")) {
-		//ResetField();
 	}
 	ImGui::End();
 }

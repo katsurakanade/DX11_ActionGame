@@ -41,11 +41,6 @@ void GUI::Init() {
 	Hp_Gauge->Position = D3DXVECTOR3(Round_fr->GetSize().x + 15, Round_fr->GetSize().y - 30, 0);
 	Hp_Gauge->SetGUI(600);
 
-	//Sprite* Item_0 = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer2);
-	//Item_0->Name = "Item_0";
-	//Item_0->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::SWORD_ICON));
-	//Item_0->SetPosition(D3DXVECTOR3(210, 890, 1));
-	//Item_0->SetSize(D3DXVECTOR3(75, 145, 1));
 
 	mpPlayerHP = Hp_Gauge;
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);

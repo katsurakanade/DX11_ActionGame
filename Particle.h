@@ -67,6 +67,8 @@ protected:
 	void CreateComputeResource();
 	// パーティクル数
 	int mParticleAmount;
+	// パーティクルライブ最大値
+	int mParticleLifeMax;
 
 public:
 

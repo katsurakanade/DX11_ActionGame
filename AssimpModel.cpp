@@ -184,15 +184,6 @@ void AssimpModel::Draw(D3DXMATRIX root) {
 					}
 				}
 
-				/*D3DXMATRIX world, scale, rot, trans;
-				D3DXMatrixScaling(&scale, mMeshes[i]->Scale.x, mMeshes[i]->Scale.y, mMeshes[i]->Scale.z);
-				D3DXQuaternionRotationYawPitchRoll(&mMeshes[i]->Quaternion, mMeshes[i]->Rotation.y, mMeshes[i]->Rotation.x, mMeshes[i]->Rotation.z);
-				D3DXMatrixRotationQuaternion(&rot, &mMeshes[i]->Quaternion);
-				D3DXMatrixTranslation(&trans, mMeshes[i]->Position.x, mMeshes[i]->Position.y, mMeshes[i]->Position.z);
-				world = scale * rot * trans;
-				world *= root;
-				Renderer::SetWorldMatrix(&world);*/
-
 				if (mMeshes[i]->Enable){
 					mMeshes[i]->Draw();
 				}

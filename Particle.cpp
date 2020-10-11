@@ -22,7 +22,9 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 	std::uniform_real_distribution<float> rndvel(setting->SpeedMinMax.x, setting->SpeedMinMax.y);
 	std::uniform_real_distribution<float> rndlife(setting->LifeMinMax.x, setting->LifeMinMax.y);
 
+	// パーティクル資料生成
 	mParticleAmount = setting->Amount;
+	mParticleLifeMax = setting->LifeMinMax.y;
 	mparticle = new Particle[setting->Amount];
 	mVel = new D3DXVECTOR3[setting->Amount];
 	mlife = new float[setting->Amount];
@@ -83,7 +85,7 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
-
+	// ComputeShader用のデータ生成
 	CreateComputeResource();
 }
 
@@ -136,7 +138,6 @@ void ParticleSystem::CreateComputeResource(){
 
 void ParticleSystem::Update() {
 
-
 	// Fill Data
 	{
 		D3D11_MAPPED_SUBRESOURCE subRes;
@@ -165,11 +166,11 @@ void ParticleSystem::Update() {
 		Renderer::GetDeviceContext()->Unmap(mpTimeBuffer, 0);
 	}
 
+	// Compute
 	ID3D11ShaderResourceView* pSRVs[2] = { mpParticleSRV,mpTimeSRV };
 	Renderer::GetDeviceContext()->CSSetShaderResources(0, 2, pSRVs);
 	Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[1], nullptr, 0);
 	Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
-
 	Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
 
 	ID3D11Buffer* pBufDbg;
@@ -183,6 +184,7 @@ void ParticleSystem::Update() {
 	Renderer::GetDevice()->CreateBuffer(&desc, nullptr, &pBufDbg);
 	Renderer::GetDeviceContext()->CopyResource(pBufDbg, mpResultBuffer);
 
+	// Return Resource
 	{
 		D3D11_MAPPED_SUBRESOURCE subRes;
 		Renderer::GetDeviceContext()->Map(pBufDbg, 0, D3D11_MAP_READ, 0, &subRes);
@@ -249,9 +251,9 @@ void ParticleSystem::Update() {
 
 	mKillFrame += 1.0f;
 
-	/*if (mKillFrame > PARTICLE_LIFE_MAX) {
+	if (mKillFrame > mParticleLifeMax) {
 		this->Destroy();
-	}*/
+	}
 
 }
 

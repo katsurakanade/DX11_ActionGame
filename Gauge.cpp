@@ -24,6 +24,7 @@ void Gauge::Uninit() {
 
 void Gauge::Update() {
 
+	// GUI
 	if (mType == GaugeType::GAUGE_GUI) {
 		std::vector <Sprite*> sp = Application::GetScene()->GetGameObjects<Sprite>(SpriteLayer);
 
@@ -35,6 +36,7 @@ void Gauge::Update() {
 
 	}
 
+	// ビルボード
 	else if (mType == GaugeType::GAUGE_BILLBOARD) {
 
 		mpBar_empty->Position = mpTarget->Position + mPositionOffest;

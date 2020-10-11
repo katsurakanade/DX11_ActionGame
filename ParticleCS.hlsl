@@ -53,7 +53,7 @@ void CSFunc(const CSInput input)
     BufOut[index].vertex[2] = result[2];
     BufOut[index].vertex[3] = result[3];
     BufOut[index].col = col;
-    BufOut[index].life = particle[index].life;
+    BufOut[index].life = alife;
 
   
 }
