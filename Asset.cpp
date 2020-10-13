@@ -97,6 +97,7 @@ void Asset::LoadModel() {
 
 		AddAssimpModelToList("asset\\model\\enemy\\Enemy.fbx", pass, animation);
 		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
+		AddAssimpModelToList("asset\\model\\human\\Human2.fbx", pass, animation);
 		AddAssimpModelToList("asset\\model\\torus\\torus.obj");
 		AddAssimpModelToList("asset\\model\\sword\\sword.obj");
 		AddAssimpModelToList("asset\\model\\rock\\rock.obj");
@@ -144,6 +145,7 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/hal.png");
 		AddTextureToList("asset/texture/stone.png");
 		AddTextureToList("asset/texture/fireball.png");
+		AddTextureToList("asset/texture/hane.png");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;

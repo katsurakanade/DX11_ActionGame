@@ -16,11 +16,6 @@ private:
 
 	// HP
 	float mHpInit = 40000.0f;
-
-	//bool mCanJump;
-	//float mJumpVel = 0;
-	//float mJumpTime = 0;
-
 	// アニメーション速度
 	float mAnimationSpeed = 3.0f;
 	// アニメーション状態

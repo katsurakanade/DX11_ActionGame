@@ -13,9 +13,6 @@
 #include "Missile.h"
 #include <random>
 
-float count;
-bool start;
-
 void Player::Init() {
 
 	Name = "Player";
@@ -58,10 +55,6 @@ void Player::Unint() {
 
 void Player::Update() {
 
-	if (start) {
-		count += 1.0f;
-	}
-
 	float speed = GetComponent<Physical>()->mSpeed;
 
 	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetNewState().c_str() , mpAnination->GetBlend(), mpAnination->GetFrame());
@@ -87,16 +80,61 @@ void Player::Update() {
 	// スキル
 	Skill(DIK_1, DIK_2, DIK_3, DIK_4);
 
-	CameraEditMode(DIK_R);
+	
 
-	if (count >= 60.0f) {
-		mpAnination->SetNewState("Idle");
-		count = 0.0f;
-		start = false;
-	}
+
+	CameraEditMode(DIK_R);
 
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
+
+	if (Input::GetKeyTrigger(DIK_N)) {
+		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
+			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+			pc->Position = D3DXVECTOR3(0, 0, 0) - Position;
+			pc->Position.y += mf->GetHeight(Position);
+
+			ParitcleSetting* setting = new ParitcleSetting;
+			setting->Amount = 500;
+			setting->PostionMinMaxX = D3DXVECTOR2(-10, 10);
+			setting->PostionMinMaxY = D3DXVECTOR2(-10, 10);
+			setting->PostionMinMaxZ = D3DXVECTOR2(-10, 10);
+			setting->SpeedMinMaxY = D3DXVECTOR2(0.3f, 5.0f);
+			setting->LifeMinMax = D3DXVECTOR2(1.0f, 200.0f);
+			setting->Size = 1.0f;
+			pc->Create(setting);
+
+			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
+			delete setting;
+
+			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN);
+		}
+	}
+
+	if (Input::GetKeyTrigger(DIK_M)) {
+
+		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2)) {
+			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+			pc->Position = D3DXVECTOR3(0, 0, 0) - Position;
+			pc->Position.y += mf->GetHeight(Position);
+
+			ParitcleSetting* setting = new ParitcleSetting;
+			setting->Amount = 500;
+			setting->PostionMinMaxX = D3DXVECTOR2(-10, 10);
+			setting->PostionMinMaxY = D3DXVECTOR2(-10, 10);
+			setting->PostionMinMaxZ = D3DXVECTOR2(-10, 10);
+			setting->SpeedMinMaxY = D3DXVECTOR2(0.3f, 5.0f);
+			setting->LifeMinMax = D3DXVECTOR2(1.0f, 200.0f);
+			setting->Size = 1.0f;
+			pc->Create(setting);
+
+			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
+			delete setting;
+
+			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2);
+		}
+		
+	}
 
 	// パーティクル生成（テスト用）
 	if (Input::GetKeyTrigger(DIK_C)) {
@@ -104,8 +142,12 @@ void Player::Update() {
 		pc->Position = this->Position;
 		ParitcleSetting* setting = new ParitcleSetting;
 		setting->Amount = 50000;
-		setting->PostionMinMax = D3DXVECTOR2(-100, 100);
-		setting->SpeedMinMax = D3DXVECTOR2(-1.0f, 1.0f);
+		setting->PostionMinMaxX = D3DXVECTOR2(-100, 100);
+		setting->PostionMinMaxY = D3DXVECTOR2(-100, 100);
+		setting->PostionMinMaxZ = D3DXVECTOR2(-100, 100);
+		setting->SpeedMinMaxX = D3DXVECTOR2(-1.0f, 1.0f);
+		setting->SpeedMinMaxY = D3DXVECTOR2(-1.0f, 1.0f);
+		setting->SpeedMinMaxZ = D3DXVECTOR2(-1.0f, 1.0f);
 		setting->LifeMinMax = D3DXVECTOR2(60.0f, 300.0f);
 		setting->Size = 0.2f;
 		pc->Create(setting);
@@ -117,14 +159,14 @@ void Player::Update() {
 
 		Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
 
-		std::uniform_real_distribution<float> rndx(Position.x - 30, Position.x + 30);
+		std::uniform_real_distribution<float> rndx(Position.x - 40, Position.x + 40);
 		std::uniform_real_distribution<float> rndy(Position.y + 10, Position.y + 50);
 		std::uniform_real_distribution<float> rndz(Position.z - 100, Position.z - 50);
 
 		Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
 		ms->Position = Position;
 		ms->p0 = Position;
-		D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), ms->p0.y, rndz(Application::RandomGen));
+		D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
 		ms->p1 = mid;
 
 	}
@@ -277,15 +319,12 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 
 void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3) {
 
-	if (Input::GetKeyTrigger(keykode_0) && !start) {
-		count = 0.0f;
-		mpAnination->SetNewStateOneTime("Attack");
-		mpAnination->SetCoefficient(30.0f);
-		start = true;
+	if (Input::GetKeyTrigger(keykode_0)) {
+		mpAnination->SetNewStateOneTime("Attack", 0.7f);
 	}
 
 	if (Input::GetKeyTrigger(keykode_1)) {
-
+		
 	}
 
 	if (Input::GetKeyTrigger(keykode_2)) {

@@ -18,8 +18,12 @@ void ParticleSystem::Init() {
 
 void ParticleSystem::Create(ParitcleSetting* setting) {
 
-	std::uniform_real_distribution<float> rndpos(setting->PostionMinMax.x, setting->PostionMinMax.y);
-	std::uniform_real_distribution<float> rndvel(setting->SpeedMinMax.x, setting->SpeedMinMax.y);
+	std::uniform_real_distribution<float> rndposX(setting->PostionMinMaxX.x, setting->PostionMinMaxX.y);
+	std::uniform_real_distribution<float> rndposY(setting->PostionMinMaxY.x, setting->PostionMinMaxY.y);
+	std::uniform_real_distribution<float> rndposZ(setting->PostionMinMaxZ.x, setting->PostionMinMaxZ.y);
+	std::uniform_real_distribution<float> rndvelX(setting->SpeedMinMaxX.x, setting->SpeedMinMaxX.y);
+	std::uniform_real_distribution<float> rndvelY(setting->SpeedMinMaxY.x, setting->SpeedMinMaxY.y);
+	std::uniform_real_distribution<float> rndvelZ(setting->SpeedMinMaxZ.x, setting->SpeedMinMaxZ.y);
 	std::uniform_real_distribution<float> rndlife(setting->LifeMinMax.x, setting->LifeMinMax.y);
 
 	// パーティクル資料生成
@@ -33,7 +37,7 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 	for (int i = 0; i < setting->Amount; i++) {
 
 		if (setting->RandomSpeed) {
-			mVel[i] = D3DXVECTOR3(rndvel(Application::RandomGen), rndvel(Application::RandomGen), rndvel(Application::RandomGen));
+			mVel[i] = D3DXVECTOR3(rndvelX(Application::RandomGen), rndvelY(Application::RandomGen), rndvelZ(Application::RandomGen));
 		}
 
 		else if (!setting->RandomSpeed) {
@@ -42,24 +46,24 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 
 		mlife[i] = rndlife(Application::RandomGen);
 
-		D3DXVECTOR3 pos = Position +  D3DXVECTOR3(rndpos(Application::RandomGen), rndpos(Application::RandomGen), rndpos(Application::RandomGen));
+		D3DXVECTOR3 pos = Position + D3DXVECTOR3(rndposX(Application::RandomGen), rndposY(Application::RandomGen), rndposZ(Application::RandomGen));
 
-		mparticle[i].vertex[0].Position = D3DXVECTOR3(-setting->Size, setting->Size, 0.0f) + pos;
+		mparticle[i].vertex[0].Position = pos  + D3DXVECTOR3(-setting->Size, setting->Size, 0.0f);
 		mparticle[i].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		mparticle[i].vertex[0].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 		mparticle[i].vertex[0].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
 
-		mparticle[i].vertex[1].Position = D3DXVECTOR3(setting->Size, setting->Size, 0.0f) + pos;
+		mparticle[i].vertex[1].Position = pos + D3DXVECTOR3(setting->Size, setting->Size, 0.0f);
 		mparticle[i].vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		mparticle[i].vertex[1].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 		mparticle[i].vertex[1].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
 
-		mparticle[i].vertex[2].Position = D3DXVECTOR3(-setting->Size, -setting->Size, 0.0f) + pos;
+		mparticle[i].vertex[2].Position = pos + D3DXVECTOR3(-setting->Size, -setting->Size, 0.0f);
 		mparticle[i].vertex[2].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		mparticle[i].vertex[2].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 		mparticle[i].vertex[2].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
 
-		mparticle[i].vertex[3].Position = D3DXVECTOR3(setting->Size, -setting->Size, 0.0f) + pos;
+		mparticle[i].vertex[3].Position = pos + D3DXVECTOR3(setting->Size, -setting->Size, 0.0f);
 		mparticle[i].vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		mparticle[i].vertex[3].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
 		mparticle[i].vertex[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
@@ -205,10 +209,10 @@ void ParticleSystem::Update() {
 
 			for (int v = 0; v < mParticleAmount; v++) {
 
-				particle[v].vertex[0].Position = pBufType[v].pos[0];
-				particle[v].vertex[1].Position = pBufType[v].pos[1];
-				particle[v].vertex[2].Position = pBufType[v].pos[2];
-				particle[v].vertex[3].Position = pBufType[v].pos[3];
+				particle[v].vertex[0].Position = mparticle[v].vertex[0].Position;
+				particle[v].vertex[1].Position = mparticle[v].vertex[1].Position;
+				particle[v].vertex[2].Position = mparticle[v].vertex[2].Position;
+				particle[v].vertex[3].Position = mparticle[v].vertex[3].Position;
 
 				particle[v].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 				particle[v].vertex[0].Diffuse = pBufType[v].col;
@@ -236,19 +240,6 @@ void ParticleSystem::Update() {
 
 	}
 
-	// CPU
-	/*D3D11_MAPPED_SUBRESOURCE msr;
-	Renderer::GetDeviceContext()->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
-	Particle* vertex = (Particle*)msr.pData;
-	for (int i = 0; i < MAX_PARTICLE; i++) {
-
-		for (int k = 0; k < 4; k++)
-		{
-			vertex[i].vertex[k].Position += mVel[i];
-		}
-	}
-	Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);*/
-
 	mKillFrame += 1.0f;
 
 	if (mKillFrame > mParticleLifeMax) {
@@ -274,7 +265,6 @@ void ParticleSystem::Render() {
 	world = scale * invView * trans;
 
 	Renderer::SetWorldMatrix(&world);
-
 
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;

@@ -36,6 +36,7 @@ enum class ASSIMP_MODEL_ENUM_GAME
 	CUBE,
 	ENEMY,
 	HUMAN,
+	HUMAN2,
 	TORUS,
 	SWORD,
 	ROCK,
@@ -59,6 +60,7 @@ enum class TEXTURE_ENUM_GAME
 	HAL,
 	STONE,
 	FOG,
+	HANE,
 };
 // ゲーム_サウンド
 enum class SOUND_ENUM_GAME {

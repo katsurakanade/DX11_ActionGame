@@ -67,7 +67,8 @@ void AssimpModel::DrawConfig() {
 	if (ImGui::TreeNode(u8"メッシュ情報")) {
 
 		for (unsigned int i = 0; i < mMeshes.size(); i++) {
-			if (ImGui::TreeNode(mMeshes[i]->Name.c_str())) {
+			std::string name = mMeshes[i]->Name + std::to_string(i);
+			if (ImGui::TreeNode(name.c_str())) {
 				ImGui::Checkbox(u8"表示", &mMeshes[i]->Enable);
 				ImGui::ColorEdit4(u8"カラー", mMeshes[i]->col);
 				ImGui::Image(mMeshes[i]->Textures[0].texture, ImVec2(100, 100));
