@@ -23,10 +23,14 @@ private:
 	Gauge* mGauge;
 	// アニメーションポインタ
 	Animation* mpAnination;
+	Effect* mpLockImage;
 	// 動き始める
 	bool mStart;
 
 public:
+
+	// ロック
+	bool Is_Lock = false;
 
 	void Init();
 	void Uninit();

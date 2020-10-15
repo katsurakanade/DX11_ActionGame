@@ -30,8 +30,6 @@ private:
 	void Movement(BYTE keykodeF, BYTE keykodeB,BYTE keykodeR, BYTE keykodeL);
 	// スキル
 	void Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3);
-	// ForDebug
-	void CameraEditMode(BYTE keykode);
 	// アニメーションポインタ
 	Animation* mpAnination;
 

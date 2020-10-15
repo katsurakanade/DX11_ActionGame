@@ -37,12 +37,19 @@ void GUI::Init() {
 	Round_fr->SetPosition(D3DXVECTOR3(50, 50, 1));
 	Round_fr->SetSize(D3DXVECTOR3(100, 100, 1));
 
+	Sprite* cha_icon = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer2);
+	cha_icon->Name = "cha_icon_0";
+	cha_icon->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
+	cha_icon->SetPosition(D3DXVECTOR3(57, 57, 1));
+	cha_icon->SetSize(D3DXVECTOR3(85, 85, 1));
+
 	Gauge* Hp_Gauge = Application::GetScene()->AddGameObject<Gauge>(SpriteLayer);
 	Hp_Gauge->Position = D3DXVECTOR3(Round_fr->GetSize().x + 15, Round_fr->GetSize().y - 30, 0);
 	Hp_Gauge->SetGUI(600);
 
 
 	mpPlayerHP = Hp_Gauge;
+	mpPlayerIcon = cha_icon;
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 }
 

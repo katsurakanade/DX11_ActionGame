@@ -15,6 +15,7 @@ private:
 	D3DXVECTOR3 mTarget;
 	// 追跡ターゲット
 	Resource* mFollowTarget;
+	Resource* mLookTarget;
 
 	// 偏移
 	D3DXVECTOR3 mFollowPostionOffset;
@@ -34,8 +35,10 @@ public:
 
 	// Setter
 	void SetFollowTarget(Resource* obj) { mFollowTarget = obj; };
+	void SetLookTarget(Resource* obj) { mLookTarget = obj; };
 	// Getter
 	D3DXMATRIX GetViewMatrix() { return mViewMatrix; };
 	Resource* GetFollowTarget() { return mFollowTarget; };
+	Resource* GetLookTarget() { return mLookTarget; };
 };
 

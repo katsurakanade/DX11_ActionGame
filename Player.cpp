@@ -80,11 +80,6 @@ void Player::Update() {
 	// スキル
 	Skill(DIK_1, DIK_2, DIK_3, DIK_4);
 
-	
-
-
-	CameraEditMode(DIK_R);
-
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
 
@@ -98,7 +93,7 @@ void Player::Update() {
 			setting->Amount = 500;
 			setting->PostionMinMaxX = D3DXVECTOR2(-10, 10);
 			setting->PostionMinMaxY = D3DXVECTOR2(-10, 10);
-			setting->PostionMinMaxZ = D3DXVECTOR2(-10, 10);
+			setting->PostionMinMaxZ = D3DXVECTOR2(-20, 5);
 			setting->SpeedMinMaxY = D3DXVECTOR2(0.3f, 5.0f);
 			setting->LifeMinMax = D3DXVECTOR2(1.0f, 200.0f);
 			setting->Size = 1.0f;
@@ -108,9 +103,11 @@ void Player::Update() {
 			delete setting;
 
 			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN);
+
+			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
+			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
 		}
 	}
-
 	if (Input::GetKeyTrigger(DIK_M)) {
 
 		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2)) {
@@ -122,7 +119,7 @@ void Player::Update() {
 			setting->Amount = 500;
 			setting->PostionMinMaxX = D3DXVECTOR2(-10, 10);
 			setting->PostionMinMaxY = D3DXVECTOR2(-10, 10);
-			setting->PostionMinMaxZ = D3DXVECTOR2(-10, 10);
+			setting->PostionMinMaxZ = D3DXVECTOR2(-20, 5);
 			setting->SpeedMinMaxY = D3DXVECTOR2(0.3f, 5.0f);
 			setting->LifeMinMax = D3DXVECTOR2(1.0f, 200.0f);
 			setting->Size = 1.0f;
@@ -132,8 +129,24 @@ void Player::Update() {
 			delete setting;
 
 			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2);
+			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
+			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_1));
 		}
 		
+	}
+	if (Input::GetKeyTrigger(DIK_R)) {
+
+		Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+		Enemy* enemy = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
+
+		if (!camera->GetLookTarget()) {
+			camera->SetLookTarget(enemy);
+			enemy->Is_Lock = true;
+		}
+		else {
+			camera->SetLookTarget(nullptr);
+			enemy->Is_Lock = false;
+		}
 	}
 
 	// パーティクル生成（テスト用）
@@ -335,23 +348,4 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 
 	}
 
-}
-
-void Player::CameraEditMode(BYTE keykode) {
-
-	if (Input::GetKeyTrigger(keykode)) {
-
-		Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
-
-		if (camera->GetFollowTarget() == this) {
-			camera->SetFollowTarget(nullptr);
-			camera->Position = D3DXVECTOR3(camera->Position.x, 200, -200);
-		}
-
-		else {
-			Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
-			camera->SetFollowTarget(this);
-		}
-	}
-	
 }

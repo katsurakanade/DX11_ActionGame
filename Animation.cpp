@@ -89,13 +89,12 @@ void Animation::DataPanel() {
 
 void Animation::SetNewStateOneTime(std::string str,float timetowait) {
 
-	if (mWaitTime != 0.0f) {
-		return;
+	if (mWaitTime == 0.0f && mNewState == mState) {
+		mFrame = 0;
+		mOldState = mState;
+		mNewState = str;
+		mOneTimeFlag = true;
+		mTimeToWait = timetowait;
 	}
 
-	mFrame = 0;
-	mOldState = mState;
-	mNewState = str;
-	mOneTimeFlag = true;
-	mTimeToWait = timetowait;
 }

@@ -61,6 +61,8 @@ enum class TEXTURE_ENUM_GAME
 	STONE,
 	FOG,
 	HANE,
+	CHARACTERICON_0,
+	CHARACTERICON_1,
 };
 // ゲーム_サウンド
 enum class SOUND_ENUM_GAME {

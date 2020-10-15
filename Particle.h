@@ -32,11 +32,9 @@ struct ParitcleSetting {
 	int Amount = 50000;
 	// ランダム速度フラグ
 	bool RandomSpeed = true;
-	// 座標最小最大X(ランダム)
+	// 座標最小最大(ランダム)
 	D3DXVECTOR2 PostionMinMaxX = D3DXVECTOR2(0,0);
-	// 座標最小最大Y(ランダム)
 	D3DXVECTOR2 PostionMinMaxY = D3DXVECTOR2(0, 0);
-	// 座標最小最大Z(ランダム)
 	D3DXVECTOR2 PostionMinMaxZ = D3DXVECTOR2(0, 0);
 	// 速度(直接設定)
 	D3DXVECTOR3 Speed = D3DXVECTOR3(0.0f, 0.0f,0.0f);

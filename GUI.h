@@ -15,6 +15,7 @@ private:
 	Player* mpPlayer;
 	Gauge* mpPlayerHP;
 	Digit* mpPlayerHPDigit;
+	Sprite* mpPlayerIcon;
 
 public:
 
@@ -22,6 +23,8 @@ public:
 	void Unint() {};
 	void Update();
 	void Render() {};
+
+	void SetPlayerIcon(ID3D11ShaderResourceView* resource) { mpPlayerIcon->SetTexture(resource); };
 
 };
 

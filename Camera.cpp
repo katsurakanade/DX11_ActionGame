@@ -27,8 +27,28 @@ void Camera::Update() {
 
 	// í«ê’
 	if (mFollowTarget) {
-		mTarget = mFollowTarget->Position + mFollowProjectionOffset;
+		mTarget = mFollowTarget->Position + mFollowProjectionOffset + mControllerPosition;
 		Position = mTarget + mFollowPostionOffset + mControllerPosition;
+	}
+
+	if (mLookTarget) {
+		mTarget = mLookTarget->Position;
+	}
+
+
+
+	// ÉJÉÅÉâëÄçÏ
+	if (Input::GetKeyPress(DIK_J)) {
+		mControllerPosition += D3DXVECTOR3(-5.0f, 0, 0) * Time::GetDeltaTime();
+	}
+	if (Input::GetKeyPress(DIK_K)) {
+		mControllerPosition += D3DXVECTOR3(5.0f, 0, 0) * Time::GetDeltaTime();
+	}
+	if (Input::GetKeyPress(DIK_U)) {
+		mControllerPosition += D3DXVECTOR3(0, 5.0f, 0) * Time::GetDeltaTime();
+	}
+	if (Input::GetKeyPress(DIK_I)) {
+		mControllerPosition += D3DXVECTOR3(0, -5.0f, 0) * Time::GetDeltaTime();
 	}
 
 	ImGui::Begin(u8"ÉJÉÅÉâ");

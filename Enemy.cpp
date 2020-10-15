@@ -37,6 +37,15 @@ void Enemy::Init() {
 	mpAnination->SetState("Idle");
 	mpAnination->SetCoefficient(10.0f);
 
+	mpLockImage = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
+	mpLockImage->Name = "enemy_lock";
+	mpLockImage->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+	mpLockImage->SetHW(1, 1);
+	mpLockImage->SetLoop(true);
+	mpLockImage->Position = Position;
+	mpLockImage->Scale = D3DXVECTOR3(3, 3, 3);
+	mpLockImage->SetActive(false);
+
 	Resource::Init();
 
 }
@@ -65,7 +74,6 @@ void Enemy::Uninit() {
 
 void Enemy::Update() {
 
-
 	float speed = GetComponent<Physical>()->mSpeed;
 
 	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetNewState().c_str(), mpAnination->GetBlend(), mpAnination->GetFrame());
@@ -93,7 +101,7 @@ void Enemy::Update() {
 
 	timer += 1;
 
-	if (timer >= 100.0f) {
+	if (timer >= 60.0f) {
 		arrow = rndarrow(Application::RandomGen);
 		timer = 0;
 	}
@@ -104,6 +112,15 @@ void Enemy::Update() {
 
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
+
+	mpLockImage->Position = Position + D3DXVECTOR3(0, 5, 3);
+
+	if (Is_Lock) {
+		mpLockImage->SetActive(true);
+	}
+	else if (!Is_Lock) {
+		mpLockImage->SetActive(false);
+	}
 
 	Resource::Update();
 }

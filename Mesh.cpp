@@ -154,16 +154,6 @@ void Mesh::Draw(){
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 
-	/*D3D11_MAPPED_SUBRESOURCE msr;
-	Renderer::GetDeviceContext()->Map(ColorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
-	float* col = (float*)msr.pData;
-	col[0] = this->col[0];
-	col[1] = this->col[1];
-	col[2] = this->col[2];
-	col[3] = this->col[3];
-	Renderer::GetDeviceContext()->Unmap(ColorBuffer, 0);
-	Renderer::GetDeviceContext()->PSSetConstantBuffers(0, 1, &ColorBuffer);*/
-
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
 	Renderer::GetDeviceContext()->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
