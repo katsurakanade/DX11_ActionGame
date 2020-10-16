@@ -77,11 +77,11 @@ void Player::Update() {
 	// 移動
 	Movement(DIK_W, DIK_S, DIK_A, DIK_D);
 
-	// スキル
-	Skill(DIK_1, DIK_2, DIK_3, DIK_4);
-
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
+
+	// スキル
+	Skill(DIK_1, DIK_2, DIK_3, DIK_4);
 
 	if (Input::GetKeyTrigger(DIK_N)) {
 		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
@@ -139,14 +139,17 @@ void Player::Update() {
 		Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
 		Enemy* enemy = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
 
-		if (!camera->GetLookTarget()) {
-			camera->SetLookTarget(enemy);
-			enemy->Is_Lock = true;
+		if (enemy != nullptr) {
+			if (!camera->GetLookTarget()) {
+				camera->SetLookTarget(enemy);
+				enemy->Is_Lock = true;
+			}
+			else {
+				camera->SetLookTarget(nullptr);
+				enemy->Is_Lock = false;
+			}
 		}
-		else {
-			camera->SetLookTarget(nullptr);
-			enemy->Is_Lock = false;
-		}
+		
 	}
 
 	// パーティクル生成（テスト用）
@@ -176,11 +179,13 @@ void Player::Update() {
 		std::uniform_real_distribution<float> rndy(Position.y + 10, Position.y + 50);
 		std::uniform_real_distribution<float> rndz(Position.z - 100, Position.z - 50);
 
-		Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
-		ms->Position = Position;
-		ms->p0 = Position;
-		D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
-		ms->p1 = mid;
+		if (e != nullptr) {
+			Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
+			ms->Position = Position;
+			ms->p0 = Position;
+			D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
+			ms->p1 = mid;
+		}
 
 	}
 	
@@ -334,6 +339,28 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 
 	if (Input::GetKeyTrigger(keykode_0)) {
 		mpAnination->SetNewStateOneTime("Attack", 0.7f);
+
+		Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
+
+		if (e != nullptr && e->GetComponent<BoxCollider>()->Collision_Box_Stay(this->GetComponent<BoxCollider>())) {
+
+			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+			ParitcleSetting* setting = new ParitcleSetting;
+			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+			setting->Amount = 3000;
+			setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
+			setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
+			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
+			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
+			setting->Size = 0.1f;
+			pc->Create(setting);
+			delete setting;
+			pc->Position = Position + D3DXVECTOR3(0,3,0);
+
+			e->mHp -= 10.0f;
+		}
+
+
 	}
 
 	if (Input::GetKeyTrigger(keykode_1)) {

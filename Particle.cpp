@@ -46,7 +46,7 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 
 		mlife[i] = rndlife(Application::RandomGen);
 
-		D3DXVECTOR3 pos = Position + D3DXVECTOR3(rndposX(Application::RandomGen), rndposY(Application::RandomGen), rndposZ(Application::RandomGen));
+		D3DXVECTOR3 pos = setting->Position + D3DXVECTOR3(rndposX(Application::RandomGen), rndposY(Application::RandomGen), rndposZ(Application::RandomGen));
 
 		mparticle[i].vertex[0].Position = pos  + D3DXVECTOR3(-setting->Size, setting->Size, 0.0f);
 		mparticle[i].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -86,11 +86,12 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 
 	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE);
 
-	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
 	// ComputeShader用のデータ生成
 	CreateComputeResource();
+
+
 }
 
 void ParticleSystem::Uninit() {

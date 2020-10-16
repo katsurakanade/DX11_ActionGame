@@ -16,9 +16,8 @@ private:
 
 	// モデル
 	AssimpModel* mModel;
-	// HP
+	// HP初期
 	float mHpInit;
-	float mHp;
 	// ゲージ
 	Gauge* mGauge;
 	// アニメーションポインタ
@@ -31,6 +30,8 @@ public:
 
 	// ロック
 	bool Is_Lock = false;
+	// HP
+	float mHp;
 
 	void Init();
 	void Uninit();

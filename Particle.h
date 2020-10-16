@@ -32,6 +32,8 @@ struct ParitcleSetting {
 	int Amount = 50000;
 	// ランダム速度フラグ
 	bool RandomSpeed = true;
+	// 座標
+	D3DXVECTOR3 Position = D3DXVECTOR3(0,0,0);
 	// 座標最小最大(ランダム)
 	D3DXVECTOR2 PostionMinMaxX = D3DXVECTOR2(0,0);
 	D3DXVECTOR2 PostionMinMaxY = D3DXVECTOR2(0, 0);
@@ -61,8 +63,6 @@ protected:
 
 	// ライフ
 	float* mlife;
-	// サイス
-	D3DXVECTOR3 mSize = D3DXVECTOR3(150.0f, 150.0f, 0.0f);
 	// テクスチャ
 	ID3D11ShaderResourceView* mTexture = nullptr;
 	// 削除フレーム

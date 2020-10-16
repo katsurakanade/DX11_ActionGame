@@ -52,7 +52,7 @@ void Enemy::Init() {
 
 void Enemy::AddGauge() {
 
-	Gauge* gauge = Application::GetScene()->AddGameObject<Gauge>(ObjectLayer);
+	Gauge* gauge = Application::GetScene()->AddGameObject<Gauge>(EffectLayer);
 	gauge->SetBillBoard(this);
 	gauge->mPositionOffest = D3DXVECTOR3(0.0f, 9.0f, 0.0f);
 	mGauge = gauge;
@@ -120,6 +120,10 @@ void Enemy::Update() {
 	}
 	else if (!Is_Lock) {
 		mpLockImage->SetActive(false);
+	}
+
+	if (mHp <= 0.0f) {
+		Destroy();
 	}
 
 	Resource::Update();

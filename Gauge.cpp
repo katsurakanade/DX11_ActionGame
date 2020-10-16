@@ -76,14 +76,14 @@ void Gauge::SetBillBoard(Resource* target) {
 
 	mType = GaugeType::GAUGE_BILLBOARD;
 
-	Effect* hpbar_empty = Application::GetScene()->AddGameObject<Effect>(ObjectLayer);
+	Effect* hpbar_empty = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
 	hpbar_empty->Name = "hpbar";
 	hpbar_empty->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
 	hpbar_empty->SetHW(1, 1);
 	hpbar_empty->SetLoop(true);
 	hpbar_empty->Scale = D3DXVECTOR3(4.0f, 0.5f, 1.0f);
 
-	Effect* hpbar_fill = Application::GetScene()->AddGameObject<Effect>(ObjectLayer);
+	Effect* hpbar_fill = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
 	hpbar_fill->Name = "hpbarfill";
 	hpbar_fill->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
 	hpbar_fill->SetHW(1, 1);

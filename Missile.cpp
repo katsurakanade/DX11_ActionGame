@@ -48,6 +48,7 @@ void Missile::Update() {
 
 	if (mCurveProgress >= 1.0f) {
 		mpEffect->Destroy();
+		e->mHp -= 3.0f;
 		Destroy();
 	}
 
