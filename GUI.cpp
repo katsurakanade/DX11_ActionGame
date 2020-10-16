@@ -43,10 +43,15 @@ void GUI::Init() {
 	cha_icon->SetPosition(D3DXVECTOR3(57, 57, 1));
 	cha_icon->SetSize(D3DXVECTOR3(85, 85, 1));
 
+	Sprite* BagIcon = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer2);
+	BagIcon->Name = "bag_icon";
+	BagIcon->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAG));
+	BagIcon->SetPosition(D3DXVECTOR3(1500, 900, 1));
+	BagIcon->SetSize(D3DXVECTOR3(150, 150, 1));
+
 	Gauge* Hp_Gauge = Application::GetScene()->AddGameObject<Gauge>(SpriteLayer);
 	Hp_Gauge->Position = D3DXVECTOR3(Round_fr->GetSize().x + 15, Round_fr->GetSize().y - 30, 0);
 	Hp_Gauge->SetGUI(600);
-
 
 	mpPlayerHP = Hp_Gauge;
 	mpPlayerIcon = cha_icon;

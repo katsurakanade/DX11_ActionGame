@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Effect.h"
 #include "Missile.h"
+#include "Particle.h"
 
 
 D3DXVECTOR3 Bezier(D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float t)
@@ -32,23 +33,45 @@ void Missile::Init() {
 }
 
 void Missile::Uninit() {
-
+	mpEffect->Destroy();
 }
 
 void Missile::Update() {
 
 	Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
-	p2 = e->Position;
+	
+	if (e) {
+		p2 = e->Position;
 
-	if (mCurveProgress <= 1.0f) {
-		mCurveProgress += 0.01f;
+		if (mCurveProgress <= 1.0f) {
+			mCurveProgress += 0.01f;
+		}
+
+		mpEffect->Position = Bezier(p0, p1, p2, mCurveProgress);
+
+		// “G‚É“–‚½‚é
+		if (mCurveProgress >= 1.0f) {
+			mpEffect->Destroy();
+
+			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+			ParitcleSetting* setting = new ParitcleSetting;
+			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+			setting->Amount = 3000;
+			setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
+			setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
+			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
+			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
+			setting->Size = 0.1f;
+			pc->Create(setting);
+			delete setting;
+			pc->Position = e->Position + D3DXVECTOR3(0, 3, 0);
+
+			e->mHp -= 3.0f;
+			Destroy();
+		}
 	}
 
-	mpEffect->Position = Bezier(p0, p1,p2, mCurveProgress);
-
-	if (mCurveProgress >= 1.0f) {
-		mpEffect->Destroy();
-		e->mHp -= 3.0f;
+	else if (!e) {
 		Destroy();
 	}
 

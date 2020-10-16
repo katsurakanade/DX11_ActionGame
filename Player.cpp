@@ -16,6 +16,7 @@
 void Player::Init() {
 
 	Name = "Player";
+	mCharacterType = 0;
 
 	mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN);
 
@@ -82,58 +83,61 @@ void Player::Update() {
 
 	// スキル
 	Skill(DIK_1, DIK_2, DIK_3, DIK_4);
-
+	// キャラ変更
 	if (Input::GetKeyTrigger(DIK_N)) {
 		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-			pc->Position = D3DXVECTOR3(0, 0, 0) - Position;
-			pc->Position.y += mf->GetHeight(Position);
-
 			ParitcleSetting* setting = new ParitcleSetting;
-			setting->Amount = 500;
-			setting->PostionMinMaxX = D3DXVECTOR2(-10, 10);
-			setting->PostionMinMaxY = D3DXVECTOR2(-10, 10);
-			setting->PostionMinMaxZ = D3DXVECTOR2(-20, 5);
-			setting->SpeedMinMaxY = D3DXVECTOR2(0.3f, 5.0f);
-			setting->LifeMinMax = D3DXVECTOR2(1.0f, 200.0f);
-			setting->Size = 1.0f;
+			setting->Amount = 3000;
+			setting->PostionMinMaxX = D3DXVECTOR2(-5, 5);
+			setting->PostionMinMaxY = D3DXVECTOR2(-5, 5);
+			setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
+			setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
+			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
+			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
+			setting->Size = 0.5f;
 			pc->Create(setting);
-
-			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 			delete setting;
 
-			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN);
+			pc->Position = Position;
+			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 
+			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN);
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
 			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
+
+			mCharacterType = 0;
 		}
 	}
 	if (Input::GetKeyTrigger(DIK_M)) {
 
 		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2)) {
+
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-			pc->Position = D3DXVECTOR3(0, 0, 0) - Position;
-			pc->Position.y += mf->GetHeight(Position);
-
 			ParitcleSetting* setting = new ParitcleSetting;
-			setting->Amount = 500;
-			setting->PostionMinMaxX = D3DXVECTOR2(-10, 10);
-			setting->PostionMinMaxY = D3DXVECTOR2(-10, 10);
-			setting->PostionMinMaxZ = D3DXVECTOR2(-20, 5);
-			setting->SpeedMinMaxY = D3DXVECTOR2(0.3f, 5.0f);
-			setting->LifeMinMax = D3DXVECTOR2(1.0f, 200.0f);
-			setting->Size = 1.0f;
+			setting->Amount = 3000;
+			setting->PostionMinMaxX = D3DXVECTOR2(-5, 5);
+			setting->PostionMinMaxY = D3DXVECTOR2(-5, 5);
+			setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
+			setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
+			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
+			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
+			setting->Size = 0.5f;
 			pc->Create(setting);
-
-			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 			delete setting;
+
+			pc->Position = Position;
+			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 
 			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2);
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
 			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_1));
+
+			mCharacterType = 1;
 		}
 		
 	}
+	// 敵ロック
 	if (Input::GetKeyTrigger(DIK_R)) {
 
 		Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
@@ -169,24 +173,6 @@ void Player::Update() {
 		pc->Create(setting);
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 		delete setting;
-	}
-	// ファイアボール生成（テスト用）
-	if (Input::GetKeyTrigger(DIK_V)) {
-
-		Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
-
-		std::uniform_real_distribution<float> rndx(Position.x - 40, Position.x + 40);
-		std::uniform_real_distribution<float> rndy(Position.y + 10, Position.y + 50);
-		std::uniform_real_distribution<float> rndz(Position.z - 100, Position.z - 50);
-
-		if (e != nullptr) {
-			Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
-			ms->Position = Position;
-			ms->p0 = Position;
-			D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
-			ms->p1 = mid;
-		}
-
 	}
 	
 	Resource::Update();
@@ -338,29 +324,46 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3) {
 
 	if (Input::GetKeyTrigger(keykode_0)) {
-		mpAnination->SetNewStateOneTime("Attack", 0.7f);
 
 		Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
 
-		if (e != nullptr && e->GetComponent<BoxCollider>()->Collision_Box_Stay(this->GetComponent<BoxCollider>())) {
+		if (mCharacterType == 0) {
+			mpAnination->SetNewStateOneTime("Attack", 0.7f);
+			if (e != nullptr && e->GetComponent<BoxCollider>()->Collision_Box_Stay(this->GetComponent<BoxCollider>())) {
 
-			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-			ParitcleSetting* setting = new ParitcleSetting;
-			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-			setting->Amount = 3000;
-			setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
-			setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
-			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
-			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
-			setting->Size = 0.1f;
-			pc->Create(setting);
-			delete setting;
-			pc->Position = Position + D3DXVECTOR3(0,3,0);
+				ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+				ParitcleSetting* setting = new ParitcleSetting;
+				pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+				setting->Amount = 3000;
+				setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
+				setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
+				setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
+				setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
+				setting->Size = 0.1f;
+				pc->Create(setting);
+				delete setting;
+				pc->Position = Position + D3DXVECTOR3(0, 3, 0);
 
-			e->mHp -= 10.0f;
+				e->mHp -= 10.0f;
+			}
 		}
+		
+		else if (mCharacterType == 1) {
 
+			mpAnination->SetNewStateOneTime("Mage", 1.0f);
 
+			std::uniform_real_distribution<float> rndx(Position.x - 40, Position.x + 40);
+			std::uniform_real_distribution<float> rndy(Position.y + 10, Position.y + 50);
+			std::uniform_real_distribution<float> rndz(Position.z - 100, Position.z - 50);
+
+			if (e != nullptr) {
+				Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
+				ms->Position = Position;
+				ms->p0 = Position;
+				D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
+				ms->p1 = mid;
+			}
+		}
 	}
 
 	if (Input::GetKeyTrigger(keykode_1)) {

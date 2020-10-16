@@ -16,16 +16,12 @@ private:
 
 	// HP
 	float mHpInit = 40000.0f;
-	// アニメーション速度
-	float mAnimationSpeed = 3.0f;
-	// アニメーション状態
-	std::string mAnimationState = "Idle";
+	// キャラタイプ
+	int mCharacterType;
 	// モデル
 	AssimpModel* mModel;
 	// ForDebug
 	void SettingPanel();
-
-	//void Jump(BYTE keykode);
 	// 移動
 	void Movement(BYTE keykodeF, BYTE keykodeB,BYTE keykodeR, BYTE keykodeL);
 	// スキル

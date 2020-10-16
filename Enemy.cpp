@@ -65,9 +65,21 @@ void Enemy::AddGauge() {
 
 void Enemy::Uninit() {
 
+	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+
+	if (camera) {
+		camera->SetLookTarget(nullptr);
+	}
+
 	if (mGauge) {
 		mGauge->Destroy();
 	}
+
+	if (mpLockImage) {
+		mpLockImage->Destroy();
+	}
+
+	
 
 	Resource::Uninit();
 }

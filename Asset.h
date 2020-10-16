@@ -63,6 +63,7 @@ enum class TEXTURE_ENUM_GAME
 	HANE,
 	CHARACTERICON_0,
 	CHARACTERICON_1,
+	BAG,
 };
 // ゲーム_サウンド
 enum class SOUND_ENUM_GAME {

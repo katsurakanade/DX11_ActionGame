@@ -89,11 +89,13 @@ void Asset::LoadModel() {
 		pass.push_back("asset\\model\\human\\Jump.fbx");
 		pass.push_back("asset\\model\\human\\Roll.fbx");
 		pass.push_back("asset\\model\\human\\Attack.fbx");
+		pass.push_back("asset\\model\\human\\Mage.fbx");
 		animation.push_back("Idle");
 		animation.push_back("Running");
 		animation.push_back("Jump");
 		animation.push_back("Roll");
 		animation.push_back("Attack");
+		animation.push_back("Mage");
 
 		AddAssimpModelToList("asset\\model\\enemy\\Enemy.fbx", pass, animation);
 		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
@@ -148,6 +150,7 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/hane.png");
 		AddTextureToList("asset/texture/Character_Icon_0.png");
 		AddTextureToList("asset/texture/Character_Icon_1.png");
+		AddTextureToList("asset/texture/bag.png");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;
