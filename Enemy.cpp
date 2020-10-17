@@ -61,15 +61,11 @@ void Enemy::AddGauge() {
 	mHp = mHpInit;
 	mGauge->mFillAmount = mHp / mHpInit;
 
+
+
 }
 
 void Enemy::Uninit() {
-
-	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
-
-	if (camera) {
-		camera->SetLookTarget(nullptr);
-	}
 
 	if (mGauge) {
 		mGauge->Destroy();
@@ -135,8 +131,17 @@ void Enemy::Update() {
 	}
 
 	if (mHp <= 0.0f) {
+
+		Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+
+		if (camera) {
+			camera->SetLookTarget(nullptr);
+		}
+
 		Destroy();
 	}
+
+	
 
 	Resource::Update();
 }

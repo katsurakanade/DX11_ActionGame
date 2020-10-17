@@ -18,6 +18,8 @@ public:
 	D3DXVECTOR3 p0, p1,p2;
 	// エフェクト
 	Effect* mpEffect;
+	// ターゲットインデックス
+	int mTargetIndex;
 
 };
 

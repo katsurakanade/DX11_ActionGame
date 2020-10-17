@@ -151,6 +151,7 @@ void Asset::LoadTexture() {
 		AddTextureToList("asset/texture/Character_Icon_0.png");
 		AddTextureToList("asset/texture/Character_Icon_1.png");
 		AddTextureToList("asset/texture/bag.png");
+		AddTextureToList("asset/texture/number.png");
 		break;
 	case SCENE_ASSET::RESULT:
 		break;

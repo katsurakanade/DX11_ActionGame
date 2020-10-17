@@ -53,6 +53,9 @@ void GUI::Init() {
 	Hp_Gauge->Position = D3DXVECTOR3(Round_fr->GetSize().x + 15, Round_fr->GetSize().y - 30, 0);
 	Hp_Gauge->SetGUI(600);
 
+	//Digit* digit = Application::GetScene()->AddGameObject<Digit>(SpriteLayer);
+	//digit->MakeSprite(5, D3DXVECTOR2(100, 100));
+
 	mpPlayerHP = Hp_Gauge;
 	mpPlayerIcon = cha_icon;
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);

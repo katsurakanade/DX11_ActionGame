@@ -296,6 +296,7 @@ void Mesh::Process(VERTEX_3D* target , int index) {
 
 }
 
+// ç≈ìKâªïKóv
 void Mesh::FillComputeMatrix() {
 
 	// Fill COMPUTEMATRIX

@@ -45,6 +45,8 @@ void Player::Init() {
 		c->SetUsePanel(true);
 	}
 
+	mpCamera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+
 	Resource::Init();
 
 }
@@ -60,29 +62,28 @@ void Player::Update() {
 
 	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetNewState().c_str() , mpAnination->GetBlend(), mpAnination->GetFrame());
 	
+	// アニメーション更新
 	if (mpAnination->GetState() == "Idle" && speed >= 1.5f) {
 		mpAnination->SetNewState("Running");
 	}
-
 	if (mpAnination->GetState() == "Running" && speed <= 1.0f) {
 		mpAnination->SetNewState("Idle");
 		mpAnination->SetCoefficient(20.0f);
 	}
-
 	if (mpAnination->GetNewState() == "Running") {
 		mpAnination->SetCoefficient(20.0f);
 	}
 
-	SettingPanel();
-
 	// 移動
 	Movement(DIK_W, DIK_S, DIK_A, DIK_D);
 
+	// 高さ修正
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
 
 	// スキル
 	Skill(DIK_1, DIK_2, DIK_3, DIK_4);
+
 	// キャラ変更
 	if (Input::GetKeyTrigger(DIK_N)) {
 		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
@@ -137,23 +138,43 @@ void Player::Update() {
 		}
 		
 	}
+
 	// 敵ロック
 	if (Input::GetKeyTrigger(DIK_R)) {
 
-		Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
-		Enemy* enemy = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
+		std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
 
-		if (enemy != nullptr) {
-			if (!camera->GetLookTarget()) {
-				camera->SetLookTarget(enemy);
-				enemy->Is_Lock = true;
+		if (enemys.size() > 0) {
+			if (!mpCamera->GetLookTarget()) {
+				mpCamera->SetLookTarget(enemys[mLockIndex]);
+				enemys[mLockIndex]->Is_Lock = true;
 			}
 			else {
-				camera->SetLookTarget(nullptr);
-				enemy->Is_Lock = false;
+				mpCamera->SetLookTarget(nullptr);
+				enemys[mLockIndex]->Is_Lock = false;
 			}
 		}
 		
+	}
+	if (mpCamera->GetLookTarget()) {
+		std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
+
+		if (Input::GetKeyTrigger(DIK_RIGHTARROW) && mLockIndex < enemys.size() - 1) {
+			enemys[mLockIndex]->Is_Lock = false;
+			mpCamera->SetLookTarget(nullptr);
+			mLockIndex++;
+			mpCamera->SetLookTarget(enemys[mLockIndex]);
+			enemys[mLockIndex]->Is_Lock = true;
+		}
+
+		else if (Input::GetKeyTrigger(DIK_LEFTARROW) && mLockIndex > 0) {
+			enemys[mLockIndex]->Is_Lock = false;
+			mpCamera->SetLookTarget(nullptr);
+			mLockIndex--;
+			mpCamera->SetLookTarget(enemys[mLockIndex]);
+			enemys[mLockIndex]->Is_Lock = true;
+		}
+
 	}
 
 	// パーティクル生成（テスト用）
@@ -161,7 +182,7 @@ void Player::Update() {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 		pc->Position = this->Position;
 		ParitcleSetting* setting = new ParitcleSetting;
-		setting->Amount = 50000;
+		setting->Amount = 100000;
 		setting->PostionMinMaxX = D3DXVECTOR2(-100, 100);
 		setting->PostionMinMaxY = D3DXVECTOR2(-100, 100);
 		setting->PostionMinMaxZ = D3DXVECTOR2(-100, 100);
@@ -174,6 +195,9 @@ void Player::Update() {
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 		delete setting;
 	}
+
+	// ForDebug
+	SettingPanel();
 	
 	Resource::Update();
 
@@ -325,30 +349,36 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 
 	if (Input::GetKeyTrigger(keykode_0)) {
 
-		Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
+		// 全敵取得
+		std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
 
+		// 普通攻撃
 		if (mCharacterType == 0) {
 			mpAnination->SetNewStateOneTime("Attack", 0.7f);
-			if (e != nullptr && e->GetComponent<BoxCollider>()->Collision_Box_Stay(this->GetComponent<BoxCollider>())) {
 
-				ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-				ParitcleSetting* setting = new ParitcleSetting;
-				pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-				setting->Amount = 3000;
-				setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
-				setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
-				setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
-				setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
-				setting->Size = 0.1f;
-				pc->Create(setting);
-				delete setting;
-				pc->Position = Position + D3DXVECTOR3(0, 3, 0);
+			for (int i = 0; i < es.size(); i++) {
+				if (es[i] != nullptr && es[i]->GetComponent<BoxCollider>()->Collision_Box_Stay(this->GetComponent<BoxCollider>())) {
 
-				e->mHp -= 10.0f;
+					ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+					ParitcleSetting* setting = new ParitcleSetting;
+					pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+					setting->Amount = 3000;
+					setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
+					setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
+					setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
+					setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
+					setting->Size = 0.1f;
+					pc->Create(setting);
+					delete setting;
+					pc->Position = Position + D3DXVECTOR3(0, 3, 0);
+
+					es[i]->mHp -= 10.0f;
+				}
 			}
-		}
 		
-		else if (mCharacterType == 1) {
+		}
+		// ファイアボール
+		else if (mCharacterType == 1 && mpCamera->GetLookTarget()) {
 
 			mpAnination->SetNewStateOneTime("Mage", 1.0f);
 
@@ -356,13 +386,16 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 			std::uniform_real_distribution<float> rndy(Position.y + 10, Position.y + 50);
 			std::uniform_real_distribution<float> rndz(Position.z - 100, Position.z - 50);
 
-			if (e != nullptr) {
+			if (es.size() > 0) {
 				Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
+				ms->mTargetIndex = mLockIndex;
 				ms->Position = Position;
 				ms->p0 = Position;
 				D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
 				ms->p1 = mid;
+				ms->p2 = es[mLockIndex]->Position;
 			}
+
 		}
 	}
 

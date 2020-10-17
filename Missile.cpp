@@ -38,10 +38,10 @@ void Missile::Uninit() {
 
 void Missile::Update() {
 
-	Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
+
+	std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
 	
-	if (e) {
-		p2 = e->Position;
+	if (es.size() > 0) {
 
 		if (mCurveProgress <= 1.0f) {
 			mCurveProgress += 0.01f;
@@ -64,14 +64,14 @@ void Missile::Update() {
 			setting->Size = 0.1f;
 			pc->Create(setting);
 			delete setting;
-			pc->Position = e->Position + D3DXVECTOR3(0, 3, 0);
+			pc->Position = es[mTargetIndex]->Position + D3DXVECTOR3(0, 3, 0);
 
-			e->mHp -= 3.0f;
+			es[mTargetIndex]->mHp -= 3.0f;
 			Destroy();
 		}
 	}
 
-	else if (!e) {
+	else if (es.size() <= 0) {
 		Destroy();
 	}
 

@@ -28,6 +28,10 @@ private:
 	void Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3);
 	// アニメーションポインタ
 	Animation* mpAnination;
+	// メインカメラポインタ
+	Camera* mpCamera;
+	// ロックしている敵インデックス
+	int mLockIndex;
 
 public:
 

@@ -27,6 +27,14 @@ void Game::Init() {
 	enemy->AddGauge();
 	enemy->Position = D3DXVECTOR3(0, 0, -150);
 
+	Enemy* enemy2 = AddGameObject<Enemy>(ObjectLayer);
+	enemy2->AddGauge();
+	enemy2->Position = D3DXVECTOR3(-50, 0, -150);
+
+	Enemy* enemy3 = AddGameObject<Enemy>(ObjectLayer);
+	enemy3->AddGauge();
+	enemy3->Position = D3DXVECTOR3(10, 0, -200);
+
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);

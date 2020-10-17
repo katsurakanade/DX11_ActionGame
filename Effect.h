@@ -53,5 +53,6 @@ public:
 	void SetLoop(bool val) { mLoop = val; };
 	void SetFillAmount(float val) { mFillAmount = val; };
 	void SetAnimeSpeed(float val) { mAnimeSpeed = val; };
+	void SetFrame(int val) { mFramecount = val; };
 };
 
