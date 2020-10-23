@@ -5,10 +5,15 @@
 
 #include "Resource.h"
 
+class ModelManager;
+
 class Props : public Resource
 {
-	// モデル
-	AssimpModel* mModel;
+
+private:
+
+	// モデルポインタ
+	ModelManager* mpModel;
 
 public:
 
@@ -16,8 +21,5 @@ public:
 	void Uninit();
 	void Update();
 	void Render();
-
-	// Setter
-	void SetModel(AssimpModel* model) { mModel = model; };
 };
 

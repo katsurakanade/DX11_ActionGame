@@ -167,9 +167,9 @@ void AssimpModel::Update(const char* animationname1, const char* animationname2,
 
 void AssimpModel::Draw(D3DXMATRIX root) {
 
-	if (DisplayConfig) {
-		DrawConfig();
-	}
+	//if (DisplayConfig) {
+	//	DrawConfig();
+	//}
 
 	for (unsigned int i = 0; i < mMeshes.size(); i++) {
 		for (unsigned int j = 0; j < mTexturesLoaded.size(); j++) {

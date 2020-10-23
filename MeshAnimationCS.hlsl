@@ -45,10 +45,10 @@ void CSFunc(const CSInput input)
     outMatrix._24 = 0.0f;
     outMatrix._34 = 0.0f;
 
-    float3 nor = mul(float4(v3d[input.dispatch.x].Normal, 0.0f), outMatrix);
+    float4 nor = mul(float4(v3d[input.dispatch.x].Normal, 0.0f), outMatrix);
     
-    BufOut[input.dispatch.x].Position = pos;
-    BufOut[input.dispatch.x].Normal = nor;
+    BufOut[input.dispatch.x].Position = pos.xyz;
+    BufOut[input.dispatch.x].Normal = nor.xyz;
     BufOut[input.dispatch.x].TexCoord.x = v3d[input.dispatch.x].TexCoord.x;
     BufOut[input.dispatch.x].TexCoord.y = v3d[input.dispatch.x].TexCoord.y;
 }

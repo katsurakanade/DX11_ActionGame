@@ -5,10 +5,11 @@
 #include "Scene.h"
 #include "Camera.h"
 
+int Camera::ID = -1;
+
 void Camera::Init() {
 
-	// ‰Šú‰»
-	Name = "Camera";
+	Name = "Camera_" + std::to_string(Camera::ID);
 
 	Position = D3DXVECTOR3(0.0f, 10.0f, -40.0f);
 	mTarget = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
@@ -16,7 +17,7 @@ void Camera::Init() {
 	mFollowPostionOffset = D3DXVECTOR3(0.0f, 3.0f, 10.0f);
 	mFollowProjectionOffset = D3DXVECTOR3(0.0f, 15.0f,14.0f);
 
-	mControllerPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	mControllerPosition = D3DXVECTOR3(0.0f, -3.0f, 5.0f);
 }
 
 void Camera::Uninit() {
@@ -34,8 +35,6 @@ void Camera::Update() {
 	if (mLookTarget) {
 		mTarget = mLookTarget->Position;
 	}
-
-
 
 	// ƒJƒƒ‰‘€ì
 	if (Input::GetKeyPress(DIK_J)) {

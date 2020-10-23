@@ -15,11 +15,11 @@ void Title::Init() {
 	Skybox* skybox = Application::GetScene()->AddGameObject<Skybox>(SpriteLayer);
 	skybox->SetModelTexture(1);
 
-	Sprite* Button = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
-	Button->Name = "Button";
-	Button->SetTexture(mAsset->GetTexture((int)TEXTURE_ENUM_TITLE::SPACEBUTTON));
-	Button->SetSize(D3DXVECTOR3(400, 120, 0));
-	Button->SetPosition(D3DXVECTOR3(SCREEN_WIDTH / 2 - 230, SCREEN_HEIGHT  - 200,1));
+	//Sprite* Button = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
+	//Button->Name = "Button";
+	//Button->SetTexture(mAsset->GetTexture((int)TEXTURE_ENUM_TITLE::SPACEBUTTON));
+	//Button->SetSize(D3DXVECTOR3(400, 120, 0));
+	//Button->SetPosition(D3DXVECTOR3(SCREEN_WIDTH / 2 - 230, SCREEN_HEIGHT  - 200,1));
 
 	Fade* fade = AddGameObject<Fade>(FadeLayer);
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));

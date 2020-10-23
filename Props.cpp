@@ -6,14 +6,18 @@
 #include "input.h"
 #include "Particle.h"
 #include "Shader.h"
+#include "ModelManager.h"
 
 void Props::Init() {
 
 	Name = "Props";
 
+	mpModel = AddComponent<ModelManager>();
+	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
+
 	Position = D3DXVECTOR3(0, 0, 0);
 	Rotation = D3DXVECTOR3(0, 0, 0);
-	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	Scale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 
 	D3DXQuaternionIdentity(&this->Quaternion);
 
@@ -25,8 +29,6 @@ void Props::Uninit() {
 }
 
 void Props::Update() {
-
-	
 
 	Resource::Update();
 }
@@ -43,8 +45,6 @@ void Props::Render() {
 
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
-	if (mModel) {
-		mModel->Draw(world);
-	}
+	mpModel->Render(world);
 
 }

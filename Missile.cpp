@@ -1,9 +1,9 @@
 #include "main.h"
 #include "Renderer.h"
 #include "Application.h"
-#include "Effect.h"
 #include "Missile.h"
 #include "Particle.h"
+#include "ImageManager.h"
 
 
 D3DXVECTOR3 Bezier(D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float t)
@@ -16,12 +16,14 @@ D3DXVECTOR3 Bezier(D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float t)
 
 void Missile::Init() {
 
-	Effect* effect = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
+	Sprite* effect = Application::GetScene()->AddGameObject<Sprite>(EffectLayer);
+	effect->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::EXPLOSION));
+	effect->GetComponent<ImageManager>()->SetBillBoard(true);
+	effect->GetComponent<ImageManager>()->SetAnimationSprite(true);
+	effect->GetComponent<ImageManager>()->SetHW(8, 6);
+	effect->GetComponent<ImageManager>()->SetAnimationSpeed(5.0f);
 	effect->Position = Position;
-	effect->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::EXPLOSION));
-	effect->SetHW(8, 6);
-	effect->SetAnimeSpeed(5.0f);
-	effect->Scale = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
+	effect->Scale = D3DXVECTOR3(3, 3, 3);
 	mpEffect = effect;
 
 	Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
@@ -37,7 +39,6 @@ void Missile::Uninit() {
 }
 
 void Missile::Update() {
-
 
 	std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
 	

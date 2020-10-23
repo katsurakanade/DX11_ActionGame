@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Shader.h"
 #include "FileManger.h"
+#include "ModelManager.h"
 #include "Grass.h"
 #include "Props.h"
 #include <random>
@@ -140,7 +141,7 @@ void MeshField::Update() {
 		if (ImGui::Button(u8"Šâ")) {
 			Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 			Props* rock = Application::GetScene()->AddGameObject<Props>(ObjectLayer);
-			rock->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
+			rock->GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
 			rock->Name = "Rock_" + std::to_string(Application::RandomDevice());
 			rock->Tag = "Rock";
 			rock->Type = "Object";
@@ -223,8 +224,8 @@ void MeshField::Render() {
 float MeshField::GetHeight(D3DXVECTOR3 pos) {
 
 	int x, z;
-	x = pos.x / 10.0f + 10.0f;
-	z = pos.z / -10.0f + 10.0f;
+	x = pos.x / 10 + 10;
+	z = pos.z / -10 + 10;
 
 	D3DXVECTOR3 pos0, pos1, pos2, pos3;
 

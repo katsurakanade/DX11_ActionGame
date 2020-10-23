@@ -10,6 +10,8 @@
 #include "Shader.h"
 #include "Collision.h"
 #include "MeshField.h"
+#include "ModelManager.h"
+#include "ImageManager.h"
 #include <random>
 
 float timer;
@@ -19,8 +21,6 @@ std::uniform_int_distribution<int> rndarrow(0, 8);
 void Enemy::Init() {
 
 	Name = "Enemy";
-
-	mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ENEMY);
 
 	Position = D3DXVECTOR3(0, 12, -20);
 	Rotation = D3DXVECTOR3(0.0f, 3.14f, 0.0f);
@@ -37,11 +37,18 @@ void Enemy::Init() {
 	mpAnination->SetState("Idle");
 	mpAnination->SetCoefficient(10.0f);
 
-	mpLockImage = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
-	mpLockImage->Name = "enemy_lock";
-	mpLockImage->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-	mpLockImage->SetHW(1, 1);
-	mpLockImage->SetLoop(true);
+	mpModel = AddComponent<ModelManager>();
+	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ENEMY));
+	mpModel->SetAnimation(mpAnination);
+
+
+	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
+	mpLockImage->Name = "enemy_lock_" + Name;
+	mpLockImage->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+	mpLockImage->GetComponent<ImageManager>()->SetAnimationSprite(true);
+	mpLockImage->GetComponent<ImageManager>()->SetBillBoard(true);
+	mpLockImage->GetComponent<ImageManager>()->SetHW(1,1);
+	mpLockImage->GetComponent<ImageManager>()->SetLoop(true);
 	mpLockImage->Position = Position;
 	mpLockImage->Scale = D3DXVECTOR3(3, 3, 3);
 	mpLockImage->SetActive(false);
@@ -54,7 +61,7 @@ void Enemy::AddGauge() {
 
 	Gauge* gauge = Application::GetScene()->AddGameObject<Gauge>(EffectLayer);
 	gauge->SetBillBoard(this);
-	gauge->mPositionOffest = D3DXVECTOR3(0.0f, 9.0f, 0.0f);
+	gauge->mPositionOffest = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	mGauge = gauge;
 
 	mHpInit = 50.0f;
@@ -84,7 +91,6 @@ void Enemy::Update() {
 
 	float speed = GetComponent<Physical>()->mSpeed;
 
-	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetNewState().c_str(), mpAnination->GetBlend(), mpAnination->GetFrame());
 
 	if (mpAnination->GetState() == "Idle" && speed >= 1.5f) {
 		mpAnination->SetNewState("Running");
@@ -158,7 +164,7 @@ void Enemy::Render() {
 
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
-	mModel->Draw(world);
+	mpModel->Render(world);
 	
 	GetComponent<BoxCollider>()->Render();
 }

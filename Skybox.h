@@ -6,13 +6,15 @@
 #include "AssimpModel.h"
 #include "Resource.h"
 
+class ModelManager;
+
 class Skybox :public Resource
 {
 
 private:
-	
-	// モデル
-	AssimpModel* mModel;
+
+	// モデルポインタ
+	ModelManager* mpModel;
 	// テクスチャインデックス
 	int TexutreIndex = 4;
 

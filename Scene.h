@@ -8,7 +8,6 @@
 #include "main.h"
 #include "Resource.h"
 #include "Camera.h"
-#include "Effect.h"
 #include "Light.h"
 #include "Fade.h"
 #include "Time.h"
@@ -16,7 +15,7 @@
 
 // レイヤー
 enum RenderLayer {
-	CameraLayer , ObjectLayer ,EffectLayer, SpriteLayer , SpriteLayer2, ParticleLayer ,FadeLayer , EndLayer
+	CameraLayer , ObjectLayer ,EffectLayer, EffectLayer2 ,SpriteLayer , SpriteLayer2, ParticleLayer ,FadeLayer , EndLayer
 };
 
 class Scene {
@@ -25,6 +24,7 @@ protected:
 
 	// オブジェクト
 	std::list<Resource*> mGameObject[EndLayer];
+	std::vector <std::string> mRenderLayerString{ "CameraLayer" , "ObjectLayer" ,"EffectLayer", "EffectLayer2" ,"SpriteLayer" , "SpriteLayer2", "ParticleLayer" ,"FadeLayer" , "EndLayer" };
 
 	// ゲームクリア用
 	bool mSwitchFlag = false;
@@ -80,12 +80,17 @@ public:
 		{
 			ImGui::Begin(u8"オブジェクト");
 
-			for (int i = 0; i < EndLayer; i++) {
-				for (Resource* g : mGameObject[i])
-				{
-					std::string str = g->Name.c_str();
-					ImGui::Text(str.c_str());
+			for (int i = CameraLayer; i < EndLayer; i++) {
+				
+				if (ImGui::TreeNode(mRenderLayerString[i].c_str())) {
+					for (Resource* g : mGameObject[i])
+					{
+						std::string str = g->Name.c_str();
+						ImGui::Text(str.c_str());
+					}
+					ImGui::TreePop();
 				}
+
 			}
 		
 			ImGui::End();

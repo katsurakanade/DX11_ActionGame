@@ -17,7 +17,7 @@ public:
 	// 始点、中点、終点
 	D3DXVECTOR3 p0, p1,p2;
 	// エフェクト
-	Effect* mpEffect;
+	Sprite* mpEffect;
 	// ターゲットインデックス
 	int mTargetIndex;
 

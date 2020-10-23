@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "Scene.h"
 #include "Gauge.h"
+#include "ImageManager.h"
 
 void Gauge::Init() {
 
@@ -26,14 +27,9 @@ void Gauge::Update() {
 
 	// GUI
 	if (mType == GaugeType::GAUGE_GUI) {
-		std::vector <Sprite*> sp = Application::GetScene()->GetGameObjects<Sprite>(SpriteLayer);
-
-		for (unsigned int i = 0; i < sp.size(); i++) {
-			if (sp[i]->Name == "hpbarfill") {
-				sp[i]->SetSize(D3DXVECTOR3(mGuiLength * mFillAmount, 100, 0));
-			}
-		}
-
+		mpBar_fill->GetComponent<ImageManager>()->SetFillAmount(mFillAmount);
+		mpBar_fill->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(Position.x, Position.y, 1));
+		mpBar_fill->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3(mGuiLength * mFillAmount, 25, 0));
 	}
 
 	// ビルボード
@@ -42,8 +38,11 @@ void Gauge::Update() {
 		mpBar_empty->Position = mpTarget->Position + mPositionOffest;
 
 		mpBar_fill->Position = mpTarget->Position + mPositionOffest;
-		mpBar_fill->SetFillAmount(mFillAmount);
+		mpBar_fill->GetComponent<ImageManager>()->SetFillAmount(mFillAmount);
+		
+		mpBar_empty->Position = mpBar_fill->Position;
 	}
+
 
 
 }
@@ -58,16 +57,18 @@ void Gauge::SetGUI(int length) {
 
 	Sprite* hpbar_empty = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	hpbar_empty->Name = "hpbarGUI";
-	hpbar_empty->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
-	hpbar_empty->SetSize(D3DXVECTOR3((float)length, 25, 0));
-	hpbar_empty->SetPosition(D3DXVECTOR3(Position.x, Position.y,1));
+	hpbar_empty->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
+	hpbar_empty->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3((float)length, 25, 0));
+	hpbar_empty->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(Position.x, Position.y,1));
 
 	Sprite* hpbar_fill = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	hpbar_fill->Name = "hpbarfillGUI";
-	hpbar_fill->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
-	hpbar_fill->SetSize(D3DXVECTOR3((float)length, 25, 0));
-	hpbar_fill->Position = D3DXVECTOR3(Position.x, Position.y, 0);
-	hpbar_fill->SetFillSprite(true);
+	hpbar_fill->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
+	hpbar_fill->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3((float)length, 25, 0));
+	hpbar_fill->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(Position.x, Position.y, 1));
+
+	mpBar_empty = hpbar_empty;
+	mpBar_fill = hpbar_fill;
 
 	mGuiLength = length;
 }
@@ -76,19 +77,25 @@ void Gauge::SetBillBoard(Resource* target) {
 
 	mType = GaugeType::GAUGE_BILLBOARD;
 
-	Effect* hpbar_empty = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
+	Sprite* hpbar_empty = Application::GetScene()->AddGameObject<Sprite>(EffectLayer);
 	hpbar_empty->Name = "hpbar";
-	hpbar_empty->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
-	hpbar_empty->SetHW(1, 1);
-	hpbar_empty->SetLoop(true);
-	hpbar_empty->Scale = D3DXVECTOR3(4.0f, 0.5f, 1.0f);
+	hpbar_empty->GetComponent<ImageManager>()->SetBillBoard(true);
+	hpbar_empty->GetComponent<ImageManager>()->SetAnimationSprite(true);
+	hpbar_empty->GetComponent<ImageManager>()->SetHW(1, 1);
+	hpbar_empty->GetComponent<ImageManager>()->SetLoop(true);
+	hpbar_empty->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
+	hpbar_empty->Position = D3DXVECTOR3(0, 0, 0);
+	hpbar_empty->Scale = D3DXVECTOR3(7.0f, 0.5f, 1.0f);
 
-	Effect* hpbar_fill = Application::GetScene()->AddGameObject<Effect>(EffectLayer);
+	Sprite* hpbar_fill = Application::GetScene()->AddGameObject<Sprite>(EffectLayer);
 	hpbar_fill->Name = "hpbarfill";
-	hpbar_fill->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
-	hpbar_fill->SetHW(1, 1);
-	hpbar_fill->SetLoop(true);
-	hpbar_fill->Scale = D3DXVECTOR3(4.0f, 0.5f, 1.0f);
+	hpbar_fill->GetComponent<ImageManager>()->SetBillBoard(true);
+	hpbar_fill->GetComponent<ImageManager>()->SetAnimationSprite(true);
+	hpbar_fill->GetComponent<ImageManager>()->SetHW(1, 1);
+	hpbar_fill->GetComponent<ImageManager>()->SetLoop(true);
+	hpbar_fill->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
+	hpbar_fill->Position = D3DXVECTOR3(0, 0, 0);
+	hpbar_fill->Scale = D3DXVECTOR3(7.0f, 0.5f, 1.0f);
 
 	mpBar_empty = hpbar_empty;
 	mpBar_fill = hpbar_fill;

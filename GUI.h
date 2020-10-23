@@ -6,6 +6,7 @@ GUIƒNƒ‰ƒX
 #include "Resource.h"
 #include "Gauge.h"
 #include "Digit.h"
+#include "ImageManager.h"
 
 class GUI : public Resource
 {
@@ -24,7 +25,7 @@ public:
 	void Update();
 	void Render() {};
 
-	void SetPlayerIcon(ID3D11ShaderResourceView* resource) { mpPlayerIcon->SetTexture(resource); };
+	void SetPlayerIcon(ID3D11ShaderResourceView* resource) { mpPlayerIcon->GetComponent<ImageManager>()->SetTexture(resource); };
 
 };
 

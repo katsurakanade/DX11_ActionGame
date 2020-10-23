@@ -4,57 +4,52 @@
 #include "Sprite.h"
 #include "Scene.h"
 #include "GUI.h"
+#include "ImageManager.h"
+#include "Digit.h"
 
 void GUI::Init() {
 
+
+
 	Sprite* fr_0 = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	fr_0->Name = "Frame_0";
-	fr_0->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));
-	fr_0->SetPosition(D3DXVECTOR3(200,875,1));
-	fr_0->SetSize(D3DXVECTOR3(100,175,1));
+	fr_0->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));
+	fr_0->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(200,875,1));
+	fr_0->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3(100,175,1));
 
 	Sprite* fr_1 = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	fr_1->Name = "Frame_1";
-	fr_1->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));
-	fr_1->SetPosition(D3DXVECTOR3(200, 675, 1));
-	fr_1->SetSize(D3DXVECTOR3(100, 175, 1));
+	fr_1->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));
+	fr_1->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(200, 675, 1));
+	fr_1->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3(100, 175, 1));
 
 	Sprite* fr_2 = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	fr_2->Name = "Frame_2";
-	fr_2->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));
-	fr_2->SetPosition(D3DXVECTOR3(75, 800, 1));
-	fr_2->SetSize(D3DXVECTOR3(100, 175, 1));
+	fr_2->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));
+	fr_2->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(75, 800, 1));
+	fr_2->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3(100, 175, 1));
 
 	Sprite* fr_3 = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
-	fr_3->Name = "Frame_3";
-	fr_3->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));
-	fr_3->SetPosition(D3DXVECTOR3(325, 800, 1));
-	fr_3->SetSize(D3DXVECTOR3(100, 175, 1));
+	fr_3->GetComponent<ImageManager>()->Name = "Frame_3";
+	fr_3->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));
+	fr_3->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(325, 800, 1));
+	fr_3->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3(100, 175, 1));
 
 	Sprite* Round_fr = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer2);
-	Round_fr->Name = "RoundFrame";
-	Round_fr->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::ROUND_FRAME));
-	Round_fr->SetPosition(D3DXVECTOR3(50, 50, 1));
-	Round_fr->SetSize(D3DXVECTOR3(100, 100, 1));
+	Round_fr->GetComponent<ImageManager>()->Name = "RoundFrame";
+	Round_fr->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::ROUND_FRAME));
+	Round_fr->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(50, 50, 1));
+	Round_fr->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3(100, 100, 1));
 
 	Sprite* cha_icon = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer2);
-	cha_icon->Name = "cha_icon_0";
-	cha_icon->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
-	cha_icon->SetPosition(D3DXVECTOR3(57, 57, 1));
-	cha_icon->SetSize(D3DXVECTOR3(85, 85, 1));
-
-	Sprite* BagIcon = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer2);
-	BagIcon->Name = "bag_icon";
-	BagIcon->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAG));
-	BagIcon->SetPosition(D3DXVECTOR3(1500, 900, 1));
-	BagIcon->SetSize(D3DXVECTOR3(150, 150, 1));
+	cha_icon->GetComponent<ImageManager>()->Name = "cha_icon_0";
+	cha_icon->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
+	cha_icon->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(57, 57, 1));
+	cha_icon->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3(85, 85, 1));
 
 	Gauge* Hp_Gauge = Application::GetScene()->AddGameObject<Gauge>(SpriteLayer);
-	Hp_Gauge->Position = D3DXVECTOR3(Round_fr->GetSize().x + 15, Round_fr->GetSize().y - 30, 0);
+	Hp_Gauge->Position = D3DXVECTOR3(Round_fr->GetComponent<ImageManager>()->GetSize().x + 15, Round_fr->GetComponent<ImageManager>()->GetSize().y - 30, 0);
 	Hp_Gauge->SetGUI(600);
-
-	//Digit* digit = Application::GetScene()->AddGameObject<Digit>(SpriteLayer);
-	//digit->MakeSprite(5, D3DXVECTOR2(100, 100));
 
 	mpPlayerHP = Hp_Gauge;
 	mpPlayerIcon = cha_icon;
@@ -63,6 +58,6 @@ void GUI::Init() {
 
 void GUI::Update() {
 
-	mpPlayerHP->mFillAmount = mpPlayer->mHp / mpPlayer->GetHpInit();
+	/*mpPlayerHP->mFillAmount = mpPlayer->mHp / mpPlayer->GetHpInit();*/
 }
 

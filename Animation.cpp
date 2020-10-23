@@ -5,7 +5,6 @@
 #include "Animation.h"
 #include "Physical.h"
 
-
 void Animation::Init() {
 
 	// データ初期化
@@ -29,7 +28,7 @@ void Animation::Update() {
 
 	// ブレンド処理
 	if (mState != mNewState) {
-		mBlend += 5.0f * Time::GetDeltaTime();
+		mBlend += 10.0f * Time::GetDeltaTime();
 	}
 
 	// 遷移
@@ -74,7 +73,7 @@ void Animation::DataPanel() {
 	ImGui::Begin(GetResource()->Name.c_str());
 	if (ImGui::TreeNode(u8"アニメーション")) {
 		ImGui::Text("Frame : %f", mFrame);
-		ImGui::Text(u8"再生速度 : %f", mCoefficient * mAnimationSpeed);
+		ImGui::Text(u8"再生速度 : %f", 60.0f);
 		ImGui::Text(u8"Blend : %f", mBlend);
 		ImGui::Text(u8"WaitTime : %f", mWaitTime);
 		ImGui::Text(u8"OneTimeFlag : %d", mOneTimeFlag);

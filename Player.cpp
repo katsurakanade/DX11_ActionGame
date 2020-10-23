@@ -9,6 +9,7 @@
 #include "Shader.h"
 #include "MeshField.h"
 #include "Collision.h"
+#include "ModelManager.h"
 #include "item.h"
 #include "Missile.h"
 #include <random>
@@ -18,17 +19,20 @@ void Player::Init() {
 	Name = "Player";
 	mCharacterType = 0;
 
-	mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN);
-
-	Position = D3DXVECTOR3(0, 12, 0);
+	Position = D3DXVECTOR3(100, 12,55);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Scale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 
 	D3DXQuaternionIdentity(&Quaternion);
-
+	
 	AddComponent<BoxCollider>();
 	AddComponent<Physical>();
+
 	mpAnination = AddComponent<Animation>();
+	mpModel = AddComponent<ModelManager>();
+
+	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
+	mpModel->SetAnimation(mpAnination);
 
 	GetComponent<BoxCollider>()->mPositionOffest = D3DXVECTOR3(0.0f, 4.25f, 0.0f);
 	GetComponent<BoxCollider>()->mScaleOffest = D3DXVECTOR3(2.5f, 9.0f, 2.5f);
@@ -59,8 +63,6 @@ void Player::Unint() {
 void Player::Update() {
 
 	float speed = GetComponent<Physical>()->mSpeed;
-
-	mModel->Update(mpAnination->GetState().c_str(), mpAnination->GetNewState().c_str() , mpAnination->GetBlend(), mpAnination->GetFrame());
 	
 	// アニメーション更新
 	if (mpAnination->GetState() == "Idle" && speed >= 1.5f) {
@@ -68,10 +70,7 @@ void Player::Update() {
 	}
 	if (mpAnination->GetState() == "Running" && speed <= 1.0f) {
 		mpAnination->SetNewState("Idle");
-		mpAnination->SetCoefficient(20.0f);
-	}
-	if (mpAnination->GetNewState() == "Running") {
-		mpAnination->SetCoefficient(20.0f);
+		mpAnination->SetCoefficient(60.0f);
 	}
 
 	// 移動
@@ -86,7 +85,7 @@ void Player::Update() {
 
 	// キャラ変更
 	if (Input::GetKeyTrigger(DIK_N)) {
-		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
+		if (GetComponent<ModelManager>()->GetModel()  != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 			ParitcleSetting* setting = new ParitcleSetting;
 			setting->Amount = 3000;
@@ -103,7 +102,7 @@ void Player::Update() {
 			pc->Position = Position;
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 
-			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN);
+			GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
 			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
 
@@ -112,7 +111,7 @@ void Player::Update() {
 	}
 	if (Input::GetKeyTrigger(DIK_M)) {
 
-		if (mModel != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2)) {
+		if (GetComponent<ModelManager>()->GetModel() != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2)) {
 
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 			ParitcleSetting* setting = new ParitcleSetting;
@@ -130,7 +129,7 @@ void Player::Update() {
 			pc->Position = Position;
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 
-			mModel = Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2);
+			GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2));
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
 			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_1));
 
@@ -146,12 +145,18 @@ void Player::Update() {
 
 		if (enemys.size() > 0) {
 			if (!mpCamera->GetLookTarget()) {
+				if (enemys.size() == 1) {
+					mLockIndex = 0;
+				}
 				mpCamera->SetLookTarget(enemys[mLockIndex]);
+				mpCamera->SetFollowPostionOffset(D3DXVECTOR3(0, 3, 20));
 				enemys[mLockIndex]->Is_Lock = true;
 			}
 			else {
 				mpCamera->SetLookTarget(nullptr);
 				enemys[mLockIndex]->Is_Lock = false;
+				mpCamera->SetFollowPostionOffset(D3DXVECTOR3(0, 3, 10));
+				mpCamera->SetControllerPosition(D3DXVECTOR3(0, 0, 0));
 			}
 		}
 		
@@ -159,18 +164,28 @@ void Player::Update() {
 	if (mpCamera->GetLookTarget()) {
 		std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
 
-		if (Input::GetKeyTrigger(DIK_RIGHTARROW) && mLockIndex < enemys.size() - 1) {
-			enemys[mLockIndex]->Is_Lock = false;
+		if (Input::GetKeyTrigger(DIK_RIGHTARROW) ) {
+				enemys[mLockIndex]->Is_Lock = false;
 			mpCamera->SetLookTarget(nullptr);
-			mLockIndex++;
+			if (mLockIndex < enemys.size() - 1) {
+				mLockIndex++;
+			}
+			else if (mLockIndex == enemys.size() - 1) {
+				mLockIndex = 0;
+			}
 			mpCamera->SetLookTarget(enemys[mLockIndex]);
 			enemys[mLockIndex]->Is_Lock = true;
 		}
 
-		else if (Input::GetKeyTrigger(DIK_LEFTARROW) && mLockIndex > 0) {
+		else if (Input::GetKeyTrigger(DIK_LEFTARROW)) {
 			enemys[mLockIndex]->Is_Lock = false;
 			mpCamera->SetLookTarget(nullptr);
-			mLockIndex--;
+			if (mLockIndex > 0){
+				mLockIndex--;
+			}
+			else if (mLockIndex == 0) {
+				mLockIndex = enemys.size() - 1;
+			}
 			mpCamera->SetLookTarget(enemys[mLockIndex]);
 			enemys[mLockIndex]->Is_Lock = true;
 		}
@@ -215,8 +230,7 @@ void Player::Render() {
 	
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
-	mModel->DisplayConfig = true;
-	mModel->Draw(world);
+	mpModel->Render(world);
 	
 	GetComponent<BoxCollider>()->Render();
 
@@ -230,7 +244,6 @@ void Player::SettingPanel() {
 	ImGui::SliderFloat3(u8"スケール", Scale, 0.1f, 10.0f);
 	ImGui::End();
 }
-
 
 void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykodeL) {
 
@@ -247,7 +260,9 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(sinf(-D3DX_PI * 0.75f) , 0, cosf(-D3DX_PI * 0.75f));
 
-	
+			if (mpCamera->GetLookTarget()) {
+				mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
+			}
 		}
 
 		else if (Input::GetKeyPress(keykodeR)) {
@@ -259,6 +274,10 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 			}
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-sinf(-D3DX_PI * 0.75f), 0, cosf(-D3DX_PI * 0.75f));
+
+			if (mpCamera->GetLookTarget()) {
+				mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+			}
 		}
 
 		else {
@@ -286,6 +305,10 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(sinf(-D3DX_PI * 0.75f), 0, -cosf(-D3DX_PI * 0.75f));
+
+			if (mpCamera->GetLookTarget()) {
+				mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
+			}
 		}
 
 		else if (Input::GetKeyPress(keykodeR)) {
@@ -297,6 +320,10 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 			}
 			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-sinf(-D3DX_PI * 0.75f), 0, -cosf(-D3DX_PI * 0.75f));
+
+			if (mpCamera->GetLookTarget()) {
+				mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+			}
 		}
 
 
@@ -326,7 +353,9 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 		GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-1.0f, 0, 0);
 
-
+		if (mpCamera->GetLookTarget()) {
+			mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
+		}
 	}
 
 	else if (Input::GetKeyPress(keykodeR)) {
@@ -341,7 +370,9 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 		GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
 		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(1.0f, 0, 0);
 
-		
+		if (mpCamera->GetLookTarget()) {
+			mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+		}
 	}
 }
 
@@ -356,7 +387,7 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 		if (mCharacterType == 0) {
 			mpAnination->SetNewStateOneTime("Attack", 0.7f);
 
-			for (int i = 0; i < es.size(); i++) {
+			for (unsigned int i = 0; i < es.size(); i++) {
 				if (es[i] != nullptr && es[i]->GetComponent<BoxCollider>()->Collision_Box_Stay(this->GetComponent<BoxCollider>())) {
 
 					ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
@@ -386,11 +417,11 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 			std::uniform_real_distribution<float> rndy(Position.y + 10, Position.y + 50);
 			std::uniform_real_distribution<float> rndz(Position.z - 100, Position.z - 50);
 
-			if (es.size() > 0) {
+			if (es.size() > 0 && mpAnination->GetState() != "Mage") {
 				Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
 				ms->mTargetIndex = mLockIndex;
 				ms->Position = Position;
-				ms->p0 = Position;
+				ms->p0 = ms->Position;
 				D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
 				ms->p1 = mid;
 				ms->p2 = es[mLockIndex]->Position;

@@ -26,6 +26,8 @@ protected:
     std::vector <Component*> Components;
   
 public:
+
+    Resource() :Name("Object"),Tag("Untagger"),Type("Object") {};
     
     // 座標
     D3DXVECTOR3 Position;
@@ -34,11 +36,11 @@ public:
     // スケール
     D3DXVECTOR3 Scale;
     // 名前
-    std::string Name = "Object";
+    std::string Name;
     // タグ
-    std::string Tag = "Untagged";
+    std::string Tag;
     // タイプ
-    std::string Type = "Object";
+    std::string Type;
 
     virtual void Init() {
         for (Component* c : Components) {

@@ -28,7 +28,6 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Digit.cpp" />
-    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="FileManger.cpp" />
@@ -36,6 +35,7 @@
     <ClCompile Include="Gauge.cpp" />
     <ClCompile Include="Grass.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -49,6 +49,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshField.cpp" />
     <ClCompile Include="Missile.cpp" />
+    <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Physical.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -72,7 +73,6 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Digit.h" />
-    <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="FileManger.h" />
@@ -80,6 +80,7 @@
     <ClInclude Include="Gauge.h" />
     <ClInclude Include="Grass.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="ImageManager.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
@@ -95,6 +96,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshField.h" />
     <ClInclude Include="Missile.h" />
+    <ClInclude Include="ModelManager.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Physical.h" />
     <ClInclude Include="Player.h" />

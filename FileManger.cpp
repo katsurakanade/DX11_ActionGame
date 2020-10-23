@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Scene.h"
 #include "Props.h"
+#include "ModelManager.h"
 #include "Lib/nlohmann/json.hpp"
 using namespace std;
 #include <gdiplus.h>
@@ -115,7 +116,10 @@ void FileManger::ReadResource(const char* pass) {
 				p->Scale.z = data["Scale"]["z"];
 
 				if (data["Tag"] == "Rock") {
-					p->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
+					if (p->GetComponent<ModelManager>()) {
+						p->GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
+					}
+					
 				}
 			}
 		

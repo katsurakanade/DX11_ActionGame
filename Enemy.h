@@ -8,21 +8,23 @@
 #include "Gauge.h"
 
 class Animation;
+class ModelManager;
 
 class Enemy : public Resource
 {
 
 private:
 
-	// モデル
-	AssimpModel* mModel;
+	
 	// HP初期
 	float mHpInit;
 	// ゲージ
 	Gauge* mGauge;
 	// アニメーションポインタ
 	Animation* mpAnination;
-	Effect* mpLockImage;
+	ModelManager* mpModel;
+	// ロック画像
+	Sprite* mpLockImage;
 	// 動き始める
 	bool mStart;
 

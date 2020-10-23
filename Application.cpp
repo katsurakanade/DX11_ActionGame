@@ -20,6 +20,7 @@ float Application::mFrameTime[100];
 float Application::mMemoryUsage[100];
 int Application::mAnalysisCount;
 float Application::mUpdateAnalysisTime;
+float Application::mFPS;
 std::random_device Application::RandomDevice;
 std::default_random_engine Application::RandomGen = std::default_random_engine(RandomDevice());
 
@@ -95,6 +96,7 @@ void Application::System() {
 
 	{
 		ImGui::Begin(u8"ƒVƒXƒeƒ€");
+		ImGui::Text("FPS : %f", mFPS);
 		ImGui::Text("Frame Time : %f", Time::GetDeltaTime());
 		ImGui::PlotLines("", mFrameTime, IM_ARRAYSIZE(mFrameTime));
 		ImGui::Text(str.c_str());
@@ -109,6 +111,7 @@ void Application::System() {
 	if (mUpdateAnalysisTime > 100) {
 		mAnalysisCount++;
 		mUpdateAnalysisTime = 0.0f;
+		mFPS = 1.0f / Time::GetDeltaTime();
 	}
 
 	if (mAnalysisCount >= 100) {

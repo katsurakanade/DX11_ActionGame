@@ -13,9 +13,9 @@ class Component {
 private:
 
     // 有効
-	bool Active = true;
+    bool Active;
     // ForDebug
-    bool UsePanel = false;
+    bool UsePanel;
     // 親
     Resource* pResource;
 
@@ -26,6 +26,8 @@ protected:
 
 public:
 
+    Component() : Name("Component"), Active(true), UsePanel(false){};
+
     // 座標
     D3DXVECTOR3 Position;
     // 回転
@@ -33,7 +35,7 @@ public:
     // スケール
     D3DXVECTOR3 Scale;
     // 名前
-    std::string Name = "Component";
+    std::string Name;
 
     virtual void Init() = 0;
     virtual void Uninit() = 0;

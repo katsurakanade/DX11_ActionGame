@@ -28,7 +28,7 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 
 	// パーティクル資料生成
 	mParticleAmount = setting->Amount;
-	mParticleLifeMax = setting->LifeMinMax.y;
+	mParticleLifeMax = (int)setting->LifeMinMax.y;
 	mparticle = new Particle[setting->Amount];
 	mVel = new D3DXVECTOR3[setting->Amount];
 	mlife = new float[setting->Amount];

@@ -28,6 +28,7 @@ private:
 	static float mMemoryUsage[100];
 	static int mAnalysisCount;
 	static float mUpdateAnalysisTime;
+	static float mFPS;
 
 public:
 

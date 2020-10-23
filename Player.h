@@ -8,6 +8,7 @@
 #include "AssimpModel.h"
 
 class Animation;
+class ModelManager;
 
 class Player : public Resource
 {
@@ -18,8 +19,6 @@ private:
 	float mHpInit = 40000.0f;
 	// キャラタイプ
 	int mCharacterType;
-	// モデル
-	AssimpModel* mModel;
 	// ForDebug
 	void SettingPanel();
 	// 移動
@@ -28,10 +27,11 @@ private:
 	void Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3);
 	// アニメーションポインタ
 	Animation* mpAnination;
+	ModelManager* mpModel;
 	// メインカメラポインタ
 	Camera* mpCamera;
 	// ロックしている敵インデックス
-	int mLockIndex;
+	unsigned int mLockIndex;
 
 public:
 

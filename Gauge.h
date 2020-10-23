@@ -4,7 +4,6 @@
 #pragma once
 
 #include "Resource.h"
-#include "Effect.h"
 
 // 描画モード
 enum class GaugeType {
@@ -23,8 +22,8 @@ private:
 	Resource* mpTarget;
 
 	// 画像
-	Effect* mpBar_empty;
-	Effect* mpBar_fill;
+	Sprite* mpBar_empty;
+	Sprite* mpBar_fill;
 
 	// 長さ（GUIモード）
 	int mGuiLength;
