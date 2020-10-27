@@ -9,8 +9,6 @@
 
 void GUI::Init() {
 
-
-
 	Sprite* fr_0 = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	fr_0->Name = "Frame_0";
 	fr_0->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::FRAME));

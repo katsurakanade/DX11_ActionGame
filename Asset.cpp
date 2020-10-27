@@ -3,16 +3,24 @@
 #include "Asset.h"
 #include "Debug.h"
 #include <thread>
+#include "Lib/nlohmann/json.hpp"
+#include <iostream>
+#include <fstream>
+
+using json = nlohmann::json;
 
 void Asset::LoadSceneAsset(){
 
 	// アセットロード
-	std::thread thread_loadmodel(&Asset::LoadModel,this);
+	/*std::thread thread_loadmodel(&Asset::LoadModel,this);
 	std::thread thread_loadtexture(&Asset::LoadTexture, this);
 	std::thread thread_loadsound(&Asset::LoadSound, this);
 	thread_loadmodel.join();
 	thread_loadtexture.join();
-	thread_loadsound.join();
+	thread_loadsound.join();*/
+	Asset::LoadModel();
+	Asset::LoadTexture();
+	Asset::LoadSound();
 
 	switch (mScene)
 	{
@@ -44,9 +52,9 @@ void Asset::UnloadSceneAsset() {
 	}
 
 	for (ID3D11ShaderResourceView* tex : mTextureList) {
-		if (tex) {
+		if (tex != nullptr) {
 			tex->Release();
-		}
+		}	
 	}
 
 	for (Sound* sound : mSoundList) {
@@ -81,9 +89,6 @@ void Asset::LoadModel() {
 		break;
 	case SCENE_ASSET::GAME:
 
-		AddAssimpModelToList("asset\\model\\ball\\ball.obj");
-		AddAssimpModelToList("asset\\model\\cube\\cube.obj");
-
 		pass.push_back("asset\\model\\human\\Idle.fbx");
 		pass.push_back("asset\\model\\human\\Running.fbx");
 		pass.push_back("asset\\model\\human\\Jump.fbx");
@@ -97,6 +102,8 @@ void Asset::LoadModel() {
 		animation.push_back("Attack");
 		animation.push_back("Mage");
 
+		AddAssimpModelToList("asset\\model\\ball\\ball.obj");
+		AddAssimpModelToList("asset\\model\\cube\\cube.obj");
 		AddAssimpModelToList("asset\\model\\enemy\\Enemy.fbx", pass, animation);
 		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
 		AddAssimpModelToList("asset\\model\\human\\Human2.fbx", pass, animation);
@@ -120,38 +127,35 @@ void Asset::LoadTexture() {
 
 	auto start = std::chrono::system_clock::now();
 
-	// シーンことロード
+	std::string jsonpath;
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
-		AddTextureToList("asset/texture/logo.png");
-		AddTextureToList("asset/texture/white.png");
-		AddTextureToList("asset/texture/star.jpg");
-		AddTextureToList("asset/texture/sky.jpg");
-		AddTextureToList("asset/texture/space_button.png");
+		jsonpath = "Asset_Texture_Title.json";
 		break;
 	case SCENE_ASSET::GAME:
-		AddTextureToList("asset/texture/white.png");
-		AddTextureToList("asset/texture/sky.jpg");
-		AddTextureToList("asset/texture/star.jpg");
-		AddTextureToList("asset/texture/Hp_frame.png");
-		AddTextureToList("asset/texture/Hp_line.png");
-		AddTextureToList("asset/texture/explosion2.png");
-		AddTextureToList("asset/texture/Particle.png");
-		AddTextureToList("asset/texture/Grass.jpg");
-		AddTextureToList("asset/texture/Frame.png");
-		AddTextureToList("asset/texture/RoundFrame.png");
-		AddTextureToList("asset/texture/Sword_Icon.png");
-		AddTextureToList("asset/texture/Plant.png");
-		AddTextureToList("asset/texture/Dirt.jpg");
-		AddTextureToList("asset/texture/hal.png");
-		AddTextureToList("asset/texture/stone.png");
-		AddTextureToList("asset/texture/fireball.png");
-		AddTextureToList("asset/texture/hane.png");
-		AddTextureToList("asset/texture/Character_Icon_0.png");
-		AddTextureToList("asset/texture/Character_Icon_1.png");
-		AddTextureToList("asset/texture/bag.png");
-		AddTextureToList("asset/texture/number.png");
+		jsonpath = "Asset_Texture_Game.json";
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
+
+	std::vector <std::string> path = GetPathFromFile(jsonpath.c_str());
+
+	// シーン別ロード
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		for (unsigned int i = 0; i < path.size(); i++) {
+			AddTextureToList(path[i].c_str());
+		}
+		break;
+	case SCENE_ASSET::GAME:
+		for (unsigned int i = 0; i < path.size() ; i++) {
+			AddTextureToList(path[i].c_str());
+		} 
 		break;
 	case SCENE_ASSET::RESULT:
 		break;
@@ -186,6 +190,36 @@ void Asset::LoadSound() {
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Sound Loaded", end, start);
+}
+
+std::vector <std::string> Asset::GetPathFromFile(const char* file) {
+
+	std::vector <std::string> result;
+
+	std::string filename = file;
+	std::ifstream fp;
+	int length;
+
+	fp.open(filename);
+
+	if (fp.is_open()) {
+		fp >> length;
+
+		// サイズ <= 0
+		if (length <= 0) {
+			return result;
+		}
+
+		for (int i = 0; i < length; i++) {
+			json data;
+			fp >> data;
+			result.push_back(data["Path"]); 
+		}
+
+
+	}
+
+	return result;
 }
 
 HRESULT Asset::CheckChunk(HANDLE hFile, DWORD format, DWORD* pChunkSize, DWORD* pChunkDataPosition)
@@ -269,4 +303,6 @@ HRESULT Asset::ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DW
 
 	return S_OK;
 }
+
+
 

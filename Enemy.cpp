@@ -41,7 +41,6 @@ void Enemy::Init() {
 	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ENEMY));
 	mpModel->SetAnimation(mpAnination);
 
-
 	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
 	mpLockImage->Name = "enemy_lock_" + Name;
 	mpLockImage->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
@@ -67,8 +66,6 @@ void Enemy::AddGauge() {
 	mHpInit = 50.0f;
 	mHp = mHpInit;
 	mGauge->mFillAmount = mHp / mHpInit;
-
-
 
 }
 
@@ -147,19 +144,17 @@ void Enemy::Update() {
 		Destroy();
 	}
 
-	
+	if (Input::GetKeyTrigger(DIK_P)) {
+		Attack();
+	}
 
 	Resource::Update();
 }
 
 void Enemy::Render() {
 
-	D3DXMATRIX world, scale, rot, trans;
-	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
-	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
-	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
-	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
-	world = scale * rot * trans;
+	D3DXMATRIX world = MakeWorldMatrix();
+
 	Renderer::SetWorldMatrix(&world);
 
 	Shader::Use(SHADER_TYPE_VSPS::Default);
@@ -172,6 +167,8 @@ void Enemy::Render() {
 void Enemy::Attack() {
 
 	Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
+
+	mpAnination->SetNewStateOneTime("Attack", 0.7f);
 
 	p->mHp -= 1000.0f;
 }

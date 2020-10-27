@@ -185,12 +185,7 @@ void MeshField::Update() {
 
 void MeshField::Render() {
 
-	D3DXMATRIX world, scale, rot, trans;
-	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
-	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
-	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
-	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
-	world = scale * rot * trans;
+	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
 
 	UINT stride = sizeof(VERTEX_3D);

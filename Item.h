@@ -10,8 +10,7 @@ class Item : public Resource
 
 private:
 
-	// ƒ‚ƒfƒ‹
-	AssimpModel* mModel;
+	ModelManager* mModel;
 
 public:
 
@@ -21,6 +20,5 @@ public:
 	void Render();
 
 	// Setter
-	void SetModel(AssimpModel* model) { mModel = model; };
 
 };

@@ -8,7 +8,7 @@
 #include "AssimpModel.h"
 
 class Animation;
-class ModelManager;
+class BoxCollider;
 
 class Player : public Resource
 {
@@ -25,9 +25,11 @@ private:
 	void Movement(BYTE keykodeF, BYTE keykodeB,BYTE keykodeR, BYTE keykodeL);
 	// スキル
 	void Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_3);
-	// アニメーションポインタ
+	// コンポーネント
 	Animation* mpAnination;
 	ModelManager* mpModel;
+	Physical* mpPhysical;
+	BoxCollider* mpCollider;
 	// メインカメラポインタ
 	Camera* mpCamera;
 	// ロックしている敵インデックス

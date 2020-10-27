@@ -24,6 +24,16 @@ protected:
     D3DXQUATERNION Quaternion;
     // コンポーネント
     std::vector <Component*> Components;
+    // ワールドマトリクス生成
+    D3DXMATRIX MakeWorldMatrix() {
+        D3DXMATRIX world, scale, rot, trans;
+        D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
+        D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
+        D3DXMatrixRotationQuaternion(&rot, &Quaternion);
+        D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
+        world = scale * rot * trans;
+        return world;
+    };
   
 public:
 

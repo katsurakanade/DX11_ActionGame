@@ -18,7 +18,6 @@ enum class ASSIMP_MODEL_ENUM_TITLE
 };
 // タイトル_テクスチャ
 enum class TEXTURE_ENUM_TITLE {
-	LOGO,
 	WHITE,
 	SKY,
 	STAR,
@@ -58,7 +57,6 @@ enum class TEXTURE_ENUM_GAME
 	PLANT,
 	DIRT,
 	HAL,
-	STONE,
 	FOG,
 	HANE,
 	CHARACTERICON_0,
@@ -81,6 +79,8 @@ private:
 	HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset);
 	// シーン
 	SCENE_ASSET mScene;
+	// ファイルパス取得
+	std::vector <std::string> GetPathFromFile(const char* file);
 
 protected:
 
@@ -110,8 +110,12 @@ protected:
 	}
 	// テクスチャ追加
 	void AddTextureToList(const char* value) {
-		ID3D11ShaderResourceView* tex;
+		ID3D11ShaderResourceView* tex = nullptr;
 		D3DX11CreateShaderResourceViewFromFile(Renderer::GetDevice(),value,NULL,NULL,&tex,NULL);
+		if (!tex) {
+			MessageBox(GetWindow(), value, "Error", MB_OK);
+		}
+		assert(tex);
 		mTextureList.push_back(tex);
 	}
 	// サウンド追加

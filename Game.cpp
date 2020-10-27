@@ -35,6 +35,9 @@ void Game::Init() {
 	enemy3->AddGauge();
 	enemy3->Position = D3DXVECTOR3(10, 0, -200);
 
+	Item* item = AddGameObject<Item>(ObjectLayer);
+	item->Position = D3DXVECTOR3(10, 43, 2);
+
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);

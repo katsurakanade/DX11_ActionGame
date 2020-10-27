@@ -45,7 +45,7 @@ void Missile::Update() {
 	if (es.size() > 0) {
 
 		if (mCurveProgress <= 1.0f) {
-			mCurveProgress += 0.01f;
+			mCurveProgress += 1.0f * Time::GetDeltaTime();
 		}
 
 		mpEffect->Position = Bezier(p0, p1, p2, mCurveProgress);

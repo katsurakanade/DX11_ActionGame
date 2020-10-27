@@ -4,11 +4,11 @@
 #include "Scene.h"
 #include "Player.h"
 #include "input.h"
-#include "Animation.h"
 #include "Particle.h"
 #include "Shader.h"
 #include "MeshField.h"
 #include "Collision.h"
+#include "Animation.h"
 #include "ModelManager.h"
 #include "item.h"
 #include "Missile.h"
@@ -25,31 +25,28 @@ void Player::Init() {
 
 	D3DXQuaternionIdentity(&Quaternion);
 	
-	AddComponent<BoxCollider>();
-	AddComponent<Physical>();
-
+	mpCollider = AddComponent<BoxCollider>();
+	mpPhysical = AddComponent<Physical>();
 	mpAnination = AddComponent<Animation>();
 	mpModel = AddComponent<ModelManager>();
 
 	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
 	mpModel->SetAnimation(mpAnination);
 
-	GetComponent<BoxCollider>()->mPositionOffest = D3DXVECTOR3(0.0f, 4.25f, 0.0f);
-	GetComponent<BoxCollider>()->mScaleOffest = D3DXVECTOR3(2.5f, 9.0f, 2.5f);
-
-	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
-	camera->SetFollowTarget(this);
-
-	mHp = mHpInit;
+	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.25f, 0.0f);
+	mpCollider->mScaleOffest = D3DXVECTOR3(2.5f, 9.0f, 2.5f);
 
 	mpAnination->SetState("Idle");
 	mpAnination->SetCoefficient(10.0f);
 
+	mpCamera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+	mpCamera->SetFollowTarget(this);
+
+	mHp = mHpInit;
+
 	for (Component* c : Components) {
 		c->SetUsePanel(true);
 	}
-
-	mpCamera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
 
 	Resource::Init();
 
@@ -62,7 +59,7 @@ void Player::Unint() {
 
 void Player::Update() {
 
-	float speed = GetComponent<Physical>()->mSpeed;
+	float speed = mpPhysical->mSpeed;
 	
 	// アニメーション更新
 	if (mpAnination->GetState() == "Idle" && speed >= 1.5f) {
@@ -102,7 +99,7 @@ void Player::Update() {
 			pc->Position = Position;
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 
-			GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
+			mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
 			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
 
@@ -129,7 +126,7 @@ void Player::Update() {
 			pc->Position = Position;
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 
-			GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2));
+			mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2));
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
 			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_1));
 
@@ -220,12 +217,7 @@ void Player::Update() {
 
 void Player::Render() {
 
-	D3DXMATRIX world, scale, rot, trans;
-	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
-	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
-	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
-	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
-	world = scale * rot * trans;
+	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
 	
 	Shader::Use(SHADER_TYPE_VSPS::Default);
@@ -245,38 +237,41 @@ void Player::SettingPanel() {
 	ImGui::End();
 }
 
-void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykodeL) {
+void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR) {
 
+	// ForWard
 	if (Input::GetKeyPress(keykodeF)) {
 
 		if (Input::GetKeyPress(keykodeL)) {
 
-			Rotation.y = D3DX_PI * 0.25f;
+			Rotation.y = D3DX_PI * -0.25f;
 
-			if (GetComponent<Physical>()->mAcceleration < 1.5f) {
-				GetComponent<Physical>()->mAcceleration += 0.1f;
+			if (mpPhysical->mAcceleration < 1.5f) {
+				mpPhysical->mAcceleration += 0.1f;
 			}
 
-			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
-			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(sinf(-D3DX_PI * 0.75f) , 0, cosf(-D3DX_PI * 0.75f));
+			mpPhysical->mSpeed += mpPhysical->mAcceleration;
+			mpPhysical->mVelocity = D3DXVECTOR3(-sinf(-D3DX_PI * 0.75f) , 0, cosf(-D3DX_PI * 0.75f));
 
 			if (mpCamera->GetLookTarget()) {
-				mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
+				mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
 			}
 		}
 
 		else if (Input::GetKeyPress(keykodeR)) {
 
-			Rotation.y = D3DX_PI * -0.25f;
+			Rotation.y = D3DX_PI * 0.25f;
 
-			if (GetComponent<Physical>()->mAcceleration < 1.5f) {
-				GetComponent<Physical>()->mAcceleration += 0.1f;
+			if (Position.x > -95.0f) {
+				if (mpPhysical->mAcceleration < 1.5f) {
+					mpPhysical->mAcceleration += 0.1f;
+				}
+				mpPhysical->mSpeed += mpPhysical->mAcceleration;
+				mpPhysical->mVelocity = D3DXVECTOR3(sinf(-D3DX_PI * 0.75f), 0, cosf(-D3DX_PI * 0.75f));
 			}
-			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
-			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-sinf(-D3DX_PI * 0.75f), 0, cosf(-D3DX_PI * 0.75f));
 
 			if (mpCamera->GetLookTarget()) {
-				mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+				mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
 			}
 		}
 
@@ -284,94 +279,105 @@ void Player::Movement(BYTE keykodeF , BYTE keykodeB ,BYTE keykodeR, BYTE keykode
 
 			Rotation.y = 0.0f;
 
-			if (GetComponent<Physical>()->mAcceleration < 1.5f) {
-				GetComponent<Physical>()->mAcceleration += 0.1f;
+			if (mpPhysical->mAcceleration < 1.5f) {
+				mpPhysical->mAcceleration += 0.1f;
 			}
-			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
-			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(0, 0, -1.0f);
+			mpPhysical->mSpeed += mpPhysical->mAcceleration;
+			mpPhysical->mVelocity = D3DXVECTOR3(0, 0, -1.0f);
 		}
 		
 	}
 
+	// Back
 	else if (Input::GetKeyPress(keykodeB)) {
 
 		if (Input::GetKeyPress(keykodeL)) {
 
-			Rotation.y = D3DX_PI * 0.75f;
+			Rotation.y = D3DX_PI * -0.75f;
 
-			if (GetComponent<Physical>()->mAcceleration < 1.5f) {
-				GetComponent<Physical>()->mAcceleration += 0.1f;
+			if (Position.z < 95.0f) {
+				if (mpPhysical->mAcceleration < 1.5f) {
+					mpPhysical->mAcceleration += 0.1f;
+				}
+
+				mpPhysical->mSpeed += mpPhysical->mAcceleration;
+				mpPhysical->mVelocity = D3DXVECTOR3(-sinf(-D3DX_PI * 0.75f), 0, -cosf(-D3DX_PI * 0.75f));
+
+				if (mpCamera->GetLookTarget()) {
+					mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
+				}
 			}
-
-			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
-			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(sinf(-D3DX_PI * 0.75f), 0, -cosf(-D3DX_PI * 0.75f));
-
-			if (mpCamera->GetLookTarget()) {
-				mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
-			}
+			
 		}
 
 		else if (Input::GetKeyPress(keykodeR)) {
 
-			Rotation.y = D3DX_PI * -0.75f;
+			Rotation.y = D3DX_PI * 0.75f;
 
-			if (GetComponent<Physical>()->mAcceleration < 1.5f) {
-				GetComponent<Physical>()->mAcceleration += 0.1f;
-			}
-			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
-			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-sinf(-D3DX_PI * 0.75f), 0, -cosf(-D3DX_PI * 0.75f));
+			if (Position.z < 95.0f && Position.x > -95.0f) {
+				if (mpPhysical->mAcceleration < 1.5f) {
+					mpPhysical->mAcceleration += 0.1f;
+				}
+				mpPhysical->mSpeed += mpPhysical->mAcceleration;
+				mpPhysical->mVelocity = D3DXVECTOR3(sinf(-D3DX_PI * 0.75f), 0, -cosf(-D3DX_PI * 0.75f));
 
-			if (mpCamera->GetLookTarget()) {
-				mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+				if (mpCamera->GetLookTarget()) {
+					mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+				}
 			}
 		}
-
 
 		else {
 
 			Rotation.y = D3DX_PI;
 
-			if (GetComponent<Physical>()->mAcceleration < 1.5f) {
-				GetComponent<Physical>()->mAcceleration += 0.1f;
+			if (Position.z < 95.0f) {
+				if (mpPhysical->mAcceleration < 1.5f) {
+					mpPhysical->mAcceleration += 0.1f;
+				}
+				mpPhysical->mSpeed += mpPhysical->mAcceleration;
+				mpPhysical->mVelocity = D3DXVECTOR3(0, 0, 1.0);
 			}
-			GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
-			GetComponent<Physical>()->mVelocity = D3DXVECTOR3(0, 0, 1.0);
 		}
-
 
 	}
 
+	// Left
 	else if (Input::GetKeyPress(keykodeL)) {
-
-		if (Rotation.y != 1.72f) {
-			Rotation = D3DXVECTOR3(0.0f, 1.72f, 0.0f);
-		}
-
-		if (GetComponent<Physical>()->mAcceleration < 1.5f) {
-			GetComponent<Physical>()->mAcceleration += 0.1f;
-		}
-		GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
-		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(-1.0f, 0, 0);
-
-		if (mpCamera->GetLookTarget()) {
-			mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
-		}
-	}
-
-	else if (Input::GetKeyPress(keykodeR)) {
 
 		if (Rotation.y != -1.72f) {
 			Rotation = D3DXVECTOR3(0.0f, -1.72f, 0.0f);
 		}
 
-		if (GetComponent<Physical>()->mAcceleration < 1.5f) {
-			GetComponent<Physical>()->mAcceleration += 0.1f;
+		if (mpPhysical->mAcceleration < 1.5f) {
+			mpPhysical->mAcceleration += 0.1f;
 		}
-		GetComponent<Physical>()->mSpeed += GetComponent<Physical>()->mAcceleration;
-		GetComponent<Physical>()->mVelocity = D3DXVECTOR3(1.0f, 0, 0);
+		mpPhysical->mSpeed += mpPhysical->mAcceleration;
+		mpPhysical->mVelocity = D3DXVECTOR3(1.0f, 0, 0);
 
 		if (mpCamera->GetLookTarget()) {
 			mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+		}
+	}
+
+	// Right
+	else if (Input::GetKeyPress(keykodeR)) {
+
+		if (Rotation.y != 1.72f) {
+			Rotation = D3DXVECTOR3(0.0f, 1.72f, 0.0f);
+		}
+
+		if (Position.x > -95.0f) {
+			if (mpPhysical->mAcceleration < 1.5f) {
+				mpPhysical->mAcceleration += 0.1f;
+			}
+			mpPhysical->mSpeed += mpPhysical->mAcceleration;
+			mpPhysical->mVelocity = D3DXVECTOR3(-1.0f, 0, 0);
+		}
+		
+
+		if (mpCamera->GetLookTarget()) {
+			mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
 		}
 	}
 }
@@ -388,7 +394,7 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 			mpAnination->SetNewStateOneTime("Attack", 0.7f);
 
 			for (unsigned int i = 0; i < es.size(); i++) {
-				if (es[i] != nullptr && es[i]->GetComponent<BoxCollider>()->Collision_Box_Stay(this->GetComponent<BoxCollider>())) {
+				if (es[i] != nullptr && es[i]->GetComponent<BoxCollider>()->Collision_Box_Stay(mpCollider)) {
 
 					ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 					ParitcleSetting* setting = new ParitcleSetting;

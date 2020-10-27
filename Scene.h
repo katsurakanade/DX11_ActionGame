@@ -40,7 +40,7 @@ public:
 	virtual void Init() = 0;
 
 	virtual void Uninit() {
-
+		
 		for (int i = 0; i < EndLayer; i++) {
 			for (Resource* g : mGameObject[i]) {
 				g->Uninit();
@@ -51,6 +51,7 @@ public:
 		for (int i = 0; i < EndLayer; i++) {
 			mGameObject[i].clear();
 		}
+
 		mAsset->UnloadSceneAsset();
 		delete mAsset;
 		mAsset = nullptr;

@@ -35,16 +35,9 @@ void Props::Update() {
 
 void Props::Render() {
 
-	D3DXMATRIX world, scale, rot, trans;
-	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
-	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
-	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
-	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
-	world = scale * rot * trans;
+	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
-
 	Shader::Use(SHADER_TYPE_VSPS::Default);
-
 	mpModel->Render(world);
 
 }

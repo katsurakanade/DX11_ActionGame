@@ -39,7 +39,7 @@ bool Application::Init() {
 
 	Renderer::mGizmosMode = false;
 
-	mScene = new Game();
+	mScene = new Title();
 	mScene->Init();
 
 	return true;

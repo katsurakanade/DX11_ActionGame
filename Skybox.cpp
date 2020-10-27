@@ -38,8 +38,6 @@ void Skybox::Update() {
 
 void Skybox::Render() {
 
-
-
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID;
@@ -50,12 +48,8 @@ void Skybox::Render() {
 	Renderer::GetDevice()->CreateRasterizerState(&rd, &rs);
 	Renderer::GetDeviceContext()->RSSetState(rs);
 
-	D3DXMATRIX world, scale, rot, trans;
-	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
-	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
-	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
-	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
-	world = scale * rot * trans;
+	D3DXMATRIX world = MakeWorldMatrix();
+
 	Renderer::SetWorldMatrix(&world);
 
 	mpModel->GetModel()->DefaultTexture = false;

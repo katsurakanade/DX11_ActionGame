@@ -5,16 +5,20 @@
 #include "Item.h"
 #include "input.h"
 #include "Shader.h"
+#include "ModelManager.h"
 
 void Item::Init() {
 	
 	Name = "Item";
 
-	Position = D3DXVECTOR3(0, 20.0f, 0);
+	Position = D3DXVECTOR3(0, 0.0f, 0);
 	Rotation = D3DXVECTOR3(0, 0, 0);
 	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
 	D3DXQuaternionIdentity(&this->Quaternion);
+
+	mModel = AddComponent<ModelManager>();
+	mModel->SetModel(Application::GetScene()->GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::SWORD));
 
 	Resource::Init();
 }
@@ -37,18 +41,11 @@ void Item::Update() {
 
 void Item::Render() {
 
-	D3DXMATRIX world, scale, rot, trans;
-	D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
-	D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
-	D3DXMatrixRotationQuaternion(&rot, &Quaternion);
-	D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
-	world = scale * rot * trans;
+	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
 
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
-	if (mModel) {
-		mModel->Draw(world);
-	}
+	mModel->Render(world);
 
 }

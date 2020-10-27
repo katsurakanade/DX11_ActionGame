@@ -21,9 +21,9 @@ void Title::Init() {
 	//Button->SetSize(D3DXVECTOR3(400, 120, 0));
 	//Button->SetPosition(D3DXVECTOR3(SCREEN_WIDTH / 2 - 230, SCREEN_HEIGHT  - 200,1));
 
-	Fade* fade = AddGameObject<Fade>(FadeLayer);
+	/*Fade* fade = AddGameObject<Fade>(FadeLayer);
 	fade->Start(false, 90, D3DCOLOR_RGBA(1, 1, 1, 1));
-	mpFade = fade;
+	mpFade = fade;*/
 
 	AudioListener::Play(mAsset->GetSound((int)SOUND_ENUM_TITLE::BGM_01), -1,0.1f);
 }
@@ -32,23 +32,29 @@ void Title::Update() {
 
 	Scene::Update();
 
-	if (mpFade != nullptr) {
-		if (!mpFade->GetIsFade()) {
-			if (mClear) {
-				AudioListener::Stop(mAsset->GetSound((int)SOUND_ENUM_TITLE::BGM_01));
-				Application::SwitchScene<Game>();
-				return;
-			}
-			mpFade->Destroy();
-		}
+	if (mClear) {
+		AudioListener::Stop(mAsset->GetSound((int)SOUND_ENUM_TITLE::BGM_01));
+		Application::SwitchScene<Game>();
+		return;
 	}
+
+	//if (mpFade != nullptr) {
+	//	if (!mpFade->GetIsFade()) {
+	//		if (mClear) {
+	//			AudioListener::Stop(mAsset->GetSound((int)SOUND_ENUM_TITLE::BGM_01));
+	//			Application::SwitchScene<Game>();
+	//			return;
+	//		}
+	//		mpFade->Destroy();
+	//	}
+	//}
 
 	if (Input::GetKeyTrigger(DIK_SPACE) && !mClear) {
 		
 		AudioListener::Play(mAsset->GetSound((int)SOUND_ENUM_TITLE::SE_01), 0,0.5f);
-		Fade* fade = AddGameObject<Fade>(FadeLayer);
+		/*Fade* fade = AddGameObject<Fade>(FadeLayer);
 		fade->Start(true, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
-		mpFade = fade;
+		mpFade = fade;*/
 		mClear = true;
 	}
 
