@@ -19,5 +19,7 @@ public:
 	void Uninit();
 	void Update();
 	void Render();
+
+	ImageManager* GetImage() { return mImage; };
 };
 

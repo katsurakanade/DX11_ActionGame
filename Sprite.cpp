@@ -13,6 +13,7 @@ void Sprite::Init() {
 
 	mImage->Position = Position;
 	mImage->Scale = Scale;
+	
 }
 
 void Sprite::Uninit() {
@@ -24,6 +25,17 @@ void Sprite::Update() {
 
 	mImage->Position = Position;
 	mImage->Scale = Scale;
+
+	if (!mImage->GetIsBillBoard()) {
+		ImGui::Begin("GUI Editor");
+		if (ImGui::TreeNode(Name.c_str())) {
+			ImGui::SliderFloat3("Postition", Position, 0, 1920);
+			ImGui::TreePop();
+		}
+		ImGui::End();
+
+		mImage->Set2DPosition(Position);
+	}
 
 	Resource::Update();
 }

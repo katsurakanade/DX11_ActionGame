@@ -12,15 +12,12 @@ using json = nlohmann::json;
 void Asset::LoadSceneAsset(){
 
 	// アセットロード
-	/*std::thread thread_loadmodel(&Asset::LoadModel,this);
+	std::thread thread_loadmodel(&Asset::LoadModel,this);
 	std::thread thread_loadtexture(&Asset::LoadTexture, this);
 	std::thread thread_loadsound(&Asset::LoadSound, this);
 	thread_loadmodel.join();
 	thread_loadtexture.join();
-	thread_loadsound.join();*/
-	Asset::LoadModel();
-	Asset::LoadTexture();
-	Asset::LoadSound();
+	thread_loadsound.join();
 
 	switch (mScene)
 	{

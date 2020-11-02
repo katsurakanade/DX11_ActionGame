@@ -48,6 +48,7 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "gdiplus.lib")
+#pragma comment(lib, "ole32.lib")
 
 #define SCREEN_WIDTH		(1920)
 #define SCREEN_HEIGHT	(1080)

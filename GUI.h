@@ -25,7 +25,7 @@ public:
 	void Update();
 	void Render() {};
 
-	void SetPlayerIcon(ID3D11ShaderResourceView* resource) { mpPlayerIcon->GetComponent<ImageManager>()->SetTexture(resource); };
+	void SetPlayerIcon(ID3D11ShaderResourceView* resource) { mpPlayerIcon->GetImage()->SetTexture(resource); };
 
 };
 

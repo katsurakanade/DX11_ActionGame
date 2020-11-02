@@ -8,10 +8,8 @@ void main(in PS_IN In, out float4 outDiffuse : SV_Target)
 {
     
     outDiffuse = g_Texture.Sample(g_SamplerState, In.TexCoord);
-    //outDiffuse += Material.Ambient;
-    //outDiffuse *= Material.Diffuse;
-    //outDiffuse += Material.Emission;
     
     outDiffuse.rgb *= In.Diffuse.rgb;
     outDiffuse.a *= In.Diffuse.a;
+
 }

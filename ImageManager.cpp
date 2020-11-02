@@ -74,6 +74,8 @@ void ImageManager::Uninit() {
 }
 
 void ImageManager::Update() {
+	
+	
 
 	if (mAnimation) {
 		if (!mLoop) {
@@ -128,41 +130,31 @@ void ImageManager::Render() {
 
 		vertex[0].Position = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
 		vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		vertex[0].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+		vertex[0].Diffuse = D3DXVECTOR4(1,1,1,1);
 		vertex[0].TexCoord = D3DXVECTOR2(frame.x, frame.y);
 
 		vertex[1].Position = D3DXVECTOR3(-1.0f + (2.0f * mFillAmount), 1.0f, 0.0f);
 		vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		vertex[1].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+		vertex[1].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
 		vertex[1].TexCoord = D3DXVECTOR2(frame.x + (1.0f / mWidth), frame.y);
 
 		vertex[2].Position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
 		vertex[2].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		vertex[2].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+		vertex[2].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
 		vertex[2].TexCoord = D3DXVECTOR2(frame.x, frame.y + (1.0f / mHeight));
 
 		vertex[3].Position = D3DXVECTOR3(-1.0f + (2.0f * mFillAmount), -1.0f, 0.0f);
 		vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		vertex[3].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+		vertex[3].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
 		vertex[3].TexCoord = D3DXVECTOR2(frame.x + (1.0f / mWidth), frame.y + (1.0f / mHeight));
 
 		Renderer::GetDeviceContext()->Unmap(mVertexBuffer, 0);
 	}
 
-
-
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-
-	MATERIAL material;
-	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	material.Ambient = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	Renderer::SetMaterial(material);
-
 	Renderer::GetDeviceContext()->PSSetConstantBuffers(0, 1, &mColorBuffer);
-
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 

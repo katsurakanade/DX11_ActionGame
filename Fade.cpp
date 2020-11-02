@@ -8,20 +8,20 @@ void Fade::Init() {
 	mIsFade = false;
 	mAlpha = 0.0f;
 
-	//Sprite* sp = Application::GetScene()->AddGameObject<Sprite>(FadeLayer);
-	//sp->Name = "FadeSprite";
-	//if (Application::GetAsset()->GetScene() == SCENE_ASSET::TITLE) {
-	//	sp->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::WHITE));
-	//}
+	Sprite* sp = Application::GetScene()->AddGameObject<Sprite>(FadeLayer);
+	sp->Name = "FadeSprite";
+	if (Application::GetAsset()->GetScene() == SCENE_ASSET::TITLE) {
+		sp->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::WHITE));
+	}
 
-	//else if (Application::GetAsset()->GetScene() == SCENE_ASSET::GAME) {
-	//	sp->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::WHITE));
-	//}
-	//sp->SetSize(D3DXVECTOR3(1920.0f, 1080.0f, 0));
-	//sp->SetPosition(D3DXVECTOR3(0, 0, 0));
-	//sp->SetColor(D3DXVECTOR4(1, 1, 1, 1));
+	else if (Application::GetAsset()->GetScene() == SCENE_ASSET::GAME) {
+		sp->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::WHITE));
+	}
+	sp->GetImage()->Set2DSize(D3DXVECTOR3(1920.0f, 1080.0f, 0));
+	sp->GetImage()->Set2DPosition(D3DXVECTOR3(0, 0, 0));
+	sp->GetImage()->SetColor(D3DXVECTOR4(1, 1, 1, 1));
 
-	//mSprite = sp;
+	mSprite = sp;
 
 }
 

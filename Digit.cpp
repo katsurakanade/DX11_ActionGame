@@ -29,7 +29,7 @@ void Digit::Update() {
 		value /= 10;
 
 		if (mNumberSprite.size() > 0) {
-			mNumberSprite[i]->GetComponent<ImageManager>()->SetFrame(n);
+			mNumberSprite[i]->GetImage()->SetFrame(n);
 		}
 	
 	}
@@ -50,11 +50,11 @@ void Digit::MakeSprite(int fig,D3DXVECTOR2 size) {
 	for (int i = 0; i < mFig; i++) {
 
 		Sprite* sp = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
-		sp->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::NUMBER));
-		sp->GetComponent<ImageManager>()->SetAnimationSprite(true);
-		sp->GetComponent<ImageManager>()->SetHW(5, 5);
-		sp->GetComponent<ImageManager>()->Set2DSize(D3DXVECTOR3(size.x, size.y, 1));
-		sp->GetComponent<ImageManager>()->Set2DPosition(D3DXVECTOR3(Position.x + (size.x * (mFig - (i + 1.0f))), Position.y, 0.0f));
+		sp->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::NUMBER));
+		sp->GetImage()->SetAnimationSprite(true);
+		sp->GetImage()->SetHW(5, 5);
+		sp->GetImage()->Set2DSize(D3DXVECTOR3(size.x, size.y, 1));
+		sp->GetImage()->Set2DPosition(D3DXVECTOR3(Position.x + (size.x * (mFig - (i + 1.0f))), Position.y, 0.0f));
 
 		mNumberSprite[i] = sp;
 	}

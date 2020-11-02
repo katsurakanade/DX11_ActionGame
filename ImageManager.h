@@ -15,6 +15,7 @@ private:
 	// サイス
 	D3DXVECTOR3 mSize;
 
+
 	// アニメーション用
 	bool mAnimation = false;
 	int mFramecount;
@@ -56,5 +57,6 @@ public:
 
 	// Getter
 	D3DXVECTOR3 GetSize() { return mSize; };
+	bool GetIsBillBoard() { return mBillBoard; };
 };
 

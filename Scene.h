@@ -15,7 +15,7 @@
 
 // レイヤー
 enum RenderLayer {
-	CameraLayer , ObjectLayer ,EffectLayer, EffectLayer2 ,SpriteLayer , SpriteLayer2, ParticleLayer ,FadeLayer , EndLayer
+	 CameraLayer , ObjectLayer ,EffectLayer, EffectLayer2 ,SpriteLayer , SpriteLayer2, ParticleLayer,FadeLayer , EndLayer
 };
 
 class Scene {
@@ -24,7 +24,7 @@ protected:
 
 	// オブジェクト
 	std::list<Resource*> mGameObject[EndLayer];
-	std::vector <std::string> mRenderLayerString{ "CameraLayer" , "ObjectLayer" ,"EffectLayer", "EffectLayer2" ,"SpriteLayer" , "SpriteLayer2", "ParticleLayer" ,"FadeLayer" , "EndLayer" };
+	std::vector <std::string> mRenderLayerString{"CameraLayer" , "ObjectLayer" ,"EffectLayer", "EffectLayer2" ,"SpriteLayer" , "SpriteLayer2", "ParticleLayer","FadeLayer"  , "EndLayer" };
 
 	// ゲームクリア用
 	bool mSwitchFlag = false;

@@ -6,6 +6,7 @@
 
 #include "AssimpModel.h"
 #include "AudioListener.h"
+#include "FileManger.h"
 
 // シーン
 enum class SCENE_ASSET {
@@ -22,6 +23,7 @@ enum class TEXTURE_ENUM_TITLE {
 	SKY,
 	STAR,
 	SPACEBUTTON,
+	TITLE,
 };
 // タイトル_サウンド
 enum class SOUND_ENUM_TITLE {
@@ -110,12 +112,14 @@ protected:
 	}
 	// テクスチャ追加
 	void AddTextureToList(const char* value) {
+
 		ID3D11ShaderResourceView* tex = nullptr;
 		D3DX11CreateShaderResourceViewFromFile(Renderer::GetDevice(),value,NULL,NULL,&tex,NULL);
 		if (!tex) {
 			MessageBox(GetWindow(), value, "Error", MB_OK);
 		}
 		assert(tex);
+
 		mTextureList.push_back(tex);
 	}
 	// サウンド追加

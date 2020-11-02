@@ -43,11 +43,11 @@ void Enemy::Init() {
 
 	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
 	mpLockImage->Name = "enemy_lock_" + Name;
-	mpLockImage->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-	mpLockImage->GetComponent<ImageManager>()->SetAnimationSprite(true);
-	mpLockImage->GetComponent<ImageManager>()->SetBillBoard(true);
-	mpLockImage->GetComponent<ImageManager>()->SetHW(1,1);
-	mpLockImage->GetComponent<ImageManager>()->SetLoop(true);
+	mpLockImage->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+	mpLockImage->GetImage()->SetAnimationSprite(true);
+	mpLockImage->GetImage()->SetBillBoard(true);
+	mpLockImage->GetImage()->SetHW(1,1);
+	mpLockImage->GetImage()->SetLoop(true);
 	mpLockImage->Position = Position;
 	mpLockImage->Scale = D3DXVECTOR3(3, 3, 3);
 	mpLockImage->SetActive(false);
