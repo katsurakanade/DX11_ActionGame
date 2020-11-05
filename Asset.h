@@ -24,6 +24,7 @@ enum class TEXTURE_ENUM_TITLE {
 	STAR,
 	SPACEBUTTON,
 	TITLE,
+	PARTICLE,
 };
 // タイトル_サウンド
 enum class SOUND_ENUM_TITLE {
@@ -35,12 +36,12 @@ enum class ASSIMP_MODEL_ENUM_GAME
 {
 	BALL,
 	CUBE,
-	ENEMY,
-	HUMAN,
-	HUMAN2,
 	TORUS,
 	SWORD,
 	ROCK,
+	ENEMY,
+	HUMAN,
+	HUMAN2,
 };
 // ゲーム_テクスチャ
 enum class TEXTURE_ENUM_GAME
@@ -58,6 +59,7 @@ enum class TEXTURE_ENUM_GAME
 	SWORD_ICON,
 	PLANT,
 	DIRT,
+	DIRT_NORMAL,
 	HAL,
 	FOG,
 	HANE,

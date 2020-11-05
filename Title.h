@@ -9,6 +9,9 @@
 
 class Title : public Scene
 {
+private:
+
+	bool mStart = false;
 	
 public:
 

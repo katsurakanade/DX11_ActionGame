@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "AssimpModel.h"
 #include "Debug.h"
+#include "Shader.h"
 
 void AssimpModel::Load(std::string FileName) {
 
@@ -39,6 +40,9 @@ void AssimpModel::Unload() {
 	mTexturesLoaded.clear();
 	mTexturesLoaded.shrink_to_fit();
 
+	mTexturesLoaded_Normal.clear();
+	mTexturesLoaded_Normal.shrink_to_fit();
+
 	mTexturesSelect.clear();
 	mTexturesSelect.shrink_to_fit();
 
@@ -52,12 +56,17 @@ void AssimpModel::DrawConfig() {
 	std::string str = u8"モデル情報: " + mName;
 	ImGui::Begin(str.c_str());
 
-	ImGui::Text(u8"テクスチャ数 : %d ", mTexturesLoaded.size());
+	ImGui::Text(u8"テクスチャ数 : %d ", mTexturesLoaded.size() + mTexturesLoaded_Normal.size());
 	if (ImGui::TreeNode(u8"テクスチャファイル")) {
 		for (unsigned int i = 0; i < mTexturesLoaded.size(); i++) {
 			ImGui::Text(u8"タイプ : %s", mTexturesLoaded[i].type.c_str());
 			ImGui::Text(u8"パス : %s", mTexturesLoaded[i].path.c_str());
 			ImGui::Image(mTexturesLoaded[i].texture, ImVec2(100, 100));
+		}
+		for (unsigned int i = 0; i < mTexturesLoaded_Normal.size(); i++) {
+			ImGui::Text(u8"タイプ : %s", mTexturesLoaded_Normal[i].type.c_str());
+			ImGui::Text(u8"パス : %s", mTexturesLoaded_Normal[i].path.c_str());
+			ImGui::Image(mTexturesLoaded_Normal[i].texture, ImVec2(100, 100));
 		}
 		ImGui::TreePop();
 
@@ -167,9 +176,9 @@ void AssimpModel::Update(const char* animationname1, const char* animationname2,
 
 void AssimpModel::Draw(D3DXMATRIX root) {
 
-	//if (DisplayConfig) {
-	//	DrawConfig();
-	//}
+	if (DisplayConfig) {
+		DrawConfig();
+	}
 
 	for (unsigned int i = 0; i < mMeshes.size(); i++) {
 		for (unsigned int j = 0; j < mTexturesLoaded.size(); j++) {
@@ -184,11 +193,15 @@ void AssimpModel::Draw(D3DXMATRIX root) {
 						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexturesSelect[SelectTextureIndex].texture);
 					}
 				}
-
-				if (mMeshes[i]->Enable){
-					mMeshes[i]->Draw();
-				}
 			}
+		}
+
+		for (unsigned int j = 0; j < mTexturesLoaded_Normal.size(); j++) {
+			Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &mTexturesLoaded_Normal[j].texture);
+		}
+
+		if (mMeshes[i]->Enable) {
+			mMeshes[i]->Draw();
 		}
 	}
 
@@ -219,6 +232,7 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 	std::vector<VERTEX_3D> vertices;
 	std::vector<UINT> indices;
 	std::vector<Texture> textures;
+	std::vector<Texture> textures_normal;
 	std::vector <DEFORM_VERTEX> DeformVertex;
 	std::unordered_map  <std::string, BONE> Bone;
 	MATERIAL  cmatrixerial;
@@ -228,7 +242,7 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 
 		if (textype.empty()) {
-			textype = determineTextureType(scene, mat);
+			textype = DetermineTextureType(scene, mat);
 		}
 	} 
 
@@ -273,9 +287,13 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 		aiMaterial* aimaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-		std::vector<Texture> diffuseMaps = this->loadcmatrixerialTextures(aimaterial, aiTextureType_DIFFUSE, "Diffuse", scene);
+		// ディフューズマップ
+		std::vector<Texture> diffuseMaps = this->LoadMatrixerialTextures(aimaterial, aiTextureType_DIFFUSE, "Diffuse", scene);
+		// 法線マップ
+		std::vector<Texture> normalMaps = this->LoadMatrixerialTextures(aimaterial, aiTextureType_HEIGHT, "Normal", scene);
 
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+		textures_normal.insert(textures_normal.end(), normalMaps.begin(), normalMaps.end());
 
 		aiColor3D color;
 
@@ -329,11 +347,11 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		return new Mesh(name, vertices, indices, textures, cmatrixerial, DeformVertex, Bone);
 	}
 
-	return new Mesh(name, vertices, indices, textures, cmatrixerial);
+	return new Mesh(name, vertices, indices, textures,textures_normal, cmatrixerial);
 
 }
 
-std::vector<Texture> AssimpModel::loadcmatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene) {
+std::vector<Texture> AssimpModel::LoadMatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene) {
 
 	std::vector<Texture> textures;
 
@@ -357,8 +375,8 @@ std::vector<Texture> AssimpModel::loadcmatrixerialTextures(aiMaterial* cmatrix, 
 			Texture texture;
 			if (textype == "embedded compressed texture")
 			{
-				int textureindex = getTextureIndex(&str);
-				texture.texture = getTextureFromModel(scene, textureindex);
+				int textureindex = GetTextureIndex(&str);
+				texture.texture = GetTextureFromModel(scene, textureindex);
 			}
 			{
 
@@ -384,7 +402,7 @@ std::vector<Texture> AssimpModel::loadcmatrixerialTextures(aiMaterial* cmatrix, 
 	return textures;
 }
 
-std::string AssimpModel::determineTextureType(const aiScene* scene, aiMaterial* cmatrix) {
+std::string AssimpModel::DetermineTextureType(const aiScene* scene, aiMaterial* cmatrix) {
 
 	aiString textypeStr;
 	cmatrix->GetTexture(aiTextureType_DIFFUSE, 0, &textypeStr);
@@ -408,7 +426,7 @@ std::string AssimpModel::determineTextureType(const aiScene* scene, aiMaterial* 
 	return "";
 }
 
-int AssimpModel::getTextureIndex(aiString* str) {
+int AssimpModel::GetTextureIndex(aiString* str) {
 
 	std::string tistr;
 	tistr = str->C_Str();
@@ -416,7 +434,7 @@ int AssimpModel::getTextureIndex(aiString* str) {
 	return stoi(tistr);
 }
 
-ID3D11ShaderResourceView* AssimpModel::getTextureFromModel(const aiScene* scene, int textureindex) {
+ID3D11ShaderResourceView* AssimpModel::GetTextureFromModel(const aiScene* scene, int textureindex) {
 
 	HRESULT hr;
 	ID3D11ShaderResourceView* texture;

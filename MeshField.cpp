@@ -95,6 +95,7 @@ void MeshField::Init() {
 	// 画像
 	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT));
 	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS));
+	mTextureNormal.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_NORMAL));
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -128,16 +129,6 @@ void MeshField::Update() {
 	}
 	if (ImGui::TreeNode(u8"マップオブジェクト追加")) {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f, 0.5f, 0.0f, 1.0f });
-		if (ImGui::Button(u8"草")) {
-			Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
-			Grass* g = Application::GetScene()->AddGameObject<Grass>(EffectLayer);
-			g->Name = "Grass_" + std::to_string(Application::RandomDevice());
-			g->Tag = "Grass";
-			g->Type = "BillBoard";			
-			g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
-			g->Position = p->Position;
-		}
-		ImGui::SameLine();
 		if (ImGui::Button(u8"岩")) {
 			Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 			Props* rock = Application::GetScene()->AddGameObject<Props>(ObjectLayer);
@@ -191,7 +182,6 @@ void MeshField::Render() {
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-
 	Renderer::GetDeviceContext()->IASetIndexBuffer(mIndexBuffer,DXGI_FORMAT_R32_UINT,0);
 
 	MATERIAL material;
@@ -201,6 +191,7 @@ void MeshField::Render() {
 	Renderer::SetMaterial(material);
 
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture[0]);
+	Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &mTextureNormal[0]);
 
 	if (!Renderer::mLineMode) {
 		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -210,7 +201,7 @@ void MeshField::Render() {
 		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 	}
 
-	Shader::Use(SHADER_TYPE_VSPS::Default);
+	Shader::Use(SHADER_TYPE_VSPS::WithNormal);
 
 	Renderer::GetDeviceContext()->DrawIndexed(((FIELD_X + 1)*2) * (FIELD_X - 1) -2,0, 0);
 	

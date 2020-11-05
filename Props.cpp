@@ -37,7 +37,7 @@ void Props::Render() {
 
 	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
-	Shader::Use(SHADER_TYPE_VSPS::Default);
+	Shader::Use(SHADER_TYPE_VSPS::WithNormal);
 	mpModel->Render(world);
 
 }

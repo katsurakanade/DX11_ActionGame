@@ -69,6 +69,8 @@ public:
 	std::vector <UINT> Indices;
 	// テクスチャ
 	std::vector <Texture> Textures;
+	// テクスチャ
+	std::vector <Texture> TexturesNormal;
 	// 変形頂点
 	std::vector <DEFORM_VERTEX> mDeformVertex;
 	// Compute Shader 用
@@ -100,13 +102,14 @@ public:
 
 	};
 	// アニメーションなし
-	Mesh(std::string name, std::vector<VERTEX_3D> vertices, std::vector<UINT> indices, std::vector <Texture> textures, MATERIAL material) {
+	Mesh(std::string name, std::vector<VERTEX_3D> vertices, std::vector<UINT> indices, std::vector <Texture> textures, std::vector <Texture> texturesnormal, MATERIAL material) {
 
 		this->Name = name;
 		this->Vertices = vertices;
 		this->Indices = indices;
 		this->Textures = textures;
 		this->Material = material;
+		this->TexturesNormal = TexturesNormal;
 
 		this->Enable = true;
 		this->SetupMesh();

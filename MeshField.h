@@ -19,10 +19,10 @@ private:
 	ID3D11Buffer* mIndexBuffer;
 	// テクスチャ
 	std::vector <ID3D11ShaderResourceView*> mTexture;
+	std::vector<ID3D11ShaderResourceView*> mTextureNormal;
 	// 頂点
 	VERTEX_3D mVertex[FIELD_X][FIELD_X];
-	// リセット
-	//void ResetField();
+
 
 public:
 

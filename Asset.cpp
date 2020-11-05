@@ -78,20 +78,39 @@ void Asset::LoadModel() {
 	std::vector <std::string> animation;
 	std::vector <std::string> pass;
 
+	std::string jsonpath;
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		jsonpath = "Asset_Model_Title.json";
+		break;
+	case SCENE_ASSET::GAME:
+		jsonpath = "Asset_Model_Game.json";
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
+
+	std::vector <std::string> path = GetPathFromFile(jsonpath.c_str());
+
 	// シーンことロード
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
-		AddAssimpModelToList("asset\\model\\ball\\ball.obj");
+		for (unsigned int i = 0; i < path.size(); i++) {
+			AddAssimpModelToList(path[i].c_str());
+		}
 		break;
 	case SCENE_ASSET::GAME:
 
-		pass.push_back("asset\\model\\human\\Idle.fbx");
-		pass.push_back("asset\\model\\human\\Running.fbx");
-		pass.push_back("asset\\model\\human\\Jump.fbx");
-		pass.push_back("asset\\model\\human\\Roll.fbx");
-		pass.push_back("asset\\model\\human\\Attack.fbx");
-		pass.push_back("asset\\model\\human\\Mage.fbx");
+		pass.push_back("asset\\animation\\Idle.fbx");
+		pass.push_back("asset\\animation\\Running.fbx");
+		pass.push_back("asset\\animation\\Jump.fbx");
+		pass.push_back("asset\\animation\\Roll.fbx");
+		pass.push_back("asset\\animation\\Attack.fbx");
+		pass.push_back("asset\\animation\\Mage.fbx");
 		animation.push_back("Idle");
 		animation.push_back("Running");
 		animation.push_back("Jump");
@@ -99,15 +118,14 @@ void Asset::LoadModel() {
 		animation.push_back("Attack");
 		animation.push_back("Mage");
 
-		AddAssimpModelToList("asset\\model\\ball\\ball.obj");
-		AddAssimpModelToList("asset\\model\\cube\\cube.obj");
-		AddAssimpModelToList("asset\\model\\enemy\\Enemy.fbx", pass, animation);
-		AddAssimpModelToList("asset\\model\\human\\Human.fbx",pass, animation);
-		AddAssimpModelToList("asset\\model\\human\\Human2.fbx", pass, animation);
-		AddAssimpModelToList("asset\\model\\torus\\torus.obj");
-		AddAssimpModelToList("asset\\model\\sword\\sword.obj");
-		AddAssimpModelToList("asset\\model\\rock\\rock.obj");
-
+		for (unsigned int i = 0; i < path.size(); i++) {
+			if (i < 5) {
+				AddAssimpModelToList(path[i].c_str());
+			}
+			else {
+				AddAssimpModelToList(path[i].c_str(),pass,animation);
+			}
+		}
 		break;
 	case SCENE_ASSET::RESULT:
 		break;
@@ -212,7 +230,6 @@ std::vector <std::string> Asset::GetPathFromFile(const char* file) {
 			fp >> data;
 			result.push_back(data["Path"]); 
 		}
-
 
 	}
 

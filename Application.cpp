@@ -94,6 +94,7 @@ void Application::System() {
 	mFrameTime[mAnalysisCount] = Time::GetDeltaTime();
 	mMemoryUsage[mAnalysisCount] = Debug::GetMemoryUsage();
 
+	// ImGui
 	{
 		ImGui::Begin(u8"システム");
 		ImGui::Text("FPS : %f", mFPS);
@@ -103,7 +104,6 @@ void Application::System() {
 		ImGui::PlotLines("", mMemoryUsage, IM_ARRAYSIZE(mMemoryUsage));
 		ImGui::Checkbox(u8"線描画モード", &Renderer::mLineMode);
 		ImGui::Checkbox(u8"Gizmosモード", &Renderer::mGizmosMode);
-		ImGui::Checkbox(u8"ライト閉め", &mDisableLighting);
 		ImGui::Checkbox(u8"GPUで計算する", &mUsingGPU);
 		ImGui::End();
 	}

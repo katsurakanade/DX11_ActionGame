@@ -2,6 +2,7 @@
 #include "input.h"
 #include "Title.h"
 #include "Application.h"
+#include "Particle.h"
 
 void Title::Init() {
 
@@ -55,6 +56,28 @@ void Title::Update() {
 		fade->Start(false, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
 		mpFade = fade;
 		mClear = true;
+	}
+
+	if (!mStart) {
+
+		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+		ParitcleSetting* setting = new ParitcleSetting;
+		setting->Amount = 150000;
+		setting->PostionMinMaxX = D3DXVECTOR2(-100, 100);
+		setting->PostionMinMaxY = D3DXVECTOR2(-100, 100);
+		setting->PostionMinMaxZ = D3DXVECTOR2(-100, 100);
+		setting->SpeedMinMaxX = D3DXVECTOR2(0.0f, 0.0f);
+		setting->SpeedMinMaxY = D3DXVECTOR2(0.01f, 0.02f);
+		setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 0.0f);
+		setting->LifeMinMax = D3DXVECTOR2(300000.0f, 300000.0f);
+		setting->Size = 0.1f;
+		pc->Create(setting);
+		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::PARTICLE));
+		delete setting;
+
+		Application::GetScene()->GetGameObject<Camera>(CameraLayer)->SetFollowTarget(pc);
+
+		mStart = true;
 	}
 
 }

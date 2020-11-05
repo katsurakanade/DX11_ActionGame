@@ -6,17 +6,21 @@
 std::vector < ID3D11VertexShader*> Shader::mVertexShaderArray;
 std::vector < ID3D11PixelShader*> Shader::mPixelShaderArray;
 std::vector < ID3D11ComputeShader*> Shader::mComputeShaderArray;
+std::vector < ID3D11GeometryShader*> Shader::mGeometryShaderArray;
 
 void Shader::Init() {
 
 	mVertexShaderArray.resize(SHADER_MAX);
 	mPixelShaderArray.resize(SHADER_MAX);
 	mComputeShaderArray.resize(2);
+	mGeometryShaderArray.resize(0);
 
 	CreateVertexShader(SHADER_TYPE_VSPS::Default);
 	CreatePixelShader(SHADER_TYPE_VSPS::Default);
 	CreateVertexShader(SHADER_TYPE_VSPS::Unlit);
 	CreatePixelShader(SHADER_TYPE_VSPS::Unlit);
+	CreateVertexShader(SHADER_TYPE_VSPS::WithNormal);
+	CreatePixelShader(SHADER_TYPE_VSPS::WithNormal);
 
 	CreateComputeShader(SHADER_TYPE::SkinMesh);
 	CreateComputeShader(SHADER_TYPE::Particle);
@@ -32,13 +36,18 @@ void Shader::Uninit() {
 		p->Release();
 	}
 
-	for (ID3D11ComputeShader* p : mComputeShaderArray) {
-		p->Release();
+	for (ID3D11ComputeShader* c : mComputeShaderArray) {
+		c->Release();
+	}
+
+	for (ID3D11GeometryShader* g : mGeometryShaderArray) {
+		g->Release();
 	}
 
 	std::vector<ID3D11VertexShader*>().swap(mVertexShaderArray);
 	std::vector<ID3D11PixelShader*>().swap(mPixelShaderArray);
 	std::vector<ID3D11ComputeShader*>().swap(mComputeShaderArray);
+	std::vector<ID3D11GeometryShader*>().swap(mGeometryShaderArray);
 }
 
 void Shader::Use(SHADER_TYPE_VSPS type) {
@@ -57,6 +66,9 @@ void Shader::CreateVertexShader(SHADER_TYPE_VSPS type) {
 	}
 	else if (type == SHADER_TYPE_VSPS::Unlit) {
 		vspass = "UnlitVS.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::WithNormal) {
+		vspass = "vertexShader.cso";
 	}
 
 	// 頂点シェーダ生成
@@ -98,6 +110,9 @@ void Shader::CreatePixelShader(SHADER_TYPE_VSPS type) {
 	else if (type == SHADER_TYPE_VSPS::Unlit) {
 		pspass = "UnlitPS.cso";
 	}
+	else if (type == SHADER_TYPE_VSPS::WithNormal) {
+		pspass = "pixelShader_WithNormal.cso";
+	}
 
 	// ピクセルシェーダ生成
 	{
@@ -127,6 +142,7 @@ void Shader::CreateComputeShader(SHADER_TYPE type) {
 		cspass = "ParticleCS.cso";
 	}
 
+
 	FILE* file;
 	long int fsize;
 
@@ -140,4 +156,23 @@ void Shader::CreateComputeShader(SHADER_TYPE type) {
 
 	delete[] buffer;
 
+}
+
+void Shader::CreateGeometryShader(SHADER_TYPE_GS type) {
+
+	const char* gspass = "";
+
+	
+	FILE* file;
+	long int fsize;
+
+	file = fopen(gspass, "rb");
+	fsize = _filelength(_fileno(file));
+	unsigned char* buffer = new unsigned char[fsize];
+	fread(buffer, fsize, 1, file);
+	fclose(file);
+
+	Renderer::GetDevice()->CreateGeometryShader(buffer, fsize, nullptr, &mGeometryShaderArray[int(type)]);
+	
+	delete[] buffer;
 }

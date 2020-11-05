@@ -8,7 +8,6 @@
 #include "MeshField.h"
 #include "Grass.h"
 
-
 void Game::Init() {
 
 	mAsset = new Asset(SCENE_ASSET::GAME);
@@ -42,7 +41,6 @@ void Game::Init() {
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);
 
-
 	AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
 
 }
@@ -50,24 +48,6 @@ void Game::Init() {
 void Game::Update() {
 
 	Scene::Update();
-
-	/*if (mpFade != nullptr) {
-		if (!mpFade->GetIsFade()) {
-			if (mClear) {
-				AudioListener::Stop(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02));
-				Application::SwitchScene<Result>();
-				return;
-			}
-			mpFade->Destroy();
-		}
-	}
-
-	if (mSwitchFlag && !mClear) {
-		Fade* fade = AddGameObject<Fade>(FadeLayer);
-		fade->Start(true, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
-		mpFade = fade; 
-		mClear = true;
-	}*/
 
 	if (Input::GetKeyTrigger(DIK_T)) {
 		AudioListener::Stop(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02));

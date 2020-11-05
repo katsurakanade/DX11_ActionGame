@@ -6,9 +6,6 @@
 
 #include "Resource.h"
 
-// 最大数
-//#define MAX_PARTICLE 50000
-
 // パーティクル
 struct Particle {
 	VERTEX_3D vertex[4];

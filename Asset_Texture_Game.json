@@ -1,4 +1,4 @@
-20
+21
 { "Path": "asset/texture/white.png" }
 { "Path": "asset/texture/sky.jpg" }
 { "Path": "asset/texture/star.jpg" }
@@ -12,6 +12,7 @@
 { "Path": "asset/texture/Sword_Icon.png" }
 { "Path": "asset/texture/Plant.png" }
 { "Path": "asset/texture/Dirt.jpg" }
+{ "Path": "asset/texture/Dirt_Normal.jpg" }
 { "Path": "asset/texture/hal.png" }
 { "Path": "asset/texture/fireball.png" }
 { "Path": "asset/texture/hane.png" }

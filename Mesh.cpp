@@ -205,6 +205,9 @@ void Mesh::Close() {
 	Textures.clear();
 	Textures.shrink_to_fit();
 
+	TexturesNormal.clear();
+	TexturesNormal.shrink_to_fit();
+
 	mDeformVertex.clear();
 	mDeformVertex.shrink_to_fit();
 

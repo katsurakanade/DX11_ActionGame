@@ -5,8 +5,9 @@ SamplerState	g_SamplerState : register(s0);
 
 void main(in PS_IN In , out float4 outDiffuse : SV_Target)
 {    
-    float4 normal = normalize(In.Normal);
-
+    float4 normal; 
+    normal = normalize(In.Normal);
+  
     float light = -dot(normal.xyz, Light.Direction.xyz);
     light = saturate(light);
     

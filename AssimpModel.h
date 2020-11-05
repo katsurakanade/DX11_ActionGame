@@ -22,6 +22,8 @@ private:
 	std::vector<Mesh*> mMeshes;
 	// テクスチャ (ロード)
 	std::vector<Texture> mTexturesLoaded;
+	// 法線テクスチャ (ロード)
+	std::vector<Texture> mTexturesLoaded_Normal;
 	// テクスチャ (選択)
 	std::vector<Texture> mTexturesSelect;
 	// アニメーション
@@ -30,8 +32,8 @@ private:
 	// ロード処理
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
-	std::vector<Texture> loadcmatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene);
-	std::string determineTextureType(const aiScene* scene, aiMaterial* cmatrix);
+	std::vector<Texture> LoadMatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene);
+	std::string DetermineTextureType(const aiScene* scene, aiMaterial* cmatrix);
 
 	// ForDebug
 	void DrawConfig();
@@ -40,8 +42,8 @@ private:
 	void CreateBone(aiNode* node, std::unordered_map <std::string, BONE> tBone);
 
 	// Getter
-	int getTextureIndex(aiString* str);
-	ID3D11ShaderResourceView* getTextureFromModel(const aiScene* scene, int textureindex);
+	int GetTextureIndex(aiString* str);
+	ID3D11ShaderResourceView* GetTextureFromModel(const aiScene* scene, int textureindex);
 
 	const aiScene* mScene;
 
