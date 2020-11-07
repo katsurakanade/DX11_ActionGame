@@ -21,6 +21,10 @@ void Shader::Init() {
 	CreatePixelShader(SHADER_TYPE_VSPS::Unlit);
 	CreateVertexShader(SHADER_TYPE_VSPS::WithNormal);
 	CreatePixelShader(SHADER_TYPE_VSPS::WithNormal);
+	CreateVertexShader(SHADER_TYPE_VSPS::Particle);
+	CreatePixelShader(SHADER_TYPE_VSPS::Particle);
+	CreateVertexShader(SHADER_TYPE_VSPS::Gizmos);
+	CreatePixelShader(SHADER_TYPE_VSPS::Gizmos);
 
 	CreateComputeShader(SHADER_TYPE::SkinMesh);
 	CreateComputeShader(SHADER_TYPE::Particle);
@@ -70,6 +74,12 @@ void Shader::CreateVertexShader(SHADER_TYPE_VSPS type) {
 	else if (type == SHADER_TYPE_VSPS::WithNormal) {
 		vspass = "vertexShader.cso";
 	}
+	else if (type == SHADER_TYPE_VSPS::Particle) {
+		vspass = "ParticleVS.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::Gizmos) {
+		vspass = "vertexShader.cso";
+	}
 
 	// 頂点シェーダ生成
 	{
@@ -84,17 +94,28 @@ void Shader::CreateVertexShader(SHADER_TYPE_VSPS type) {
 
 		Renderer::GetDevice()->CreateVertexShader(buffer, fsize, NULL, &mVertexShaderArray[int(type)]);
 
+		UINT numElements;
 		// 入力レイアウト生成
-		D3D11_INPUT_ELEMENT_DESC layout[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 6, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 10, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
-		UINT numElements = ARRAYSIZE(layout);
-
-		Renderer::GetDevice()->CreateInputLayout(layout, numElements, buffer, fsize, &Renderer::mVertexLayout);
+		if (type == SHADER_TYPE_VSPS::Particle) {
+			D3D11_INPUT_ELEMENT_DESC layout[] =
+			{
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+			};
+			numElements = ARRAYSIZE(layout);
+			Renderer::GetDevice()->CreateInputLayout(layout, numElements, buffer, fsize, Renderer::GetInputLayoutParticle());
+		}
+		else {
+			D3D11_INPUT_ELEMENT_DESC layout[] =
+			{
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 6, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 10, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+			};
+			numElements = ARRAYSIZE(layout);
+			Renderer::GetDevice()->CreateInputLayout(layout, numElements, buffer, fsize, Renderer::GetInputLayout());
+		}
 
 		delete[] buffer;
 	}
@@ -112,6 +133,12 @@ void Shader::CreatePixelShader(SHADER_TYPE_VSPS type) {
 	}
 	else if (type == SHADER_TYPE_VSPS::WithNormal) {
 		pspass = "pixelShader_WithNormal.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::Particle) {
+		pspass = "ParticlePS.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::Gizmos) {
+		pspass = "GizmosPS.cso";
 	}
 
 	// ピクセルシェーダ生成

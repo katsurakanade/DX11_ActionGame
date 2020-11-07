@@ -49,23 +49,15 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 		D3DXVECTOR3 pos = setting->Position + D3DXVECTOR3(rndposX(Application::RandomGen), rndposY(Application::RandomGen), rndposZ(Application::RandomGen));
 
 		mparticle[i].vertex[0].Position = pos  + D3DXVECTOR3(-setting->Size, setting->Size, 0.0f);
-		mparticle[i].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		mparticle[i].vertex[0].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 		mparticle[i].vertex[0].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
 
 		mparticle[i].vertex[1].Position = pos + D3DXVECTOR3(setting->Size, setting->Size, 0.0f);
-		mparticle[i].vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		mparticle[i].vertex[1].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 		mparticle[i].vertex[1].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
 
 		mparticle[i].vertex[2].Position = pos + D3DXVECTOR3(-setting->Size, -setting->Size, 0.0f);
-		mparticle[i].vertex[2].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		mparticle[i].vertex[2].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 		mparticle[i].vertex[2].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
 
 		mparticle[i].vertex[3].Position = pos + D3DXVECTOR3(setting->Size, -setting->Size, 0.0f);
-		mparticle[i].vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		mparticle[i].vertex[3].Diffuse = D3DXVECTOR4(1, 1, 1, 1);
 		mparticle[i].vertex[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
 
 		mParticlePos[i] = pos;
@@ -139,18 +131,20 @@ void ParticleSystem::CreateComputeResource(){
 	// UAV
 	hr = Renderer::CreateBufferUAV(mpResultBuffer, &mpResultUAV);
 	assert(SUCCEEDED(hr));
+
+	
 }
 
 void ParticleSystem::Update() {
 
-	// Fill Data
+	// Fill Data (Performance Issues)
 	{
 		D3D11_MAPPED_SUBRESOURCE subRes;
 		Renderer::GetDeviceContext()->Map(mpParticleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
 		ParticleCompute* pBufType = (ParticleCompute*)subRes.pData;
 		for (int v = 0; v < mParticleAmount; v++) {
 			pBufType[v].vel = mVel[v];
-			pBufType[v].col = mparticle[v].vertex[0].Diffuse;
+			pBufType[v].col = D3DXVECTOR4(1, 1, 1, 1);
 			pBufType[v].life = mlife[v];
 			pBufType[v].pos[0] = mparticle[v].vertex[0].Position;
 			pBufType[v].pos[1] = mparticle[v].vertex[1].Position;
@@ -160,6 +154,7 @@ void ParticleSystem::Update() {
 		Renderer::GetDeviceContext()->Unmap(mpParticleBuffer, 0);
 	}
 
+	// Fill Time
 	{
 		D3D11_MAPPED_SUBRESOURCE subRes;
 		Renderer::GetDeviceContext()->Map(mpTimeBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
@@ -178,18 +173,11 @@ void ParticleSystem::Update() {
 	Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
 	Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
 
-	ID3D11Buffer* pBufDbg;
-	D3D11_BUFFER_DESC desc;
-	memset(&desc, 0, sizeof(desc));
-	mpResultBuffer->GetDesc(&desc);
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-	desc.Usage = D3D11_USAGE_STAGING;
-	desc.BindFlags = 0;
-	desc.MiscFlags = 0;
-	Renderer::GetDevice()->CreateBuffer(&desc, nullptr, &pBufDbg);
-	Renderer::GetDeviceContext()->CopyResource(pBufDbg, mpResultBuffer);
+	// CopyResource
+	ID3D11Buffer* pBufDbg = nullptr;
+	pBufDbg = Renderer::CreateAndCopyToBuffer(mpResultBuffer);
 
-	// Return Resource
+	// Return Resource (Performance Issues)
 	{
 		D3D11_MAPPED_SUBRESOURCE subRes;
 		Renderer::GetDeviceContext()->Map(pBufDbg, 0, D3D11_MAP_READ, 0, &subRes);
@@ -210,25 +198,14 @@ void ParticleSystem::Update() {
 
 			for (int v = 0; v < mParticleAmount; v++) {
 
-				particle[v].vertex[0].Position = mparticle[v].vertex[0].Position;
-				particle[v].vertex[1].Position = mparticle[v].vertex[1].Position;
-				particle[v].vertex[2].Position = mparticle[v].vertex[2].Position;
-				particle[v].vertex[3].Position = mparticle[v].vertex[3].Position;
+				particle[v].vertex[0].Position = pBufType[v].pos[0];
+				particle[v].vertex[1].Position = pBufType[v].pos[1];
+				particle[v].vertex[2].Position = pBufType[v].pos[2];
+				particle[v].vertex[3].Position = pBufType[v].pos[3];
 
-				particle[v].vertex[0].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-				particle[v].vertex[0].Diffuse = pBufType[v].col;
 				particle[v].vertex[0].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
-
-				particle[v].vertex[1].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-				particle[v].vertex[1].Diffuse = pBufType[v].col;
 				particle[v].vertex[1].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
-
-				particle[v].vertex[2].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-				particle[v].vertex[2].Diffuse = pBufType[v].col;
 				particle[v].vertex[2].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
-
-				particle[v].vertex[3].Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-				particle[v].vertex[3].Diffuse = pBufType[v].col;
 				particle[v].vertex[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
 				
 			}
@@ -241,8 +218,8 @@ void ParticleSystem::Update() {
 
 	}
 
+	// Kill
 	mKillFrame += 1.0f;
-
 	if (mKillFrame > mParticleLifeMax) {
 		this->Destroy();
 	}
@@ -267,7 +244,9 @@ void ParticleSystem::Render() {
 
 	Renderer::SetWorldMatrix(&world);
 
-	UINT stride = sizeof(VERTEX_3D);
+	Renderer::SetInputLayout(1);
+
+	UINT stride = sizeof(VERTEX_3D_PARTICLE);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 
@@ -275,12 +254,14 @@ void ParticleSystem::Render() {
 
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	Shader::Use(SHADER_TYPE_VSPS::Unlit);	
+	Shader::Use(SHADER_TYPE_VSPS::Particle);	
 
 	for (int i = 0; i < mParticleAmount; i++) {
 		if (mlife[i] > 0.0f) {
-			Renderer::GetDeviceContext()->Draw(4, 0 + (i * 4));	Renderer::GetDeviceContext()->Draw(4, 0 + (i * 4));
+			Renderer::GetDeviceContext()->Draw(4, 0 + (i * 4));
 		}
 	}
+
+	Renderer::SetInputLayout(0);
 
 }

@@ -52,7 +52,7 @@
 
 #define SCREEN_WIDTH		(1920)
 #define SCREEN_HEIGHT	(1080)
-#define FIELD_X 101
+#define FIELD_X 41
 
 // Getter
 HWND GetWindow();

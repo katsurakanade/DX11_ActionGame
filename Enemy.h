@@ -9,6 +9,8 @@
 
 class Animation;
 class ModelManager;
+class BoxCollider;
+class Physical;
 
 class Enemy : public Resource
 {
@@ -20,9 +22,11 @@ private:
 	float mHpInit;
 	// ゲージ
 	Gauge* mGauge;
-	// アニメーションポインタ
+	// コンポーネント
 	Animation* mpAnination;
 	ModelManager* mpModel;
+	Physical* mpPhysical;
+	BoxCollider* mpCollider;
 	// ロック画像
 	Sprite* mpLockImage;
 	// 動き始める

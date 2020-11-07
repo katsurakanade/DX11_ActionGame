@@ -119,7 +119,7 @@ void Asset::LoadModel() {
 		animation.push_back("Mage");
 
 		for (unsigned int i = 0; i < path.size(); i++) {
-			if (i < 5) {
+			if (i < 6) {
 				AddAssimpModelToList(path[i].c_str());
 			}
 			else {

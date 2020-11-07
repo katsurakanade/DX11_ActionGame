@@ -14,6 +14,7 @@ void Title::Init() {
 	AddGameObject<Light>(CameraLayer);
 
 	Skybox* skybox = Application::GetScene()->AddGameObject<Skybox>(ObjectLayer);
+	skybox->Rotation = D3DXVECTOR3(0, 1.5f, 0);
 	skybox->SetModelTexture(1);
 
 	Sprite* title_icon = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
@@ -27,9 +28,6 @@ void Title::Init() {
 	spacebutton->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::SPACEBUTTON));
 	spacebutton->Position = D3DXVECTOR3(671, 780, 1);
 	spacebutton->GetImage()->Set2DSize(D3DXVECTOR3(500, 175, 1));
-
-	Fade* fade = AddGameObject<Fade>(FadeLayer);
-	mpFade = fade;
 
 	AudioListener::Play(mAsset->GetSound((int)SOUND_ENUM_TITLE::BGM_01), -1,0.1f);
 }
@@ -50,19 +48,19 @@ void Title::Update() {
 	}
 
 	if (Input::GetKeyTrigger(DIK_SPACE) && !mClear) {
-		
-		AudioListener::Play(mAsset->GetSound((int)SOUND_ENUM_TITLE::SE_01), 0,0.5f);
+
+		AudioListener::Play(mAsset->GetSound((int)SOUND_ENUM_TITLE::SE_01), 0, 0.5f);
 		Fade* fade = AddGameObject<Fade>(FadeLayer);
 		fade->Start(false, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
 		mpFade = fade;
 		mClear = true;
 	}
-
+	
 	if (!mStart) {
 
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 		ParitcleSetting* setting = new ParitcleSetting;
-		setting->Amount = 150000;
+		setting->Amount = 100000;
 		setting->PostionMinMaxX = D3DXVECTOR2(-100, 100);
 		setting->PostionMinMaxY = D3DXVECTOR2(-100, 100);
 		setting->PostionMinMaxZ = D3DXVECTOR2(-100, 100);

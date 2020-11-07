@@ -13,6 +13,7 @@ ID3D11RenderTargetView* Renderer::mRenderTargetView = NULL;
 ID3D11DepthStencilView* Renderer::mDepthStencilView = NULL;
 
 ID3D11InputLayout* Renderer::mVertexLayout = NULL;
+ID3D11InputLayout* Renderer::mVertexLayoutParticle = NULL;
 ID3D11Buffer* Renderer::mWorldBuffer = NULL;
 ID3D11Buffer* Renderer::mViewBuffer = NULL;
 ID3D11Buffer* Renderer::mProjectionBuffer = NULL;
@@ -91,10 +92,7 @@ void Renderer::Init()
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvd.Flags = 0;
 	mD3DDevice->CreateDepthStencilView(depthTexture, &dsvd, &mDepthStencilView);
-
-
 	mImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
-
 
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -208,7 +206,8 @@ void Renderer::Init()
 	mImmediateContext->PSSetConstantBuffers(6, 1, &mParameterBuffer);
 
 	// 入力レイアウト設定
-	mImmediateContext->IASetInputLayout(mVertexLayout);
+	SetInputLayout(0);
+
 
 	// シェーダ設定
 	Shader::Use(SHADER_TYPE_VSPS::Default);
@@ -538,4 +537,16 @@ void Renderer::SetBlendState(BLEND_STATE state) {
 		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		mImmediateContext->OMSetBlendState(mBlendState, blendFactor, 0xffffffff);
 	}
+}
+
+void Renderer::SetInputLayout(int index) {
+
+	if (index == 0) {
+		mImmediateContext->IASetInputLayout(mVertexLayout);
+	}
+
+	else {
+		mImmediateContext->IASetInputLayout(mVertexLayoutParticle);
+	}
+
 }

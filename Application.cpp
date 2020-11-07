@@ -37,7 +37,7 @@ bool Application::Init() {
 	AudioListener::SetVolume(1.0f);
 	StaticManger::Init();
 
-	Renderer::mGizmosMode = false;
+	Renderer::mGizmosMode = true;
 
 	mScene = new Title();
 	mScene->Init();

@@ -25,19 +25,19 @@ void Enemy::Init() {
 	Position = D3DXVECTOR3(0, 12, -20);
 	Rotation = D3DXVECTOR3(0.0f, 3.14f, 0.0f);
 	Scale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
-
 	D3DXQuaternionIdentity(&Quaternion);
 
-	AddComponent<Physical>();
-	AddComponent<BoxCollider>();
-	GetComponent<BoxCollider>()->mPositionOffest = D3DXVECTOR3(0.0f, 3.5f, 3.0f);
-	GetComponent<BoxCollider>()->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
-
+	mpPhysical = AddComponent<Physical>();
+	mpCollider = AddComponent<BoxCollider>();
 	mpAnination = AddComponent<Animation>();
+	mpModel = AddComponent<ModelManager>();
+
+	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
+	mpCollider->mScaleOffestCoff = D3DXVECTOR3(52.0f, 157.0f, 60.0f);
+	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 3.5f, 3.0f);
+	mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
 	mpAnination->SetState("Idle");
 	mpAnination->SetCoefficient(10.0f);
-
-	mpModel = AddComponent<ModelManager>();
 	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ENEMY));
 	mpModel->SetAnimation(mpAnination);
 
@@ -79,15 +79,12 @@ void Enemy::Uninit() {
 		mpLockImage->Destroy();
 	}
 
-	
-
 	Resource::Uninit();
 }
 
 void Enemy::Update() {
 
 	float speed = GetComponent<Physical>()->mSpeed;
-
 
 	if (mpAnination->GetState() == "Idle" && speed >= 1.5f) {
 		mpAnination->SetNewState("Running");
@@ -161,7 +158,7 @@ void Enemy::Render() {
 
 	mpModel->Render(world);
 	
-	GetComponent<BoxCollider>()->Render();
+	mpCollider->Render();
 }
 
 void Enemy::Attack() {

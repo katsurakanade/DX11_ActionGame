@@ -29,13 +29,6 @@ void Item::Uninit() {
 
 void Item::Update() {
 
-
-	ImGui::Begin(Name.c_str());
-	ImGui::SliderFloat3(u8"座標", Position, -1000.0f, 1000.0f, "%.0f", 5.0f);
-	ImGui::SliderFloat3(u8"回転", Rotation, -3.14f, 3.14f);
-	ImGui::SliderFloat3(u8"スケール", Scale, 0.1f, 10.0f);
-	ImGui::End();
-
 	Resource::Update();
 }
 

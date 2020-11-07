@@ -29,6 +29,19 @@ struct PS_IN
     float2 TexCoord : TEXCOORD0;
 };
 
+struct VS_IN_PARTICLE
+{
+    float4 Position : POSITION0;
+    float2 TexCoord : TEXCOORD0;
+};
+
+struct PS_IN_PARTICLE
+{
+    float4 Position : SV_POSITION;
+    float4 WorldPosition : POSITION0;
+    float2 TexCoord : TEXCOORD0;
+};
+
 struct MATERIAL
 {
     float4 Ambient;

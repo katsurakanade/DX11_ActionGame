@@ -46,14 +46,26 @@
     <Filter Include="ヘッダー ファイル\Model">
       <UniqueIdentifier>{5979f832-3804-4588-9e5b-4fc72c9980b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Particle">
+      <UniqueIdentifier>{8d66976a-9569-4910-bd82-ebd85cd0c9dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Render">
+      <UniqueIdentifier>{d863d7bf-eae4-43e2-831e-d19933de9a6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Render">
+      <UniqueIdentifier>{40dc677b-1716-4b33-9000-be6072576bf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JSON">
+      <UniqueIdentifier>{d520c11a-f360-4ded-8ae6-5b572c703bd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\File">
+      <UniqueIdentifier>{ad300e1c-da8f-490f-9d97-65c3a197d776}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\File">
+      <UniqueIdentifier>{121c542b-95d9-4803-aa42-2b3049f379cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Asset.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>ソース ファイル\Imgui</Filter>
     </ClCompile>
@@ -114,9 +126,6 @@
     <ClCompile Include="Digit.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>ソース ファイル\Static</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\Static</Filter>
     </ClCompile>
@@ -135,9 +144,6 @@
     <ClCompile Include="AudioListener.cpp">
       <Filter>ソース ファイル\Static</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>ソース ファイル\Static</Filter>
-    </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
@@ -149,12 +155,6 @@
     </ClCompile>
     <ClCompile Include="MeshField.cpp">
       <Filter>ソース ファイル\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="FileManger.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Grass.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Props.cpp">
       <Filter>ソース ファイル\Resource</Filter>
@@ -168,17 +168,35 @@
     <ClCompile Include="ImageManager.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
-    <ClCompile Include="AssimpModel.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Shader.cpp">
+      <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>ソース ファイル\Render</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="AssimpModel.cpp">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelTools.cpp">
+      <Filter>ソース ファイル\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Grass.cpp">
+      <Filter>ソース ファイル\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset.cpp">
+      <Filter>ソース ファイル\File</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManger.cpp">
+      <Filter>ソース ファイル\File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Asset.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
       <Filter>ソース ファイル\Imgui</Filter>
     </ClInclude>
@@ -260,17 +278,11 @@
     <ClInclude Include="Time.h">
       <Filter>ヘッダー ファイル\Static</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>ヘッダー ファイル\Static</Filter>
-    </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>ヘッダー ファイル\Static</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Result.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
@@ -279,9 +291,6 @@
       <Filter>ヘッダー ファイル\Static</Filter>
     </ClInclude>
     <ClInclude Include="AudioListener.h">
-      <Filter>ヘッダー ファイル\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
       <Filter>ヘッダー ファイル\Static</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
@@ -296,12 +305,6 @@
     <ClInclude Include="MeshField.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="FileManger.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Grass.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Props.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
@@ -314,11 +317,32 @@
     <ClInclude Include="ImageManager.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="AssimpModel.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Shader.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelTools.h">
+      <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpModel.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Grass.h">
+      <Filter>ヘッダー ファイル\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>ヘッダー ファイル\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset.h">
+      <Filter>ヘッダー ファイル\File</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManger.h">
+      <Filter>ヘッダー ファイル\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -334,9 +358,6 @@
     <FxCompile Include="vertexShader.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-    <FxCompile Include="ParticleCS.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
     <FxCompile Include="UnlitPS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
@@ -346,5 +367,31 @@
     <FxCompile Include="pixelShader_WithNormal.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="ParticleVS.hlsl">
+      <Filter>リソース ファイル\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleCS.hlsl">
+      <Filter>リソース ファイル\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePS.hlsl">
+      <Filter>リソース ファイル\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="GizmosPS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Asset_Texture_Title.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="Asset_Texture_Game.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="Asset_Model_Title.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="Asset_Model_Game.json">
+      <Filter>JSON</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -37,14 +37,7 @@ void BoxCollider::Init() {
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
 
-	D3D11_BUFFER_DESC cbd;
-	cbd.Usage = D3D11_USAGE_DYNAMIC;
-	cbd.ByteWidth = sizeof(float) * 4;
-	cbd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cbd.MiscFlags = 0;
 
-	Renderer::GetDevice()->CreateBuffer(&cbd, &sd, &mColorBuffer);
 
 	D3DXQuaternionIdentity(&Quaternion);
 }
@@ -52,12 +45,16 @@ void BoxCollider::Init() {
 void BoxCollider::Uninit() {
 
 	mVertexBuffer->Release();
-	mColorBuffer->Release();
 }
 
 void BoxCollider::Update(){
 
-	
+	mScaleOffest.x = GetResource()->Scale.x * mScaleOffestCoff.x;
+	mScaleOffest.y = GetResource()->Scale.y * mScaleOffestCoff.y;
+	mScaleOffest.z = GetResource()->Scale.z * mScaleOffestCoff.z;
+
+	//D3DXVec3Cross(&mScaleOffest, &GetResource()->Scale, &mScaleOffestCoff);
+
 	Position = GetResource()->Position + (mPositionOffest);
 	Rotation = GetResource()->Rotation;
 	Scale = GetResource()->Scale + (mScaleOffest);
@@ -78,23 +75,13 @@ void BoxCollider::Render() {
 		world = scale * rot * trans;
 		Renderer::SetWorldMatrix(&world);
 
-		D3D11_MAPPED_SUBRESOURCE msr;
-		Renderer::GetDeviceContext()->Map(mColorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
-		float* col = (float*)msr.pData;
-		col[0] = 1;
-		col[1] = 1;
-		col[2] = 1;
-		col[3] = 1;
-		Renderer::GetDeviceContext()->Unmap(mColorBuffer, 0);
-		Renderer::GetDeviceContext()->PSSetConstantBuffers(0, 1, &mColorBuffer);
-
 		UINT stride = sizeof(VERTEX_3D);
 		UINT offset = 0;
 		Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 
 		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
-		Shader::Use(SHADER_TYPE_VSPS::Unlit);
+		Shader::Use(SHADER_TYPE_VSPS::Gizmos);
 
 		Renderer::GetDeviceContext()->Draw(8, 0);
 
@@ -142,6 +129,13 @@ bool BoxCollider::Collision_Box_Enter(BoxCollider* target) {
 
 void BoxCollider::DataPanel() {
 
+	ImGui::Begin(GetResource()->Name.c_str());
+	if (ImGui::TreeNode(u8"BoxCollider")) {
+		ImGui::SliderFloat3("PositionOffset", mPositionOffest, -50.0f, 50.0f);
+		ImGui::SliderFloat3("ScaleOffset", mScaleOffestCoff, -500.0f, 500.0f);
+		ImGui::TreePop();
+	}
+	ImGui::End();
 	
 }
 

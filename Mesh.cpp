@@ -299,10 +299,9 @@ void Mesh::Process(VERTEX_3D* target , int index) {
 
 }
 
-// Å“K‰»•K—v
 void Mesh::FillComputeMatrix() {
 
-	// Fill COMPUTEMATRIX
+	// Fill COMPUTEMATRIX (Performance Issues)
 	D3D11_MAPPED_SUBRESOURCE subRes_1;
 	Renderer::GetDeviceContext()->Map(mpComputeBuf, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes_1);
 	COMPUTEMATRIX* pBufType_cm = (COMPUTEMATRIX*)subRes_1.pData;

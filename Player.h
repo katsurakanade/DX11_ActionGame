@@ -35,6 +35,8 @@ private:
 	// ロックしている敵インデックス
 	unsigned int mLockIndex;
 
+	bool mLockMovement[8];
+
 public:
 
 	// HP

@@ -7,6 +7,7 @@
 #include "Item.h"
 #include "MeshField.h"
 #include "Grass.h"
+#include "LevelTools.h"
 
 void Game::Init() {
 
@@ -21,6 +22,7 @@ void Game::Init() {
 	skybox->SetModelTexture(2);
 
 	Player* player = AddGameObject<Player>(ObjectLayer);
+	player->Position = D3DXVECTOR3(-50, 0, 50);
 
 	Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
 	enemy->AddGauge();
@@ -34,10 +36,8 @@ void Game::Init() {
 	enemy3->AddGauge();
 	enemy3->Position = D3DXVECTOR3(10, 0, -200);
 
-	Item* item = AddGameObject<Item>(ObjectLayer);
-	item->Position = D3DXVECTOR3(10, 43, 2);
-
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
+	LevelTools* lt = AddGameObject<LevelTools>(ObjectLayer);
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);
 
@@ -49,8 +49,23 @@ void Game::Update() {
 
 	Scene::Update();
 
-	if (Input::GetKeyTrigger(DIK_T)) {
-		AudioListener::Stop(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02));
-		Application::SwitchScene<Title>();
+	if (mpFade != nullptr) {
+		if (!mpFade->GetIsFade()) {
+			if (mClear) {
+				AudioListener::Stop(mAsset->GetSound((int)SOUND_ENUM_GAME::BGM_02));
+				Application::SwitchScene<Title>();
+				return;
+			}
+			mpFade->Destroy();
+		}
 	}
+
+	if (Input::GetKeyTrigger(DIK_T) && !mClear) {
+
+		Fade* fade = AddGameObject<Fade>(FadeLayer);
+		fade->Start(false, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
+		mpFade = fade;
+		mClear = true;
+	}
+
 }

@@ -12,6 +12,7 @@
 #include "ModelManager.h"
 #include "item.h"
 #include "Missile.h"
+#include "Props.h"
 #include <random>
 
 void Player::Init() {
@@ -33,8 +34,9 @@ void Player::Init() {
 	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
 	mpModel->SetAnimation(mpAnination);
 
-	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.25f, 0.0f);
-	mpCollider->mScaleOffest = D3DXVECTOR3(2.5f, 9.0f, 2.5f);
+	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
+	mpCollider->mScaleOffestCoff = D3DXVECTOR3(52.0f, 157.0f, 60.0f);
+	mpCollider->SetUsePanel(true);
 
 	mpAnination->SetState("Idle");
 	mpAnination->SetCoefficient(10.0f);
@@ -192,17 +194,17 @@ void Player::Update() {
 	// パーティクル生成（テスト用）
 	if (Input::GetKeyTrigger(DIK_C)) {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = this->Position;
+		pc->Position = this->Position + D3DXVECTOR3(0,5,0);
 		ParitcleSetting* setting = new ParitcleSetting;
-		setting->Amount = 100000;
-		setting->PostionMinMaxX = D3DXVECTOR2(-100, 100);
-		setting->PostionMinMaxY = D3DXVECTOR2(-100, 100);
-		setting->PostionMinMaxZ = D3DXVECTOR2(-100, 100);
-		setting->SpeedMinMaxX = D3DXVECTOR2(-1.0f, 1.0f);
-		setting->SpeedMinMaxY = D3DXVECTOR2(-1.0f, 1.0f);
-		setting->SpeedMinMaxZ = D3DXVECTOR2(-1.0f, 1.0f);
-		setting->LifeMinMax = D3DXVECTOR2(60.0f, 300.0f);
-		setting->Size = 0.2f;
+		setting->Amount = 1000;
+		setting->PostionMinMaxX = D3DXVECTOR2(-5, 5);
+		setting->PostionMinMaxY = D3DXVECTOR2(-5, 5);
+		setting->PostionMinMaxZ = D3DXVECTOR2(-5, 5);
+		setting->SpeedMinMaxX = D3DXVECTOR2(0.0f, 0.0f);
+		setting->SpeedMinMaxY = D3DXVECTOR2(0.0f, 0.0f);
+		setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 0.0f);
+		setting->LifeMinMax = D3DXVECTOR2(30000.0f, 30000.0f);
+		setting->Size = 0.1f;
 		pc->Create(setting);
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 		delete setting;
@@ -210,6 +212,18 @@ void Player::Update() {
 
 	// ForDebug
 	SettingPanel();
+
+	Props* wall = Application::GetScene()->GetGameObject<Props>(ObjectLayer);
+	if (mpCollider->Collision_Box_Enter(wall->GetComponent<BoxCollider>())) {
+		if (wall->Position.z < Position.z) {
+			mLockMovement[0] = true;
+			mpPhysical->mSpeed = 0.0f;
+		}
+		else if (wall->Position.z > Position.z) {
+			mLockMovement[1] = true;
+			mpPhysical->mSpeed = 0.0f;
+		}
+	}
 	
 	Resource::Update();
 
@@ -219,11 +233,8 @@ void Player::Render() {
 
 	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
-	
 	Shader::Use(SHADER_TYPE_VSPS::Default);
-
 	mpModel->Render(world);
-	
 	GetComponent<BoxCollider>()->Render();
 
 }
@@ -241,6 +252,10 @@ void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR
 
 	// ForWard
 	if (Input::GetKeyPress(keykodeF)) {
+
+		if (mLockMovement[0] == true) {
+			return;
+		}
 
 		if (Input::GetKeyPress(keykodeL)) {
 
@@ -286,15 +301,18 @@ void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR
 			mpPhysical->mVelocity = D3DXVECTOR3(0, 0, -1.0f);
 		}
 		
+		mLockMovement[1] = false;
 	}
 
 	// Back
 	else if (Input::GetKeyPress(keykodeB)) {
 
+		if (mLockMovement[1] == true) {
+			return;
+		}
+
 		if (Input::GetKeyPress(keykodeL)) {
-
 			Rotation.y = D3DX_PI * -0.75f;
-
 			if (Position.z < 95.0f) {
 				if (mpPhysical->mAcceleration < 1.5f) {
 					mpPhysical->mAcceleration += 0.1f;
@@ -307,7 +325,6 @@ void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR
 					mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
 				}
 			}
-			
 		}
 
 		else if (Input::GetKeyPress(keykodeR)) {
@@ -340,6 +357,7 @@ void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR
 			}
 		}
 
+		mLockMovement[0] = false;
 	}
 
 	// Left
@@ -375,7 +393,6 @@ void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR
 			mpPhysical->mVelocity = D3DXVECTOR3(-1.0f, 0, 0);
 		}
 		
-
 		if (mpCamera->GetLookTarget()) {
 			mpCamera->AddControllerPosition(D3DXVECTOR3(-0.01f, 0, 0));
 		}

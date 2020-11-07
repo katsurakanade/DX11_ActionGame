@@ -5,7 +5,7 @@
 #include "Debug.h"
 
 const char* CLASS_NAME = "AppClass";
-const char* WINDOW_NAME = "DirectX11 アクションゲーム";
+const char* WINDOW_NAME = "Blessing";
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

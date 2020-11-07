@@ -119,7 +119,12 @@ void FileManger::ReadResource(const char* pass) {
 					if (p->GetComponent<ModelManager>()) {
 						p->GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
 					}
-					
+				}
+
+				else if (data["Tag"] == "Wall") {
+					if (p->GetComponent<ModelManager>()) {
+						p->GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::WALL));
+					}
 				}
 			}
 		

@@ -6,9 +6,16 @@
 
 #include "Resource.h"
 
+// パーティクル用頂点レイアウト（法線、ライト無し）
+struct VERTEX_3D_PARTICLE
+{
+	D3DXVECTOR3 Position;
+	D3DXVECTOR2 TexCoord;
+};
+
 // パーティクル
 struct Particle {
-	VERTEX_3D vertex[4];
+	VERTEX_3D_PARTICLE vertex[4];
 };
 
 // パーティクル（Compute Shader計算用）

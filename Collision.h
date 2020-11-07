@@ -13,7 +13,6 @@ private:
 	// バッファ
 	ID3D11Buffer* mVertexBuffer = nullptr;
 	ID3D11Buffer* mIndexBuffer = nullptr;
-	ID3D11Buffer* mColorBuffer = nullptr;
 
 	// サイス
 	D3DXVECTOR3 mSize = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
@@ -30,6 +29,7 @@ public:
 	// 偏移量
 	D3DXVECTOR3 mPositionOffest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 mScaleOffest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 mScaleOffestCoff = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	void Init();
 	void Uninit();

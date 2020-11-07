@@ -13,7 +13,6 @@ void Fade::Init() {
 	if (Application::GetAsset()->GetScene() == SCENE_ASSET::TITLE) {
 		sp->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::WHITE));
 	}
-
 	else if (Application::GetAsset()->GetScene() == SCENE_ASSET::GAME) {
 		sp->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::WHITE));
 	}

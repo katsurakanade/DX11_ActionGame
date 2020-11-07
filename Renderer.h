@@ -58,7 +58,7 @@ class Renderer
 {
 private:
 
-	static D3D_FEATURE_LEVEL       mFeatureLevel;
+	static D3D_FEATURE_LEVEL mFeatureLevel;
 
 	static ID3D11Device* mD3DDevice;
 	static ID3D11DeviceContext* mImmediateContext;
@@ -79,7 +79,8 @@ private:
 	static ID3D11DepthStencilState* mDepthStateDisable;
 
 	static ID3D11BlendState* mBlendState;
-
+	static ID3D11InputLayout* mVertexLayout;
+	static ID3D11InputLayout* mVertexLayoutParticle;
 
 public:
 	static void Init();
@@ -112,12 +113,13 @@ public:
 	static void SetLight(LIGHT Light);
 	static void SetParameter(D3DXVECTOR4 Parameter);
 	static void SetBlendState(BLEND_STATE state);
+	static void SetInputLayout(int index);
 
 	// Getter
 	static ID3D11Device* GetDevice(void) { return mD3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(void) { return mImmediateContext; }
 	static ID3D11RenderTargetView* GetRenderTargetView() { return mRenderTargetView; };
-	static ID3D11InputLayout* mVertexLayout;
-
+	static ID3D11InputLayout** GetInputLayout() { return &mVertexLayout; };
+	static ID3D11InputLayout** GetInputLayoutParticle() { return &mVertexLayoutParticle; };
 };
 
