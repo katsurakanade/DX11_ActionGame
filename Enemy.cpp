@@ -150,15 +150,15 @@ void Enemy::Update() {
 
 void Enemy::Render() {
 
-	D3DXMATRIX world = MakeWorldMatrix();
-
-	Renderer::SetWorldMatrix(&world);
-
-	Shader::Use(SHADER_TYPE_VSPS::Default);
-
-	mpModel->Render(world);
+	if (!Application::GetScene()->GetMainCamera()->CheckInView(Position)) 
+		return;
 	
+	D3DXMATRIX world = MakeWorldMatrix();
+	Renderer::SetWorldMatrix(&world);
+	Shader::Use(SHADER_TYPE_VSPS::Default);
+	mpModel->Render(world);
 	mpCollider->Render();
+
 }
 
 void Enemy::Attack() {

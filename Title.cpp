@@ -10,7 +10,7 @@ void Title::Init() {
 	mAsset->LoadSceneAsset();
 	Application::SetAsset(mAsset);
 
-	AddGameObject<Camera>(CameraLayer);
+	mMaincamera =  AddGameObject<Camera>(CameraLayer);
 	AddGameObject<Light>(CameraLayer);
 
 	Skybox* skybox = Application::GetScene()->AddGameObject<Skybox>(ObjectLayer);

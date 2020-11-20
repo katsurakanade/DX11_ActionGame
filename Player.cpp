@@ -50,6 +50,7 @@ void Player::Init() {
 		c->SetUsePanel(true);
 	}
 
+
 	Resource::Init();
 
 }
@@ -213,7 +214,7 @@ void Player::Update() {
 	// ForDebug
 	SettingPanel();
 
-	Props* wall = Application::GetScene()->GetGameObject<Props>(ObjectLayer);
+	/*Props* wall = Application::GetScene()->GetGameObject<Props>(ObjectLayer);
 	if (mpCollider->Collision_Box_Enter(wall->GetComponent<BoxCollider>())) {
 		if (wall->Position.z < Position.z) {
 			mLockMovement[0] = true;
@@ -223,7 +224,7 @@ void Player::Update() {
 			mLockMovement[1] = true;
 			mpPhysical->mSpeed = 0.0f;
 		}
-	}
+	}*/
 	
 	Resource::Update();
 
@@ -252,10 +253,6 @@ void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR
 
 	// ForWard
 	if (Input::GetKeyPress(keykodeF)) {
-
-		if (mLockMovement[0] == true) {
-			return;
-		}
 
 		if (Input::GetKeyPress(keykodeL)) {
 
@@ -301,15 +298,10 @@ void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR
 			mpPhysical->mVelocity = D3DXVECTOR3(0, 0, -1.0f);
 		}
 		
-		mLockMovement[1] = false;
 	}
 
 	// Back
 	else if (Input::GetKeyPress(keykodeB)) {
-
-		if (mLockMovement[1] == true) {
-			return;
-		}
 
 		if (Input::GetKeyPress(keykodeL)) {
 			Rotation.y = D3DX_PI * -0.75f;
@@ -357,7 +349,6 @@ void Player::Movement(BYTE keykodeF, BYTE keykodeB ,BYTE keykodeL, BYTE keykodeR
 			}
 		}
 
-		mLockMovement[0] = false;
 	}
 
 	// Left

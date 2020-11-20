@@ -38,15 +38,6 @@ void Skybox::Update() {
 
 void Skybox::Render() {
 
-	D3D11_RASTERIZER_DESC rd;
-	ZeroMemory(&rd, sizeof(rd));
-	rd.FillMode = D3D11_FILL_SOLID;
-	rd.CullMode = D3D11_CULL_NONE;
-	rd.DepthClipEnable = TRUE;
-	rd.MultisampleEnable = FALSE;
-	ID3D11RasterizerState* rs;
-	Renderer::GetDevice()->CreateRasterizerState(&rd, &rs);
-	Renderer::GetDeviceContext()->RSSetState(rs);
 
 	D3DXMATRIX world = MakeWorldMatrix();
 
@@ -57,7 +48,9 @@ void Skybox::Render() {
 
 	Shader::Use(SHADER_TYPE_VSPS::Unlit);
 
+	Renderer::SetRasterizerState(1);
 	mpModel->Render(world);
+	Renderer::SetRasterizerState(0);
 
 }
 

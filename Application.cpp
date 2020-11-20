@@ -12,6 +12,7 @@
 #include "FileManger.h"
 #include <thread>
 
+// Static
 Scene* Application::mScene = nullptr;
 Asset* Application::mAsset;
 bool Application::mDisableLighting;
@@ -23,6 +24,7 @@ float Application::mUpdateAnalysisTime;
 float Application::mFPS;
 std::random_device Application::RandomDevice;
 std::default_random_engine Application::RandomGen = std::default_random_engine(RandomDevice());
+ShaderParameter Application::mShaderParameter;
 
 std::map<std::string, std::string> StaticManger::StateMap;
 
@@ -65,7 +67,6 @@ void Application::Update() {
 	mScene->Update();
 
 	std::thread system(System);
-
 	system.join();
 
 
@@ -83,7 +84,10 @@ void Application::Render() {
 	light.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	Renderer::SetLight(light);
 
+	Renderer::SetParameter(mShaderParameter);
+
 	mScene->Render();
+	mScene->AfterRender();
 	Renderer::End();
 }
 

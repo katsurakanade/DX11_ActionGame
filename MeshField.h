@@ -20,6 +20,7 @@ private:
 	// テクスチャ
 	std::vector <ID3D11ShaderResourceView*> mTexture;
 	std::vector<ID3D11ShaderResourceView*> mTextureNormal;
+	std::vector<ID3D11ShaderResourceView*> mTextureHeight;
 	// 頂点
 	VERTEX_3D mVertex[FIELD_X][FIELD_X];
 

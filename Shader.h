@@ -4,7 +4,7 @@
 
 #pragma once
 
-#define SHADER_MAX 5
+#define SHADER_MAX 6
 
 // ComputeShader
 enum class SHADER_TYPE
@@ -19,7 +19,7 @@ enum class SHADER_TYPE_GS {
 
 // VertexShader,PixelShader
 enum class SHADER_TYPE_VSPS {
-	Default,Unlit,WithNormal,Particle,Gizmos
+	Default,Unlit,WithNormal,WithHeight,Particle,Gizmos
 };
 
 class Shader

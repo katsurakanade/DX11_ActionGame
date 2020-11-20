@@ -379,6 +379,9 @@
     <FxCompile Include="GizmosPS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="pixelShader_WithHeight.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Asset_Texture_Title.json">

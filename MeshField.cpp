@@ -96,6 +96,7 @@ void MeshField::Init() {
 	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT));
 	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS));
 	mTextureNormal.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_NORMAL));
+	mTextureHeight.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_HEIGHT));
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -132,6 +133,7 @@ void MeshField::Render() {
 
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture[0]);
 	Renderer::GetDeviceContext()->PSSetShaderResources(1, 1, &mTextureNormal[0]);
+	Renderer::GetDeviceContext()->PSSetShaderResources(2, 1, &mTextureHeight[0]);
 
 	if (!Renderer::mLineMode) {
 		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -141,7 +143,7 @@ void MeshField::Render() {
 		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 	}
 
-	Shader::Use(SHADER_TYPE_VSPS::WithNormal);
+	Shader::Use(SHADER_TYPE_VSPS::WithHeight);
 
 	Renderer::GetDeviceContext()->DrawIndexed(((FIELD_X + 1)*2) * (FIELD_X - 1) -2,0, 0);
 	

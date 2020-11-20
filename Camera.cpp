@@ -73,11 +73,62 @@ void Camera::Render() {
 
 	Renderer::SetViewMatrix(&mViewMatrix);
 
-	D3DXMATRIX projectionMatrix;
-	D3DXMatrixPerspectiveFovLH(&projectionMatrix, 1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 1000.0f);
 
-	Renderer::SetProjectionMatrix(&projectionMatrix);
+	D3DXMatrixPerspectiveFovLH(&mProjectionMatrix, 1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 1000.0f);
+
+	Renderer::SetProjectionMatrix(&mProjectionMatrix);
 
 	Renderer::SetCameraPosition(Position);
 
+}
+
+bool Camera::CheckInView(D3DXVECTOR3 tpos) {
+
+	D3DXMATRIX invvp;
+	vp = mViewMatrix * mProjectionMatrix;
+	D3DXMatrixInverse(&invvp, NULL, &vp);
+
+	D3DXVECTOR3 vpos[4];
+	D3DXVECTOR3 wpos[4];
+
+	vpos[0] = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
+	vpos[1] = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	vpos[2] = D3DXVECTOR3(-1.0f, -1.0f, 1.0f);
+	vpos[3] = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
+
+	for (int i = 0; i < 4; i++) {
+		D3DXVec3TransformCoord(&wpos[i], &vpos[i], &invvp);
+	}
+
+	D3DXVECTOR3 v, nor, v1, v2;
+	v = tpos - Position;
+	v1 = wpos[0] - Position;
+	v2 = wpos[2] - Position;
+	D3DXVec3Cross(&nor, &v1, &v2);
+
+	if (D3DXVec3Dot(&nor, &v) < 0.0f)
+		return false;
+
+	v1 = wpos[1] - Position;
+	v2 = wpos[3] - Position;
+	D3DXVec3Cross(&nor, &v1, &v2);
+
+	if (D3DXVec3Dot(&nor, &v) > 0.0f)
+		return false;
+
+	v1 = wpos[0] - Position;
+	v2 = wpos[1] - Position;
+	D3DXVec3Cross(&nor, &v1, &v2);
+
+	if (D3DXVec3Dot(&nor, &v) > 0.0f)
+		return false;
+
+	v1 = wpos[2] - Position;
+	v2 = wpos[3] - Position;
+	D3DXVec3Cross(&nor, &v1, &v2);
+
+	if (D3DXVec3Dot(&nor, &v) < 0.0f)
+		return false;
+
+	return true;
 }

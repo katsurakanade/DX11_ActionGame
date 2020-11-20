@@ -79,6 +79,7 @@ cbuffer CameraBuffer : register(b5)
 
 cbuffer ParameterBuffer : register(b6)
 {
-    float Parameter;
+    float mRimStrength;
+    float3 mNoramlOffset;
 }
 

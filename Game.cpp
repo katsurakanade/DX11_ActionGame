@@ -15,7 +15,7 @@ void Game::Init() {
 	mAsset->LoadSceneAsset();
 	Application::SetAsset(mAsset);
 
-	AddGameObject<Camera>(CameraLayer);
+	mMaincamera = AddGameObject<Camera>(CameraLayer);
 	AddGameObject<Light>(CameraLayer);
 
 	Skybox* skybox = Application::GetScene()->AddGameObject<Skybox>(ObjectLayer);
@@ -27,14 +27,6 @@ void Game::Init() {
 	Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
 	enemy->AddGauge();
 	enemy->Position = D3DXVECTOR3(0, 0, -150);
-
-	Enemy* enemy2 = AddGameObject<Enemy>(ObjectLayer);
-	enemy2->AddGauge();
-	enemy2->Position = D3DXVECTOR3(-50, 0, -150);
-
-	Enemy* enemy3 = AddGameObject<Enemy>(ObjectLayer);
-	enemy3->AddGauge();
-	enemy3->Position = D3DXVECTOR3(10, 0, -200);
 
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 	LevelTools* lt = AddGameObject<LevelTools>(ObjectLayer);

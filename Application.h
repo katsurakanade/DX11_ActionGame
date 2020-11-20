@@ -30,6 +30,8 @@ private:
 	static float mUpdateAnalysisTime;
 	static float mFPS;
 
+	static ShaderParameter mShaderParameter;
+
 public:
 
 	static bool Init();

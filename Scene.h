@@ -24,7 +24,7 @@ protected:
 
 	// オブジェクト
 	std::list<Resource*> mGameObject[EndLayer];
-	std::vector <std::string> mRenderLayerString{"CameraLayer" , "ObjectLayer" ,"EffectLayer", "EffectLayer2" ,"SpriteLayer" , "SpriteLayer2", "ParticleLayer","FadeLayer"  , "EndLayer" };
+	std::vector<std::string> mRenderLayerString{"CameraLayer" , "ObjectLayer" ,"EffectLayer", "EffectLayer2" ,"SpriteLayer" , "SpriteLayer2", "ParticleLayer","FadeLayer"  , "EndLayer" };
 
 	// ゲームクリア用
 	bool mSwitchFlag = false;
@@ -34,6 +34,8 @@ protected:
 	Fade* mpFade;
 	// シーンアセット
 	Asset* mAsset;
+	// メインカメラ
+	Camera* mMaincamera;
 
 public:
 	
@@ -82,12 +84,10 @@ public:
 			ImGui::Begin(u8"オブジェクト");
 
 			for (int i = CameraLayer; i < EndLayer; i++) {
-				
 				if (ImGui::TreeNode(mRenderLayerString[i].c_str())) {
 					for (Resource* g : mGameObject[i])
 					{
-						std::string str = g->Name.c_str();
-						ImGui::Text(str.c_str());
+						ImGui::Text(g->Name.c_str());
 					}
 					ImGui::TreePop();
 				}
@@ -100,6 +100,7 @@ public:
 	}
 
 	virtual void Render() {
+
 		for (int i = 0; i < EndLayer; i++) {
 			for (Resource* g : mGameObject[i])
 			{
@@ -108,6 +109,11 @@ public:
 				}
 			}
 		}
+	}
+
+	virtual void AfterRender() {
+
+		
 	}
 
 	template <typename T>
@@ -151,4 +157,5 @@ public:
 	void SetSwitchFlag(bool val) { mSwitchFlag = val; };
 	// Getter
 	Asset* GetAsset() { return mAsset; };
+	Camera* GetMainCamera() { return mMaincamera; };
 };

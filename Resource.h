@@ -52,6 +52,8 @@ public:
     // ƒ^ƒCƒv
     std::string Type;
 
+    bool Panel;
+
     virtual void Init() {
         for (Component* c : Components) {
             c->Init();

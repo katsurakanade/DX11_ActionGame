@@ -28,6 +28,8 @@ private:
 
 	// マトリックス
 	D3DXMATRIX mViewMatrix;
+	D3DXMATRIX mProjectionMatrix;
+	D3DXMATRIX vp;
 
 public:
 
@@ -38,6 +40,8 @@ public:
 	void Uninit();
 	void Update();
 	void Render();
+
+	bool CheckInView(D3DXVECTOR3 tpos);
 
 	// Setter
 	void SetFollowTarget(Resource* obj) { mFollowTarget = obj; };

@@ -28,7 +28,7 @@ void main(in PS_IN In , out float4 outDiffuse : SV_Target)
     outDiffuse.rgb += specular * Material.Specular.xyz;
     
     float rim = 1.0f + dot(eyev, normal.xyz);
-    rim = pow(rim, 2) * 0.1f;
+    rim = pow(rim, 2) * mRimStrength;
     outDiffuse.rgb += rim;
     
  

@@ -15,17 +15,19 @@ void Shader::Init() {
 	mComputeShaderArray.resize(2);
 	mGeometryShaderArray.resize(0);
 
+	// シェーダー生成
 	CreateVertexShader(SHADER_TYPE_VSPS::Default);
 	CreatePixelShader(SHADER_TYPE_VSPS::Default);
 	CreateVertexShader(SHADER_TYPE_VSPS::Unlit);
 	CreatePixelShader(SHADER_TYPE_VSPS::Unlit);
 	CreateVertexShader(SHADER_TYPE_VSPS::WithNormal);
 	CreatePixelShader(SHADER_TYPE_VSPS::WithNormal);
+	CreateVertexShader(SHADER_TYPE_VSPS::WithHeight);
+	CreatePixelShader(SHADER_TYPE_VSPS::WithHeight);
 	CreateVertexShader(SHADER_TYPE_VSPS::Particle);
 	CreatePixelShader(SHADER_TYPE_VSPS::Particle);
 	CreateVertexShader(SHADER_TYPE_VSPS::Gizmos);
 	CreatePixelShader(SHADER_TYPE_VSPS::Gizmos);
-
 	CreateComputeShader(SHADER_TYPE::SkinMesh);
 	CreateComputeShader(SHADER_TYPE::Particle);
 }
@@ -72,6 +74,9 @@ void Shader::CreateVertexShader(SHADER_TYPE_VSPS type) {
 		vspass = "UnlitVS.cso";
 	}
 	else if (type == SHADER_TYPE_VSPS::WithNormal) {
+		vspass = "vertexShader.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::WithHeight) {
 		vspass = "vertexShader.cso";
 	}
 	else if (type == SHADER_TYPE_VSPS::Particle) {
@@ -133,6 +138,9 @@ void Shader::CreatePixelShader(SHADER_TYPE_VSPS type) {
 	}
 	else if (type == SHADER_TYPE_VSPS::WithNormal) {
 		pspass = "pixelShader_WithNormal.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::WithHeight) {
+		pspass = "pixelShader_WithHeight.cso";
 	}
 	else if (type == SHADER_TYPE_VSPS::Particle) {
 		pspass = "ParticlePS.cso";

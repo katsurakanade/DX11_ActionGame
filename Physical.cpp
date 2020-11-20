@@ -69,11 +69,6 @@ bool Physical::IsMoving() {
 
 void Physical::ProcessPostion() {
 
-	// 重力
-	//if (!IsGround) {
-	//	GetResource()->Position.y -= mGravity * Time::GetDeltaTime();
-	//}
-
 	// 移動速度
 	GetResource()->Position += mVelocity * mSpeed * Time::GetDeltaTime();
 	// ジャンプ速度

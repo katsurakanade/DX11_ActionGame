@@ -78,7 +78,7 @@ void LevelTools::Update() {
 				ImGui::PushItemWidth(1000);
 				ImGui::SliderFloat3(u8"座標", propslist[i]->Position, -200.0f, 200.0f, "%.1f", 1.0f);
 				ImGui::SliderFloat3(u8"回転", propslist[i]->Rotation, -3.14f, 3.14f);
-				ImGui::SliderFloat3(u8"スケール", propslist[i]->Scale, 0.1f, 100.0f);
+				ImGui::SliderFloat3(u8"スケール", propslist[i]->Scale, 0.1f, 300.0f);
 				if (ImGui::Button(u8"削除")) {
 					propslist[i]->Destroy();
 				}

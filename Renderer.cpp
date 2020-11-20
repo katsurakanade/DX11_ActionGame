@@ -25,6 +25,9 @@ ID3D11Buffer* Renderer::mParameterBuffer = NULL;
 ID3D11DepthStencilState* Renderer::mDepthStateEnable = NULL;
 ID3D11DepthStencilState* Renderer::mDepthStateDisable = NULL;
 
+ID3D11RasterizerState* Renderer::mRasterizerState_CullBack = NULL;
+ID3D11RasterizerState* Renderer::mRasterizerState_CullNone = NULL;
+
 ID3D11BlendState* Renderer::mBlendState;
 
 bool Renderer::mLineMode = false;
@@ -112,10 +115,16 @@ void Renderer::Init()
 	rd.DepthClipEnable = TRUE;
 	rd.MultisampleEnable = FALSE;
 
-	ID3D11RasterizerState* rs;
-	mD3DDevice->CreateRasterizerState(&rd, &rs);
+	mD3DDevice->CreateRasterizerState(&rd, &mRasterizerState_CullBack);
 
-	mImmediateContext->RSSetState(rs);
+	ZeroMemory(&rd, sizeof(rd));
+	rd.FillMode = D3D11_FILL_SOLID;
+	rd.CullMode = D3D11_CULL_NONE;
+	rd.DepthClipEnable = TRUE;
+	rd.MultisampleEnable = FALSE;
+	Renderer::GetDevice()->CreateRasterizerState(&rd, &mRasterizerState_CullNone);
+
+	mImmediateContext->RSSetState(mRasterizerState_CullBack);
 
 	// ブレンドステート設定
 	D3D11_BLEND_DESC blendDesc;
@@ -509,7 +518,7 @@ void Renderer::SetLight(LIGHT Light)
 
 }
 
-void Renderer::SetParameter(D3DXVECTOR4 Parameter)
+void Renderer::SetParameter(ShaderParameter Parameter)
 {
 	mImmediateContext->UpdateSubresource(mParameterBuffer, 0, NULL, &Parameter, 0, 0);
 }
@@ -549,4 +558,15 @@ void Renderer::SetInputLayout(int index) {
 		mImmediateContext->IASetInputLayout(mVertexLayoutParticle);
 	}
 
+}
+
+void Renderer::SetRasterizerState(int index) {
+
+	if (index == 0) {
+		mImmediateContext->RSSetState(mRasterizerState_CullBack);
+	}
+
+	else {
+		mImmediateContext->RSSetState(mRasterizerState_CullNone);
+	}
 }

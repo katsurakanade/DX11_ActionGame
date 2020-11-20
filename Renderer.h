@@ -54,6 +54,11 @@ enum class BLEND_STATE {
 	NONE,ALPHA_BLEND
 };
 
+struct ShaderParameter {
+	float mRimStrength;
+	D3DXVECTOR3 mNoramlOffset = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+};
+
 class Renderer
 {
 private:
@@ -77,6 +82,9 @@ private:
 
 	static ID3D11DepthStencilState* mDepthStateEnable;
 	static ID3D11DepthStencilState* mDepthStateDisable;
+
+	static ID3D11RasterizerState* mRasterizerState_CullBack;
+	static ID3D11RasterizerState* mRasterizerState_CullNone;
 
 	static ID3D11BlendState* mBlendState;
 	static ID3D11InputLayout* mVertexLayout;
@@ -111,9 +119,10 @@ public:
 	static void SetMaterial(MATERIAL Material);
 	static void SetCameraPosition(D3DXVECTOR3 CameraPosition);
 	static void SetLight(LIGHT Light);
-	static void SetParameter(D3DXVECTOR4 Parameter);
+	static void SetParameter(ShaderParameter Parameter);
 	static void SetBlendState(BLEND_STATE state);
 	static void SetInputLayout(int index);
+	static void SetRasterizerState(int index);
 
 	// Getter
 	static ID3D11Device* GetDevice(void) { return mD3DDevice; }
