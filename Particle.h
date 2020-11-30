@@ -34,8 +34,10 @@ struct ParticleCompute {
 struct ParitcleSetting {
 	// 数
 	int Amount = 50000;
-	// ランダム速度フラグ
+	// ランダム速度
 	bool RandomSpeed = true;
+	// 極座標
+	bool PolarCoordinates = false;
 	// 座標
 	D3DXVECTOR3 Position = D3DXVECTOR3(0,0,0);
 	// 座標最小最大(ランダム)

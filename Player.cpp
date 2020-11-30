@@ -50,6 +50,7 @@ void Player::Init() {
 		c->SetUsePanel(true);
 	}
 
+	mpModel->GetModel()->DisplayConfig = true;
 
 	Resource::Init();
 
@@ -78,7 +79,7 @@ void Player::Update() {
 
 	// 高さ修正
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
-	Position.y = mf->GetHeight(Position) + mf->Position.y;
+	Position.y = mf->GetHeight(Position) + mf->Position.y; 
 
 	// スキル
 	Skill(DIK_1, DIK_2, DIK_3, DIK_4);
@@ -96,6 +97,7 @@ void Player::Update() {
 			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
 			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
 			setting->Size = 0.5f;
+			setting->PolarCoordinates = true;
 			pc->Create(setting);
 			delete setting;
 
@@ -123,6 +125,7 @@ void Player::Update() {
 			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
 			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
 			setting->Size = 0.5f;
+			setting->PolarCoordinates = true;
 			pc->Create(setting);
 			delete setting;
 
@@ -195,36 +198,24 @@ void Player::Update() {
 	// パーティクル生成（テスト用）
 	if (Input::GetKeyTrigger(DIK_C)) {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = this->Position + D3DXVECTOR3(0,5,0);
 		ParitcleSetting* setting = new ParitcleSetting;
-		setting->Amount = 1000;
-		setting->PostionMinMaxX = D3DXVECTOR2(-5, 5);
-		setting->PostionMinMaxY = D3DXVECTOR2(-5, 5);
-		setting->PostionMinMaxZ = D3DXVECTOR2(-5, 5);
-		setting->SpeedMinMaxX = D3DXVECTOR2(0.0f, 0.0f);
-		setting->SpeedMinMaxY = D3DXVECTOR2(0.0f, 0.0f);
-		setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 0.0f);
-		setting->LifeMinMax = D3DXVECTOR2(30000.0f, 30000.0f);
-		setting->Size = 0.1f;
-		pc->Create(setting);
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+		setting->Amount = 30000;
+		setting->SpeedMinMaxX = D3DXVECTOR2(-0.1f, 0.1f);
+		setting->SpeedMinMaxY = D3DXVECTOR2(-0.1f, 0.1f);
+		setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 0.5f);
+		setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
+		setting->Size = 0.1f;
+		setting->PolarCoordinates = true;
+		pc->Create(setting);
 		delete setting;
+		pc->Position = Position;
 	}
 
 	// ForDebug
 	SettingPanel();
 
-	/*Props* wall = Application::GetScene()->GetGameObject<Props>(ObjectLayer);
-	if (mpCollider->Collision_Box_Enter(wall->GetComponent<BoxCollider>())) {
-		if (wall->Position.z < Position.z) {
-			mLockMovement[0] = true;
-			mpPhysical->mSpeed = 0.0f;
-		}
-		else if (wall->Position.z > Position.z) {
-			mLockMovement[1] = true;
-			mpPhysical->mSpeed = 0.0f;
-		}
-	}*/
+
 	
 	Resource::Update();
 
@@ -235,6 +226,7 @@ void Player::Render() {
 	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
 	Shader::Use(SHADER_TYPE_VSPS::Default);
+
 	mpModel->Render(world);
 	GetComponent<BoxCollider>()->Render();
 
@@ -413,6 +405,7 @@ void Player::Skill(BYTE keykode_0, BYTE keykode_1, BYTE keykode_2, BYTE keykode_
 					setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
 					setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
 					setting->Size = 0.1f;
+					setting->PolarCoordinates = true;
 					pc->Create(setting);
 					delete setting;
 					pc->Position = Position + D3DXVECTOR3(0, 3, 0);

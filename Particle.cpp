@@ -25,6 +25,7 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 	std::uniform_real_distribution<float> rndvelY(setting->SpeedMinMaxY.x, setting->SpeedMinMaxY.y);
 	std::uniform_real_distribution<float> rndvelZ(setting->SpeedMinMaxZ.x, setting->SpeedMinMaxZ.y);
 	std::uniform_real_distribution<float> rndlife(setting->LifeMinMax.x, setting->LifeMinMax.y);
+	std::uniform_real_distribution<float> rndtheta(-3.14f, 3.14f);
 
 	// パーティクル資料生成
 	mParticleAmount = setting->Amount;
@@ -37,7 +38,24 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 	for (int i = 0; i < setting->Amount; i++) {
 
 		if (setting->RandomSpeed) {
-			mVel[i] = D3DXVECTOR3(rndvelX(Application::RandomGen), rndvelY(Application::RandomGen), rndvelZ(Application::RandomGen));
+
+			if (setting->PolarCoordinates) {
+				auto x = rndvelX(Application::RandomGen);
+				auto y = rndvelY(Application::RandomGen);
+				auto z = rndvelZ(Application::RandomGen);
+				auto radius = sqrt(x * x + y * y + z * z);
+				auto theta = rndtheta(Application::RandomGen);
+				auto phi = 3.14f;
+
+				x = radius * sin(theta) * cos(phi);
+				y = radius * sin(theta) * sin(phi);
+				z = radius * cos(theta);
+
+				mVel[i] = D3DXVECTOR3(x, z, y);
+			}
+			else {
+				mVel[i] = D3DXVECTOR3(rndvelX(Application::RandomGen), rndvelY(Application::RandomGen), rndvelZ(Application::RandomGen));
+			}
 		}
 
 		else if (!setting->RandomSpeed) {

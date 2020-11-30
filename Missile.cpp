@@ -63,6 +63,7 @@ void Missile::Update() {
 			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
 			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
 			setting->Size = 0.1f;
+			setting->PolarCoordinates = true;
 			pc->Create(setting);
 			delete setting;
 			pc->Position = es[mTargetIndex]->Position + D3DXVECTOR3(0, 3, 0);
