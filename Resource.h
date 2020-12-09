@@ -51,7 +51,7 @@ public:
     std::string Tag;
     // タイプ
     std::string Type;
-
+    // パーネル
     bool Panel;
 
     virtual void Init() {
@@ -75,7 +75,8 @@ public:
             c->FixedUpdate();
         }
     };
-    virtual void Render() = 0;
+
+    virtual void Render() {};
 
     // 削除
     void Destroy() { this->Alive = false; };
@@ -134,6 +135,7 @@ public:
     T* AddComponent() {
         T* Component = new T();
         Components.emplace_back(Component);
+        /*Component->SetResource(this);*/
         Component->Init();
         return Component;
     };

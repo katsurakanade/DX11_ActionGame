@@ -8,6 +8,7 @@
 #include "MeshField.h"
 #include "Grass.h"
 #include "LevelTools.h"
+#include "ParticleManager.h"
 
 void Game::Init() {
 
@@ -30,6 +31,7 @@ void Game::Init() {
 
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 	LevelTools* lt = AddGameObject<LevelTools>(ObjectLayer);
+	ParticleManager* pm = AddGameObject<ParticleManager>(ObjectLayer);
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);
 

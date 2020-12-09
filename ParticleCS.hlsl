@@ -24,7 +24,7 @@ StructuredBuffer<ParticleCompute> particle : register(t0);
 StructuredBuffer<TimeCompute> Time : register(t1);
 RWStructuredBuffer<ParticleCompute> BufOut : register(u0);
 
-#define size_x    128
+#define size_x    1024
 #define size_y      1
 #define size_z      1
 

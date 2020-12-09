@@ -53,42 +53,45 @@ std::string textype;
 
 void AssimpModel::DrawConfig() {
 
-	std::string str = u8"モデル情報: " + mName;
-	ImGui::Begin(str.c_str());
+	ImGui::Begin(mResourceName.c_str());
 
-	ImGui::Text(u8"テクスチャ数 : %d ", mTexturesLoaded.size() + mTexturesLoaded_Normal.size());
-	if (ImGui::TreeNode(u8"テクスチャファイル")) {
-		for (unsigned int i = 0; i < mTexturesLoaded.size(); i++) {
-			ImGui::Text(u8"タイプ : %s", mTexturesLoaded[i].type.c_str());
-			ImGui::Text(u8"パス : %s", mTexturesLoaded[i].path.c_str());
-			ImGui::Image(mTexturesLoaded[i].texture, ImVec2(100, 100));
-		}
-		for (unsigned int i = 0; i < mTexturesLoaded_Normal.size(); i++) {
-			ImGui::Text(u8"タイプ : %s", mTexturesLoaded_Normal[i].type.c_str());
-			ImGui::Text(u8"パス : %s", mTexturesLoaded_Normal[i].path.c_str());
-			ImGui::Image(mTexturesLoaded_Normal[i].texture, ImVec2(100, 100));
-		}
-		ImGui::TreePop();
+	if (ImGui::TreeNode(u8"モデル")) {
 
-	}
-
-	ImGui::Text(u8"メッシュ数 : %d", mMeshes.size());
-	if (ImGui::TreeNode(u8"メッシュ情報")) {
-
-		for (unsigned int i = 0; i < mMeshes.size(); i++) {
-			std::string name = mMeshes[i]->Name + std::to_string(i);
-			if (ImGui::TreeNode(name.c_str())) {
-				ImGui::Checkbox(u8"表示", &mMeshes[i]->Enable);
-				ImGui::ColorEdit4(u8"カラー", mMeshes[i]->col);
-				ImGui::Image(mMeshes[i]->Textures[0].texture, ImVec2(100, 100));
-				if (Anicmatrixion) {
-					ImGui::Text("Bone :  %d", mMeshes[i]->mBone.size());
-					ImGui::Text("Deform Vertex : %d", mMeshes[i]->mDeformVertex.size());
-				}
-				ImGui::TreePop();
+		ImGui::Text(u8"テクスチャ数 : %d ", mTexturesLoaded.size() + mTexturesLoaded_Normal.size());
+		if (ImGui::TreeNode(u8"テクスチャファイル")) {
+			for (unsigned int i = 0; i < mTexturesLoaded.size(); i++) {
+				ImGui::Text(u8"タイプ : %s", mTexturesLoaded[i].type.c_str());
+				ImGui::Text(u8"パス : %s", mTexturesLoaded[i].path.c_str());
+				ImGui::Image(mTexturesLoaded[i].texture, ImVec2(100, 100));
 			}
+			for (unsigned int i = 0; i < mTexturesLoaded_Normal.size(); i++) {
+				ImGui::Text(u8"タイプ : %s", mTexturesLoaded_Normal[i].type.c_str());
+				ImGui::Text(u8"パス : %s", mTexturesLoaded_Normal[i].path.c_str());
+				ImGui::Image(mTexturesLoaded_Normal[i].texture, ImVec2(100, 100));
+			}
+			ImGui::TreePop();
+
 		}
 
+		ImGui::Text(u8"メッシュ数 : %d", mMeshes.size());
+		if (ImGui::TreeNode(u8"メッシュ情報")) {
+
+			for (unsigned int i = 0; i < mMeshes.size(); i++) {
+				std::string name = mMeshes[i]->Name + std::to_string(i);
+				if (ImGui::TreeNode(name.c_str())) {
+					ImGui::Checkbox(u8"表示", &mMeshes[i]->Enable);
+					ImGui::ColorEdit4(u8"カラー", mMeshes[i]->col);
+					ImGui::Image(mMeshes[i]->Textures[0].texture, ImVec2(100, 100));
+					if (Anicmatrixion) {
+						ImGui::Text("Bone :  %d", mMeshes[i]->mBone.size());
+						ImGui::Text("Deform Vertex : %d", mMeshes[i]->mDeformVertex.size());
+					}
+					ImGui::TreePop();
+				}
+			}
+
+			ImGui::TreePop();
+		}
 		ImGui::TreePop();
 	}
 

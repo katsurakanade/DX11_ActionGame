@@ -9,6 +9,7 @@ void ModelManager::Init() {
 
 	Name = "ModelManager";
 
+
 }
 
 void ModelManager::Uninit() {
@@ -16,6 +17,10 @@ void ModelManager::Uninit() {
 }
 
 void ModelManager::Update() {
+	
+	if (mModel->mResourceName == "Model") {
+		mModel->mResourceName = GetResource()->Name;
+	}
 
 	if (mpAnimation) {
 		mModel->Update(mpAnimation->GetState().c_str(), mpAnimation->GetNewState().c_str(), mpAnimation->GetBlend(), mpAnimation->GetFrame());

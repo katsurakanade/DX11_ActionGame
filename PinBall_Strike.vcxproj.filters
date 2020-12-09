@@ -195,6 +195,9 @@
     <ClCompile Include="FileManger.cpp">
       <Filter>ソース ファイル\File</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>ソース ファイル\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -343,6 +346,9 @@
     </ClInclude>
     <ClInclude Include="FileManger.h">
       <Filter>ヘッダー ファイル\File</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

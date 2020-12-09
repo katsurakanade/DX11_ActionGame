@@ -68,7 +68,7 @@ protected:
 	ID3D11ShaderResourceView* mTexture = nullptr;
 	// 削除フレーム
 	float mKillFrame;
-	// Compute Shader用バッファ生成
+	// Compute Shader用バッファ、SRV、UAV生成
 	void CreateComputeResource();
 	// パーティクル数
 	int mParticleAmount;
@@ -98,6 +98,7 @@ public:
 	void Update();
 	void Render();
 
+	// パーティクル資料生成
 	void Create(ParitcleSetting* setting);
 
 	// Setter

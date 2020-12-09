@@ -15,7 +15,6 @@ private:
 
 	// 名前
 	std::string mName;
-
 	// パス
 	std::string mDirectory;
 	// メッシュ
@@ -51,6 +50,9 @@ public:
 
 	AssimpModel() = delete;
 	AssimpModel(bool anicmatrixion) : Anicmatrixion(anicmatrixion) {};
+
+	// リソース名前
+	std::string mResourceName = "Model";
 
 	// フラグ
 	bool DisplayConfig = false;

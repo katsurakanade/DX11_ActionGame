@@ -7,7 +7,6 @@
 #include <random>
 #include "Shader.h"
 
-
 void ParticleSystem::Init() {
 
 	mKillFrame = 0.0f;
@@ -99,13 +98,18 @@ void ParticleSystem::Uninit() {
 	delete mlife;
 	mlife = nullptr;
 
+	// バッファリリース
 	mVertexBuffer->Release();
 	mpParticleBuffer->Release();
+	mpTimeBuffer->Release();
 	mpResultBuffer->Release();
 	mpPositionBuffer->Release();
+	// SRVリリース
 	mpParticleSRV->Release();
 	mpResultUAV->Release();
 	mpPositionSRV->Release();
+	// UAVリリース
+	mpResultUAV->Release();
 }
 
 void ParticleSystem::CreateComputeResource() {
@@ -148,12 +152,7 @@ void ParticleSystem::Update() {
 		D3D11_MAPPED_SUBRESOURCE subRes;
 		Renderer::GetDeviceContext()->Map(mpParticleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
 		ParticleCompute* pBufType = (ParticleCompute*)subRes.pData;
-		for (int v = 0; v < mParticleAmount; v++) {
-			pBufType[v].vel = mparticle[v].vel;
-			pBufType[v].col = D3DXVECTOR4(1, 1, 1, 1);
-			pBufType[v].life = mparticle[v].life;
-			pBufType[v].pos = mparticle[v].pos;
-		}
+		memcpy(subRes.pData, mparticle, sizeof(ParticleCompute) * mParticleAmount);
 		Renderer::GetDeviceContext()->Unmap(mpParticleBuffer, 0);
 	}
 
@@ -174,7 +173,7 @@ void ParticleSystem::Update() {
 	Renderer::GetDeviceContext()->CSSetShaderResources(0, 2, pSRVs);
 	Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[1], nullptr, 0);
 	Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
-	Renderer::GetDeviceContext()->Dispatch(128, 1, 1);
+	Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
 
 	// CopyResource
 	{
@@ -183,12 +182,7 @@ void ParticleSystem::Update() {
 
 		Renderer::GetDeviceContext()->Map(pBufDbg, 0, D3D11_MAP_READ, 0, &subRes);
 		ParticleCompute* pBufType = (ParticleCompute*)subRes.pData;
-		for (int v = 0; v < mParticleAmount; v++) {
-			mparticle[v].pos = pBufType[v].pos;
-			mparticle[v].vel = pBufType[v].vel;
-			mparticle[v].col = D3DXVECTOR4(1, 1, 1, 1);
-			mparticle[v].life = pBufType[v].life;
-		}
+		memcpy(mparticle, pBufType, sizeof(ParticleCompute) * mParticleAmount);
 		Renderer::GetDeviceContext()->Unmap(pBufDbg, 0);
 
 		pBufDbg->Release();
@@ -204,7 +198,6 @@ void ParticleSystem::Update() {
 		}
 		Renderer::GetDeviceContext()->Unmap(mpPositionBuffer, 0);
 	}
-
 
 	// Kill
 	mKillFrame += 1.0f;
