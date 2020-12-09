@@ -33,6 +33,7 @@ struct VS_IN_PARTICLE
 {
     float4 Position : POSITION0;
     float2 TexCoord : TEXCOORD0;
+    uint InstanceID : SV_InstanceID;
 };
 
 struct PS_IN_PARTICLE

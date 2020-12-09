@@ -57,12 +57,12 @@ void Missile::Update() {
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 			ParitcleSetting* setting = new ParitcleSetting;
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-			setting->Amount = 3000;
-			setting->SpeedMinMaxX = D3DXVECTOR2(-0.5f, 0.5f);
-			setting->SpeedMinMaxY = D3DXVECTOR2(-0.5f, 0.5f);
-			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 1.0f);
-			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
-			setting->Size = 0.1f;
+			setting->Amount = 30000;
+			setting->SpeedMinMaxX = D3DXVECTOR2(-25.0f, 25.0f);
+			setting->SpeedMinMaxY = D3DXVECTOR2(-25.0f, 25.0f);
+			setting->SpeedMinMaxZ = D3DXVECTOR2(-100.0f, 100.0f);
+			setting->LifeMinMax = D3DXVECTOR2(1.0f, 120.0f);
+			setting->Size = 0.2f;
 			setting->PolarCoordinates = true;
 			pc->Create(setting);
 			delete setting;
