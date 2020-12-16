@@ -75,7 +75,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO(); 
+	(void)io;
 
 	// Japanese Font
 	io.Fonts->AddFontFromFileTTF("asset\\font\\ipam.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());

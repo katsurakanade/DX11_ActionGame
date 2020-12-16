@@ -26,7 +26,7 @@ protected:
 
 public:
 
-    Component() : Name("Component"), Active(true), UsePanel(false){};
+    Component() : Name("Component"), Active(true), UsePanel(false),pResource(nullptr){};
 
     // ç¿ïW
     D3DXVECTOR3 Position;

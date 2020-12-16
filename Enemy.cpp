@@ -34,8 +34,9 @@ void Enemy::Init() {
 
 	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
 	mpCollider->mScaleOffestCoff = D3DXVECTOR3(52.0f, 157.0f, 60.0f);
-	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 3.5f, 3.0f);
+	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 3.5f, 0.0f);
 	mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
+
 	mpAnination->SetState("Idle");
 	mpAnination->SetCoefficient(10.0f);
 	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ENEMY));
@@ -51,6 +52,8 @@ void Enemy::Init() {
 	mpLockImage->Position = Position;
 	mpLockImage->Scale = D3DXVECTOR3(3, 3, 3);
 	mpLockImage->SetActive(false);
+
+	AddGauge();
 
 	Resource::Init();
 
@@ -150,12 +153,15 @@ void Enemy::Update() {
 
 void Enemy::Render() {
 
-	if (!Application::GetScene()->GetMainCamera()->CheckInView(Position)) 
+	if (!Application::GetScene()->GetMainCamera()->CheckInView(Position)) {
+		mGauge->Hide(true);
 		return;
+	}
 	
 	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
 	Shader::Use(SHADER_TYPE_VSPS::Default);
+	mGauge->Hide(false);
 	mpModel->Render(world);
 	mpCollider->Render();
 

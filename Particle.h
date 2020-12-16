@@ -62,8 +62,6 @@ class ParticleSystem : public Resource
 
 protected:
 
-	// ライフ
-	float* mlife;
 	// テクスチャ
 	ID3D11ShaderResourceView* mTexture = nullptr;
 	// 削除フレーム
@@ -85,11 +83,12 @@ public:
 	ID3D11Buffer* mpTimeBuffer;
 	ID3D11Buffer* mpResultBuffer;
 	ID3D11Buffer* mpPositionBuffer;
-
+	ID3D11Buffer* mpLifeBuffer;
 	// SRV
 	ID3D11ShaderResourceView* mpParticleSRV;
 	ID3D11ShaderResourceView* mpTimeSRV;
 	ID3D11ShaderResourceView* mpPositionSRV;
+	ID3D11ShaderResourceView* mpLifeSRV;
 	// UAV
 	ID3D11UnorderedAccessView* mpResultUAV;
 

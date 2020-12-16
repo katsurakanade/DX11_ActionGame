@@ -39,8 +39,12 @@ public:
 	void Uninit();
 	void Update();
 	void Render();
+	// ‰B‚µ
+	void Hide(bool hide);
+
 	// Setter
 	void SetGUI(int length);
 	void SetBillBoard(Resource* target);
+
 };
 

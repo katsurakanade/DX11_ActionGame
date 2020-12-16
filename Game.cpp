@@ -26,8 +26,10 @@ void Game::Init() {
 	player->Position = D3DXVECTOR3(-50, 0, 50);
 
 	Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
-	enemy->AddGauge();
 	enemy->Position = D3DXVECTOR3(0, 0, -150);
+
+	Enemy* enemy_2 = AddGameObject<Enemy>(ObjectLayer);
+	enemy_2->Position = D3DXVECTOR3(0, 0, -50);
 
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 	LevelTools* lt = AddGameObject<LevelTools>(ObjectLayer);

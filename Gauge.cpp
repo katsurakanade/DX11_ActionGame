@@ -51,6 +51,17 @@ void Gauge::Render() {
 
 }
 
+void Gauge::Hide(bool hide) {
+	if (hide) {
+		mpBar_empty->SetActive(false);
+		mpBar_fill->SetActive(false);
+	}
+	else if (!hide) {
+		mpBar_empty->SetActive(true);
+		mpBar_fill->SetActive(true);
+	}
+}
+
 void Gauge::SetGUI(int length) {
 
 	mType = GaugeType::GAUGE_GUI;

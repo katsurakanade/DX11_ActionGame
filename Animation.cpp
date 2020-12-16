@@ -37,39 +37,38 @@ void Animation::Update() {
 		mBlend = 0.0f;
 	}
 
-	// ForDebug
-	if (GetUsePanel()) {
-		DataPanel();
-	}
-
+	// 一回アニメーション用
 	if (mOneTimeFlag) {
 		mWaitTime += 1.0f * Time::GetDeltaTime();
 	}
-
 	if (mOneTimeFlag && mWaitTime >= mTimeToWait) {
 		mWaitTime = 0.0f;
 		mNewState = mOldState;
 		mOneTimeFlag = false;
+	}
+
+	// ForDebug
+	if (GetUsePanel()) {
+		DataPanel();
 	}
 }
 
 void Animation::FixedUpdate() {
 
 	// フレーム修正
-	if (mFrame >= 1000000) {
+	if (mFrame >= 1000000) 
 		mFrame = 0;
-	}
-	if (mBlend < 0.0f) {
+	// ブレンド修正
+	if (mBlend < 0.0f) 
 		mBlend = 0.0f;
-	}
-	if (mBlend >= 1.0f) {
+	if (mBlend >= 1.0f) 
 		mBlend = 1.0f;
-	}
 
 }
 
 void Animation::DataPanel() {
 
+	// ImGui
 	ImGui::Begin(GetResource()->Name.c_str());
 	if (ImGui::TreeNode(u8"アニメーション")) {
 		ImGui::Text("Frame : %f", mFrame);

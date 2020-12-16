@@ -43,7 +43,6 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 	mParticleAmount = setting->Amount;
 	mParticleLifeMax = (int)setting->LifeMinMax.y;
 	mparticle = new ParticleCompute[setting->Amount];
-	mlife = new float[setting->Amount];
 
 	for (int i = 0; i < setting->Amount; i++) {
 		if (setting->RandomSpeed) {
@@ -95,19 +94,18 @@ void ParticleSystem::Uninit() {
 	delete mparticle;
 	mparticle = nullptr;
 
-	delete mlife;
-	mlife = nullptr;
-
 	// バッファリリース
 	mVertexBuffer->Release();
 	mpParticleBuffer->Release();
 	mpTimeBuffer->Release();
 	mpResultBuffer->Release();
 	mpPositionBuffer->Release();
+	mpLifeBuffer->Release();
 	// SRVリリース
 	mpParticleSRV->Release();
 	mpResultUAV->Release();
 	mpPositionSRV->Release();
+	mpLifeSRV->Release();
 	// UAVリリース
 	mpResultUAV->Release();
 }
@@ -126,12 +124,17 @@ void ParticleSystem::CreateComputeResource() {
 	hr = Renderer::CreateStructuredBuffer_DYN(sizeof(D3DXVECTOR3), (UINT)mParticleAmount, nullptr, &mpPositionBuffer);
 	assert(SUCCEEDED(hr));
 
+	hr = Renderer::CreateStructuredBuffer_DYN(sizeof(float), (UINT)mParticleAmount, nullptr, &mpLifeBuffer);
+	assert(SUCCEEDED(hr));
+
 	// SRV
 	hr = Renderer::CreateBufferSRV(mpParticleBuffer, &mpParticleSRV);
 	assert(SUCCEEDED(hr));
 	hr = Renderer::CreateBufferSRV(mpTimeBuffer, &mpTimeSRV);
 	assert(SUCCEEDED(hr));
 	hr = Renderer::CreateBufferSRV(mpPositionBuffer, &mpPositionSRV);
+	assert(SUCCEEDED(hr));
+	hr = Renderer::CreateBufferSRV(mpLifeBuffer, &mpLifeSRV);
 	assert(SUCCEEDED(hr));
 
 	// Output
@@ -199,6 +202,16 @@ void ParticleSystem::Update() {
 		Renderer::GetDeviceContext()->Unmap(mpPositionBuffer, 0);
 	}
 
+	{
+		D3D11_MAPPED_SUBRESOURCE subRes;
+		Renderer::GetDeviceContext()->Map(mpLifeBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
+		float* pBufType = (float*)subRes.pData;
+		for (int v = 0; v < mParticleAmount; v++) {
+			pBufType[v] = mparticle[v].life;
+		}
+		Renderer::GetDeviceContext()->Unmap(mpLifeBuffer, 0);
+	}
+
 	// Kill
 	mKillFrame += 1.0f;
 	if (mKillFrame > mParticleLifeMax) {
@@ -236,6 +249,8 @@ void ParticleSystem::Render() {
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
 
 	Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &mpPositionSRV);
+
+	Renderer::GetDeviceContext()->VSSetShaderResources(3, 1, &mpLifeSRV);
 
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
