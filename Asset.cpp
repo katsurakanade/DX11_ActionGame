@@ -15,12 +15,25 @@ void Asset::LoadSceneAsset(){
 	std::thread thread_loadmodel(&Asset::LoadModel,this);
 	std::thread thread_loadtexture(&Asset::LoadTexture, this);
 	std::thread thread_loadsound(&Asset::LoadSound, this);
+
 	thread_loadmodel.join();
 	thread_loadtexture.join();
 	thread_loadsound.join();
 
+	// エラーチェック
+	int error = mLostFileList.size();
+	for (int i = 0; i < error; i++) {
+		MessageBox(GetWindow(), mLostFileList[i].c_str(), "ファイル読み込みエラー", MB_OK);
+	}
+	if (error > 0) {
+		if (MessageBox(GetWindow(), "ファイル読み込みエラー", "エラー", MB_OK)) {
+			exit(1);
+		}
+	}
+
 	switch (mScene)
 	{
+
 	case SCENE_ASSET::TITLE:
 		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_TITLE::BALL]->PushTextureSelect(this,(int)TEXTURE_ENUM_TITLE::STAR);
 		mAssimpModelList[(int)ASSIMP_MODEL_ENUM_TITLE::BALL]->PushTextureSelect(this, (int)TEXTURE_ENUM_TITLE::SKY);

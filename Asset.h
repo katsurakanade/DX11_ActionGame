@@ -15,7 +15,7 @@ enum class SCENE_ASSET {
 // タイトル_モデル
 enum class ASSIMP_MODEL_ENUM_TITLE
 {
-	BALL,
+	BALL,END
 };
 // タイトル_テクスチャ
 enum class TEXTURE_ENUM_TITLE {
@@ -25,11 +25,13 @@ enum class TEXTURE_ENUM_TITLE {
 	SPACEBUTTON,
 	TITLE,
 	PARTICLE,
+	END,
 };
 // タイトル_サウンド
 enum class SOUND_ENUM_TITLE {
 	BGM_01,
 	SE_01,
+	END,
 };
 // ゲーム_モデル
 enum class ASSIMP_MODEL_ENUM_GAME
@@ -43,6 +45,7 @@ enum class ASSIMP_MODEL_ENUM_GAME
 	ENEMY,
 	HUMAN,
 	HUMAN2,
+	END,
 };
 // ゲーム_テクスチャ
 enum class TEXTURE_ENUM_GAME
@@ -69,10 +72,12 @@ enum class TEXTURE_ENUM_GAME
 	CHARACTERICON_1,
 	BAG,
 	NUMBER,
+	END,
 };
 // ゲーム_サウンド
 enum class SOUND_ENUM_GAME {
 	BGM_02,
+	END,
 };
 
 class Asset
@@ -96,35 +101,39 @@ protected:
 	std::vector<ID3D11ShaderResourceView*> mTextureList;
 	// サウンド
 	std::vector<Sound*> mSoundList;
+	// 存在していないファイル名称
+	std::vector<std::string> mLostFileList;
 
 	// モデル追加
 	void AddAssimpModelToList(const char* value) {
 		AssimpModel* md = new AssimpModel(false);
-		md->Load(value);
-		mAssimpModelList.push_back(md);
+		if (md->Load(value))
+			mAssimpModelList.push_back(md);
+		else
+			mLostFileList.push_back(value);
+		
 	}
 	// モデル追加(アニメーションあり)
 	void AddAssimpModelToList(const char* value, std::vector<std::string> animationpass , std::vector<std::string> animationname) {
 		AssimpModel* md = new AssimpModel(true);
-		md->Load(value);
-
-		for (unsigned int i = 0; i < animationpass.size(); i++) {
-			md->LoadAnimation(animationpass[i],animationname[i]);
+		if (md->Load(value)) {
+			for (unsigned int i = 0; i < animationpass.size(); i++) {
+				md->LoadAnimation(animationpass[i], animationname[i]);
+			}
+			mAssimpModelList.push_back(md);
 		}
-
-		mAssimpModelList.push_back(md);
+		else
+			mLostFileList.push_back(value);
 	}
 	// テクスチャ追加
 	void AddTextureToList(const char* value) {
 
 		ID3D11ShaderResourceView* tex = nullptr;
 		D3DX11CreateShaderResourceViewFromFile(Renderer::GetDevice(),value,NULL,NULL,&tex,NULL);
-		if (!tex) {
-			MessageBox(GetWindow(), value, "Error", MB_OK);
-		}
-		assert(tex);
-
-		mTextureList.push_back(tex);
+		if (tex)
+			mTextureList.push_back(tex);
+		else
+			mLostFileList.push_back(value);
 	}
 	// サウンド追加
 	void AddSoundToList(const char* value) {
@@ -145,14 +154,22 @@ protected:
 		// サウンドデータファイルの生成
 		hFile = CreateFile(value, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 
-		CheckChunk(hFile, 'FFIR', &dwChunkSize, &dwChunkPosition);
-
-		ReadChunkData(hFile, &dwFiletype, sizeof(DWORD), dwChunkPosition);
-
-		CheckChunk(hFile, ' tmf', &dwChunkSize, &dwChunkPosition);
-
-		ReadChunkData(hFile, &wfx, dwChunkSize, dwChunkPosition);
-
+		if (CheckChunk(hFile, 'FFIR', &dwChunkSize, &dwChunkPosition) != S_OK) {
+			mLostFileList.push_back(value);
+			return;
+		}
+		else if (ReadChunkData(hFile, &dwFiletype, sizeof(DWORD), dwChunkPosition) != S_OK) {
+			mLostFileList.push_back(value);
+			return;
+		}
+		else if (CheckChunk(hFile, ' tmf', &dwChunkSize, &dwChunkPosition) != S_OK) {
+			mLostFileList.push_back(value);
+			return;
+		}
+		else if (ReadChunkData(hFile, &wfx, dwChunkSize, dwChunkPosition) != S_OK) {
+			mLostFileList.push_back(value);
+			return;
+		}
 
 		//// オーディオデータ読み込み
 		CheckChunk(hFile, 'atad', &sound->SizeAudio, &dwChunkPosition);

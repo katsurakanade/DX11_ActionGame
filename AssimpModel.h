@@ -63,7 +63,7 @@ public:
 	void Update(const char* animationname,int frame);
 	void Update(const char* animationname, const char* animationname2, float BlendRate, int frame);
 	void Draw(D3DXMATRIX root);
-	void Load(std::string FileName);
+	bool Load(std::string FileName);
 	void LoadAnimation(std::string Filename, std::string name);
 	void Unload();
 

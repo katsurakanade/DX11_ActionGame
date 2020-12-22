@@ -5,9 +5,12 @@
 #include "Debug.h"
 #include "Shader.h"
 
-void AssimpModel::Load(std::string FileName) {
+bool AssimpModel::Load(std::string FileName) {
 
 	mScene = aiImportFile(FileName.c_str(), aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_MaxQuality);
+
+	if (mScene == nullptr) 
+		return false;
 
 	mName = mScene->mRootNode->mName.C_Str();
 
@@ -15,6 +18,7 @@ void AssimpModel::Load(std::string FileName) {
 
 	ProcessNode(mScene->mRootNode, mScene);
 
+	return true;
 }
 
 void AssimpModel::LoadAnimation(std::string Filename,std::string name) {
