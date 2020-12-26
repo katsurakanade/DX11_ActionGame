@@ -19,7 +19,6 @@ private:
 	static Scene* mScene;
 	// シーンアセット
 	static Asset* mAsset;
-
 	// フラグ
 	static bool mDisableLighting;
 	static bool mUsingGPU;

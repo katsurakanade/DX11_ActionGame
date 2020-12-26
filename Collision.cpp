@@ -37,8 +37,6 @@ void BoxCollider::Init() {
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &mVertexBuffer);
 
-
-
 	D3DXQuaternionIdentity(&Quaternion);
 }
 
@@ -52,8 +50,6 @@ void BoxCollider::Update(){
 	mScaleOffest.x = GetResource()->Scale.x * mScaleOffestCoff.x;
 	mScaleOffest.y = GetResource()->Scale.y * mScaleOffestCoff.y;
 	mScaleOffest.z = GetResource()->Scale.z * mScaleOffestCoff.z;
-
-	//D3DXVec3Cross(&mScaleOffest, &GetResource()->Scale, &mScaleOffestCoff);
 
 	Position = GetResource()->Position + (mPositionOffest);
 	Rotation = GetResource()->Rotation;
@@ -96,6 +92,7 @@ bool BoxCollider::Collision_Box_Stay(BoxCollider* target) {
 	D3DXVECTOR3 targetmin = target->Position + D3DXVECTOR3(-(target->mSize.x * target->Scale.x) / 2, (target->mSize.y * target->Scale.y) / 2, -(target->mSize.z * target->Scale.z) / 2);
 	D3DXVECTOR3 targetmax = target->Position + D3DXVECTOR3((target->mSize.x * target->Scale.x) / 2, -(target->mSize.y * target->Scale.y) / 2, (target->mSize.z * target->Scale.z) / 2);
 
+	// TODO:‚æ‚è‚‘¬‰»
 	if (selfmax.z > targetmin.z&& selfmin.z < targetmax.z) {
 		if (selfmax.x > targetmin.x&& selfmin.x < targetmax.x) {
 			if (selfmax.y < targetmin.y && selfmin.y > targetmax.y) {

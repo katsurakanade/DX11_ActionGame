@@ -14,7 +14,7 @@
 
 // Static
 Scene* Application::mScene = nullptr;
-Asset* Application::mAsset;
+Asset* Application::mAsset = nullptr;
 bool Application::mDisableLighting;
 bool Application::mUsingGPU;
 float Application::mFrameTime[100];

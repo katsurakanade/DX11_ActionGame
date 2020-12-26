@@ -24,6 +24,7 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="AudioListener.cpp" />
+    <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Debug.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="AudioListener.h" />
+    <ClInclude Include="Behavior.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Component.h" />

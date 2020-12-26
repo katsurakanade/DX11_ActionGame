@@ -11,6 +11,7 @@ class Animation;
 class ModelManager;
 class BoxCollider;
 class Physical;
+class Behavior;
 
 class Enemy : public Resource
 {
@@ -27,6 +28,7 @@ private:
 	ModelManager* mpModel;
 	Physical* mpPhysical;
 	BoxCollider* mpCollider;
+	Behavior* mpBehavior;
 	// ロック画像
 	Sprite* mpLockImage;
 	// 動き始める
@@ -46,11 +48,6 @@ public:
 
 	// ゲージ追加
 	void AddGauge();
-	// 攻撃
-	void Attack();
-	// 移動
-	void Movement(int arrow);
-	// 向き
-	void LookAt();
+	
 };
 

@@ -21,7 +21,7 @@ struct MATERIAL
 	D3DXCOLOR	Specular;
 	D3DXCOLOR	Emission;
 	float		Shininess;
-	float		Dummy[3];//16byte境界用
+	float		Dummy[3]; //16byte境界用
 };
 
 // マテリアル構造体
@@ -43,7 +43,7 @@ struct DX11_SUBSET
 struct LIGHT
 {
 	BOOL		Enable;
-	BOOL		Dummy[3];//16byte境界用
+	BOOL		Dummy[3]; //16byte境界用
 	D3DXVECTOR4	Direction;
 	D3DXCOLOR	Diffuse;
 	D3DXCOLOR	Ambient;
@@ -63,14 +63,13 @@ class Renderer
 {
 private:
 
+	// D3D用
 	static D3D_FEATURE_LEVEL mFeatureLevel;
-
 	static ID3D11Device* mD3DDevice;
 	static ID3D11DeviceContext* mImmediateContext;
 	static IDXGISwapChain* mSwapChain;
 	static ID3D11RenderTargetView* mRenderTargetView;
 	static ID3D11DepthStencilView* mDepthStencilView;
-
 	// バッファ
 	static ID3D11Buffer* mWorldBuffer;
 	static ID3D11Buffer* mViewBuffer;
@@ -79,18 +78,21 @@ private:
 	static ID3D11Buffer* mLightBuffer;
 	static ID3D11Buffer* mCameraBuffer;
 	static ID3D11Buffer* mParameterBuffer;
-
+	// 深度設定
 	static ID3D11DepthStencilState* mDepthStateEnable;
 	static ID3D11DepthStencilState* mDepthStateDisable;
-
+	// カリング設定
 	static ID3D11RasterizerState* mRasterizerState_CullBack;
 	static ID3D11RasterizerState* mRasterizerState_CullNone;
-
+	// ブレンド設定
 	static ID3D11BlendState* mBlendState;
+	// インプットレイアウト
 	static ID3D11InputLayout* mVertexLayout;
 	static ID3D11InputLayout* mVertexLayoutParticle;
 
 public:
+
+
 	static void Init();
 	static void Uninit();
 	static void Begin();

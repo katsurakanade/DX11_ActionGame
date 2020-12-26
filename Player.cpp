@@ -168,7 +168,7 @@ void Player::Update() {
 		std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
 
 		if (Input::GetKeyTrigger(DIK_RIGHTARROW) ) {
-				enemys[mLockIndex]->Is_Lock = false;
+			enemys[mLockIndex]->Is_Lock = false;
 			mpCamera->SetLookTarget(nullptr);
 			if (mLockIndex < enemys.size() - 1) {
 				mLockIndex++;

@@ -135,7 +135,7 @@ public:
     T* AddComponent() {
         T* Component = new T();
         Components.emplace_back(Component);
-        /*Component->SetResource(this);*/
+        Component->SetResource(this);
         Component->Init();
         return Component;
     };
