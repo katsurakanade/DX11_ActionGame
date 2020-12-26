@@ -147,15 +147,29 @@ void Behavior::MoveTo(D3DXVECTOR3 target_position) {
 	D3DXVec3Normalize(&result, &direction);
 
 	// TODO:8•ûŒü‰ü‘PAŠp“x‰ü‘P
-	if (direction.x > 3.0f && direction.z > 3.0f)
-		GetResource()->Rotation.y = D3DX_PI * -0.75f;
-	else if (direction.x < 3.0f && direction.z > 3.0f)
-		GetResource()->Rotation.y = D3DX_PI * 0.75f;
-	else if (direction.x > 3.0f && direction.z < 3.0f)
-		GetResource()->Rotation.y = D3DX_PI * -0.25f;
-	else if (direction.x < 3.0f && direction.z < 3.0f)
-		GetResource()->Rotation.y = D3DX_PI * 0.25f;
-
+	if (direction.z > 5.0f) {
+		if (direction.x > -4.0f && direction.x < 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * 1.0f;
+		else if (direction.x > 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * -0.75f;
+		else if (direction.x < 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * 0.75f;
+	}
+	else if (direction.z < 5.0f && direction.z > -5.0f) {
+		if (direction.x > 0.0f)
+			GetResource()->Rotation.y = D3DX_PI * -0.5f;
+		else if (direction.x < 0.0f)
+			GetResource()->Rotation.y = D3DX_PI * 0.5f;
+	}
+	else if (direction.z < -5.0f) {
+		if (direction.x > -4.0f && direction.x < 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * 2.0f;
+		else if (direction.x > 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * -0.25f;
+		else if (direction.x < 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * 0.25f;
+	}
+	
 	if (mpPhysical->mAcceleration < 1.5f) 
 		mpPhysical->mAcceleration += 0.05f;
 	

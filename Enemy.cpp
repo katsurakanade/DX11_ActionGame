@@ -32,12 +32,13 @@ void Enemy::Init() {
 	mpBehavior = AddComponent<Behavior>();
 
 	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
-	mpCollider->mScaleOffestCoff = D3DXVECTOR3(52.0f, 157.0f, 60.0f);
+	mpCollider->mScaleOffestCoff = D3DXVECTOR3(150.0f, 157.0f, 150.0f);
 	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 3.5f, 0.0f);
 	mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
+	mpCollider->SetUsePanel(true);
 
 	mpAnination->SetState("Idle");
-	mpAnination->SetCoefficient(10.0f);
+	mpAnination->SetCoefficient(5.0f);
 	mpAnination->SetUsePanel(true);
 
 	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ENEMY));
@@ -53,7 +54,6 @@ void Enemy::Init() {
 	mpLockImage->Position = Position;
 	mpLockImage->Scale = D3DXVECTOR3(3, 3, 3);
 	mpLockImage->SetActive(false);
-
 
 	AddGauge();
 	Resource::Init();

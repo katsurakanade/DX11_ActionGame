@@ -34,8 +34,8 @@ private:
 	Camera* mpCamera;
 	// ロックしている敵インデックス
 	unsigned int mLockIndex;
-
-	bool mLockMovement[8];
+	// 移動ロック
+	bool mMovementLock;
 
 public:
 
