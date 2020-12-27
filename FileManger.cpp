@@ -1,10 +1,12 @@
 #include "main.h"
-#include "FileManger.h"
 #include "Application.h"
 #include "Scene.h"
 #include "Props.h"
 #include "ModelManager.h"
+
 #include "Lib/nlohmann/json.hpp"
+#include "FileManger.h"
+
 using namespace std;
 #include <gdiplus.h>
 #include <iostream>
@@ -12,51 +14,7 @@ using namespace std;
 #include <codecvt>
 #include <locale>
 
-using json = nlohmann::json;
-
-// マップロード
-void FileManger::Read(const char* pass,float output[FIELD_X][FIELD_X]) {
-
-	std::string filename = pass;
-	std::ifstream file;
-
-	file.open(filename);
-
-	// Fill
-	if (file.is_open()) {
-		for (int i = 0; i < FIELD_X; i++) {
-			for (int k = 0; k < FIELD_X; k++) {
-				file >> output[i][k];
-			}
-		}
-
-		file.close();
-	}
-
-
-}
-
-void FileManger::Write(const char* pass, float output[FIELD_X][FIELD_X]) {
-
-	std::string filename = pass;
-	std::ofstream file;
-
-	file.open(filename);
-	assert(file);
-
-	// Fill
-	if (file.is_open()) {
-		for (int i = 0; i < FIELD_X; i++) {
-			for (int k = 0; k < FIELD_X; k++) {
-				file << output[i][k] << std::endl;
-			}
-		}
-		file.close();
-		MessageBox(GetWindow(), "セーブ成功", "マップデータ", MB_ICONINFORMATION);
-	}
-}
-
-void FileManger::ReadResource(const char* pass) {
+void FileManager::ReadResource(const char* pass) {
 
 	std::string filename = pass;
 	std::ifstream file;
@@ -135,7 +93,7 @@ void FileManger::ReadResource(const char* pass) {
 	}
 }
 
-void FileManger::ReadImageMap(const char* pass, float output[FIELD_X][FIELD_X]) {
+void FileManager::ReadImageMap(const char* pass, float output[FIELD_X][FIELD_X]) {
 
 	Gdiplus::GdiplusStartupInput gdiplusstartupinput;
 	ULONG_PTR gdiplustoken;
@@ -160,3 +118,101 @@ void FileManger::ReadImageMap(const char* pass, float output[FIELD_X][FIELD_X]) 
 	Gdiplus::GdiplusShutdown(gdiplustoken);
 }
 
+void FileManager::CreateParticleJSON(const char* pass, ParitcleSetting* setting) {
+
+	std::string filename = pass;
+	std::ofstream file;
+
+	file.open(filename);
+	assert(file);
+
+	if (file.is_open()) {
+		
+		json data;
+		data["Amount"] = setting->Amount;
+		data["RandomSpeed"] = setting->RandomSpeed;
+		data["PolarCoordinates"] = setting->PolarCoordinates; 
+
+		data["Position"]["x"] = setting->Position.x;
+		data["Position"]["y"] = setting->Position.y;
+		data["Position"]["z"] = setting->Position.z;
+
+		data["PostionMinMaxX"]["x"] = setting->PostionMinMaxX.x;
+		data["PostionMinMaxX"]["y"] = setting->PostionMinMaxX.y;
+		data["PostionMinMaxY"]["x"] = setting->PostionMinMaxY.x;
+		data["PostionMinMaxY"]["y"] = setting->PostionMinMaxY.y;
+		data["PostionMinMaxZ"]["x"] = setting->PostionMinMaxZ.x;
+		data["PostionMinMaxZ"]["y"] = setting->PostionMinMaxZ.y;
+
+		data["Speed"]["x"] = setting->Speed.x;
+		data["Speed"]["y"] = setting->Speed.y;
+		data["Speed"]["z"] = setting->Speed.z;
+
+		data["SpeedMinMaxX"]["x"] = setting->SpeedMinMaxX.x;
+		data["SpeedMinMaxX"]["y"] = setting->SpeedMinMaxX.y;
+		data["SpeedMinMaxY"]["x"] = setting->SpeedMinMaxY.x;
+		data["SpeedMinMaxY"]["y"] = setting->SpeedMinMaxY.y;
+		data["SpeedMinMaxZ"]["x"] = setting->SpeedMinMaxZ.x;
+		data["SpeedMinMaxZ"]["y"] = setting->SpeedMinMaxZ.y;
+
+		data["LifeMinMax"]["x"] = setting->LifeMinMax.x;
+		data["LifeMinMax"]["y"] = setting->LifeMinMax.y;
+
+		data["Size"] = setting->Size;
+
+		file << data << std::endl;
+		file.close();
+
+		MessageBox(GetWindow(), "セーブ成功", "パーティクルデータ", MB_ICONINFORMATION);
+
+	}
+}
+
+ParitcleSetting FileManager::ReadParticleJSON(const char* pass) {
+
+	std::string filename = pass;
+	std::ifstream file;
+	ParitcleSetting setting;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		json data;
+		file >> data;
+
+		setting.Amount = data["Amount"];
+		setting.RandomSpeed = data["RandomSpeed"];
+		setting.PolarCoordinates = data["PolarCoordinates"];
+
+		setting.Position.x = data["Position"]["x"];
+		setting.Position.y = data["Position"]["y"];
+		setting.Position.z = data["Position"]["z"];
+
+		setting.PostionMinMaxX.x = data["PostionMinMaxX"]["x"];
+		setting.PostionMinMaxX.y = data["PostionMinMaxX"]["y"];
+		setting.PostionMinMaxY.x = data["PostionMinMaxY"]["x"];
+		setting.PostionMinMaxY.y = data["PostionMinMaxY"]["y"];
+		setting.PostionMinMaxZ.x = data["PostionMinMaxZ"]["x"];
+		setting.PostionMinMaxZ.y = data["PostionMinMaxZ"]["y"];
+
+		setting.Speed.x = data["Speed"]["x"];
+		setting.Speed.y = data["Speed"]["y"];
+		setting.Speed.z = data["Speed"]["z"];
+
+		setting.SpeedMinMaxX.x = data["SpeedMinMaxX"]["x"];
+		setting.SpeedMinMaxX.y = data["SpeedMinMaxX"]["y"];
+		setting.SpeedMinMaxY.x = data["SpeedMinMaxY"]["x"];
+		setting.SpeedMinMaxY.y = data["SpeedMinMaxY"]["y"];
+		setting.SpeedMinMaxZ.x = data["SpeedMinMaxZ"]["x"];
+		setting.SpeedMinMaxZ.y = data["SpeedMinMaxZ"]["y"];
+
+		setting.LifeMinMax.x = data["LifeMinMax"]["x"];
+		setting.LifeMinMax.y = data["LifeMinMax"]["y"];
+
+		setting.Size = data["Size"];
+	}
+
+	file.close();
+	return setting;
+}

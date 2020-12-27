@@ -14,10 +14,10 @@ float MeshField::HeightMap[FIELD_X][FIELD_X];
 void MeshField::Init() {
 
 	// マップ上のオブジェクトロード
-	FileManger::ReadResource("grass.json");
-	FileManger::ReadResource("rock.json");
+	FileManager::ReadResource("asset\\json_scene_object\\grass.json");
+	FileManager::ReadResource("asset\\json_scene_object\\props.json");
 	// マップロード（画像）
-	FileManger::ReadImageMap("asset/texture/map2.bmp",MeshField::HeightMap);
+	FileManager::ReadImageMap("asset/texture/map2.bmp",MeshField::HeightMap);
 
 	Name = "MeshField";
 
@@ -94,7 +94,6 @@ void MeshField::Init() {
 
 	// 画像
 	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT));
-	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::GRASS));
 	mTextureNormal.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_NORMAL));
 	mTextureHeight.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_HEIGHT));
 

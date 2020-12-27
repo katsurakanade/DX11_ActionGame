@@ -59,22 +59,9 @@ void Title::Update() {
 	if (!mStart) {
 
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		ParitcleSetting* setting = new ParitcleSetting;
-		setting->Amount = 1000000;
-		setting->PostionMinMaxX = D3DXVECTOR2(-50, 50);
-		setting->PostionMinMaxY = D3DXVECTOR2(-50, 50);
-		setting->PostionMinMaxZ = D3DXVECTOR2(-50, 50);
-		setting->SpeedMinMaxX = D3DXVECTOR2(0.0f, 0.0f);
-		setting->SpeedMinMaxY = D3DXVECTOR2(1.0f, 2.0f);
-		setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 0.0f);
-		setting->LifeMinMax = D3DXVECTOR2(30000.0f, 30000.0f);
-		setting->Size = 0.03f;
-		pc->Create(setting);
+		pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\Title_Particle.json"));
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::PARTICLE));
-		delete setting;
-
 		Application::GetScene()->GetGameObject<Camera>(CameraLayer)->SetFollowTarget(pc);
-
 		mStart = true;
 	}
 

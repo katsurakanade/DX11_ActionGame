@@ -9,28 +9,32 @@
 
 using json = nlohmann::json;
 
-
 void Asset::LoadSceneAsset(){
 
-	// アセットロード
+	// JSONデータ完全性チェック
+	CheckJSONDataIntegrity();
+
+	// アセットロード(マルチスレッド)
 	std::thread thread_loadmodel(&Asset::LoadModel,this);
 	std::thread thread_loadtexture(&Asset::LoadTexture, this);
 	std::thread thread_loadsound(&Asset::LoadSound, this);
-
 	thread_loadmodel.join();
 	thread_loadtexture.join();
 	thread_loadsound.join();
 
-	// エラーチェック
-	int error = mLostFileList.size();
-	for (int i = 0; i < error; i++) {
-		MessageBox(GetWindow(), mLostFileList[i].c_str(), "ファイル読み込みエラー", MB_OK);
-	}
-	if (error > 0) {
-		if (MessageBox(GetWindow(), "ファイル読み込みエラー", "エラー", MB_OK)) {
+	// アセットファイル完全性チェック
+	if (mLostFileList.size() > 0) {
+		std::string str;
+		for (int i = 0; i < mLostFileList.size(); i++) {
+			str += mLostFileList[i].c_str();
+			str += "\n";
+		}
+		MessageBox(GetWindow(), str.c_str(), "アセットファイル読み込みエラー", MB_OK);
+		if (MessageBox(GetWindow(), "アセットファイル読み込みエラー", "エラー", MB_OK)) {
 			exit(1);
 		}
 	}
+	mLostFileList.clear();
 
 	switch (mScene)
 	{
@@ -96,10 +100,10 @@ void Asset::LoadModel() {
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
-		jsonpath = "Asset_Model_Title.json";
+		jsonpath = "asset\\json_asset\\Asset_Model_Title.json";
 		break;
 	case SCENE_ASSET::GAME:
-		jsonpath = "Asset_Model_Game.json";
+		jsonpath = "asset\\json_asset\\Asset_Model_Game.json";
 		break;
 	case SCENE_ASSET::RESULT:
 		break;
@@ -160,10 +164,10 @@ void Asset::LoadTexture() {
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
-		jsonpath = "Asset_Texture_Title.json";
+		jsonpath = "asset\\json_asset\\Asset_Texture_Title.json";
 		break;
 	case SCENE_ASSET::GAME:
-		jsonpath = "Asset_Texture_Game.json";
+		jsonpath = "asset\\json_asset\\Asset_Texture_Game.json";
 		break;
 	case SCENE_ASSET::RESULT:
 		break;
@@ -219,6 +223,43 @@ void Asset::LoadSound() {
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Sound Loaded", end, start);
+}
+
+void Asset::CheckFile(const char* path) {
+
+	auto checkfile = [](const char* path) ->bool {std::ifstream file; file.open(path); return file.is_open(); };
+	if (!checkfile(path)) 
+		mLostFileList.push_back(path);
+}
+
+void Asset::CheckJSONDataIntegrity() {
+
+	int error = 0;
+
+	CheckFile("asset\\json_asset\\Asset_Model_Game.json");
+	CheckFile("asset\\json_asset\\Asset_Model_Title.json");
+	CheckFile("asset\\json_asset\\Asset_Texture_Game.json");
+	CheckFile("asset\\json_asset\\Asset_Texture_Title.json");
+	CheckFile("asset\\json_scene_object\\grass.json");
+	CheckFile("asset\\json_scene_object\\props.json");
+	CheckFile("asset\\json_particle\\PlayerAttack_FireBall_Particle.json");
+	CheckFile("asset\\json_particle\\PlayerAttack_Simple_Particle.json");
+	CheckFile("asset\\json_particle\\PlayerSwitchCharacter_Particle.json");
+	CheckFile("asset\\json_particle\\Title_Particle.json");
+
+	if (mLostFileList.size() > 0) {
+		std::string str;
+		for (int i = 0; i < mLostFileList.size(); i++) {
+			str += mLostFileList[i].c_str();
+			str += "\n";
+		}
+		MessageBox(GetWindow(), str.c_str(), "JSONファイル読み込みエラー", MB_OK);
+		if (MessageBox(GetWindow(), "JSONファイル読み込みエラー", "エラー", MB_OK)) {
+			exit(1);
+		}
+	}
+
+	mLostFileList.clear();
 }
 
 std::vector <std::string> Asset::GetPathFromFile(const char* file) {

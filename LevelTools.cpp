@@ -26,9 +26,9 @@ void LevelTools::Update() {
 		{
 			if (ImGui::MenuItem(u8"Save")) {
 				std::vector<Grass*> grasslist = Application::GetScene()->GetGameObjects<Grass>(EffectLayer);
-				FileManger::WriteResource("grass.json", grasslist);
+				FileManager::WriteResource("asset\\json_scene_object\\grass.json", grasslist);
 				std::vector<Props*> propslist = Application::GetScene()->GetGameObjects<Props>(ObjectLayer);
-				FileManger::WriteResource("rock.json", propslist);
+				FileManager::WriteResource("asset\\json_scene_object\\props.json", propslist);
 			}
 
 			ImGui::EndMenu();

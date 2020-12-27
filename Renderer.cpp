@@ -501,9 +501,7 @@ void Renderer::SetProjectionMatrix(D3DXMATRIX* ProjectionMatrix)
 
 void Renderer::SetMaterial(MATERIAL Material)
 {
-
 	mImmediateContext->UpdateSubresource(mMaterialBuffer, 0, NULL, &Material, 0, 0);
-
 }
 
 void Renderer::SetCameraPosition(D3DXVECTOR3 CameraPosition)
@@ -513,9 +511,7 @@ void Renderer::SetCameraPosition(D3DXVECTOR3 CameraPosition)
 
 void Renderer::SetLight(LIGHT Light)
 {
-
 	mImmediateContext->UpdateSubresource(mLightBuffer, 0, NULL, &Light, 0, 0);
-
 }
 
 void Renderer::SetParameter(ShaderParameter Parameter)

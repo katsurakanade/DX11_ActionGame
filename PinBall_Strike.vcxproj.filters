@@ -55,9 +55,6 @@
     <Filter Include="ソース ファイル\Render">
       <UniqueIdentifier>{40dc677b-1716-4b33-9000-be6072576bf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="JSON">
-      <UniqueIdentifier>{d520c11a-f360-4ded-8ae6-5b572c703bd0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\File">
       <UniqueIdentifier>{ad300e1c-da8f-490f-9d97-65c3a197d776}</UniqueIdentifier>
     </Filter>
@@ -400,19 +397,5 @@
     <FxCompile Include="pixelShader_WithHeight.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Asset_Texture_Title.json">
-      <Filter>JSON</Filter>
-    </None>
-    <None Include="Asset_Texture_Game.json">
-      <Filter>JSON</Filter>
-    </None>
-    <None Include="Asset_Model_Title.json">
-      <Filter>JSON</Filter>
-    </None>
-    <None Include="Asset_Model_Game.json">
-      <Filter>JSON</Filter>
-    </None>
   </ItemGroup>
 </Project>

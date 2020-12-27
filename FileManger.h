@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Grass.h"
+#include "Particle.h"
 #include "Lib/nlohmann/json.hpp"
 #include <iostream>
 #include <fstream>
@@ -17,7 +18,7 @@ typedef struct
 	BYTE r;
 }RGB;
 
-class FileManger
+class FileManager
 {
 
 private:
@@ -26,11 +27,12 @@ private:
 
 public:
 
-	// マップIO
-	static void Read(const char* pass, float output[FIELD_X][FIELD_X]);
-	static void Write(const char* pass, float output[FIELD_X][FIELD_X]);
-
+	// 高さマップ読み込み
 	static void ReadImageMap(const char* pass, float output[FIELD_X][FIELD_X]);
+	// パーティクル情報作成
+	static void CreateParticleJSON(const char* pass, ParitcleSetting* setting);
+	// パーティクル情報読み込み
+	static ParitcleSetting ReadParticleJSON(const char* pass);
 
 	// リソースIO
 	static void ReadResource(const char* pass);

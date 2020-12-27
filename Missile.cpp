@@ -53,19 +53,9 @@ void Missile::Update() {
 		// “G‚É“–‚½‚é
 		if (mCurveProgress >= 1.0f) {
 			mpEffect->Destroy();
-
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-			ParitcleSetting* setting = new ParitcleSetting;
+			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-			setting->Amount = 30000;
-			setting->SpeedMinMaxX = D3DXVECTOR2(-15.0f, 15.0f);
-			setting->SpeedMinMaxY = D3DXVECTOR2(-15.0f, 15.0f);
-			setting->SpeedMinMaxZ = D3DXVECTOR2(-20.0f, 20.0f);
-			setting->LifeMinMax = D3DXVECTOR2(1.0f, 300.0f);
-			setting->Size = 0.1f;
-			setting->PolarCoordinates = true;
-			pc->Create(setting);
-			delete setting;
 			pc->Position = es[mTargetIndex]->Position + D3DXVECTOR3(0, 3, 0);
 
 			es[mTargetIndex]->mHp -= 3.0f;

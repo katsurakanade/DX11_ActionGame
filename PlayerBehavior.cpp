@@ -213,19 +213,9 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 			for (unsigned int i = 0; i < es.size(); i++) {
 				if (es[i] != nullptr && es[i]->GetComponent<BoxCollider>()->Collision_Box_Stay(mpCollider)) {
 					ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-					ParitcleSetting* setting = new ParitcleSetting;
+					pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
 					pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-					setting->Amount = 30000;
-					setting->SpeedMinMaxX = D3DXVECTOR2(-35.0f, 35.0f);
-					setting->SpeedMinMaxY = D3DXVECTOR2(-35.0f, 35.0f);
-					setting->SpeedMinMaxZ = D3DXVECTOR2(-50.0f, 50.0f);
-					setting->LifeMinMax = D3DXVECTOR2(1.0f, 300.0f);
-					setting->Size = 0.1f;
-					setting->PolarCoordinates = true;
-					pc->Create(setting);
-					delete setting;
 					pc->Position = Position + D3DXVECTOR3(0, 3, 0);
-
 					es[i]->mHp -= 10.0f;
 				}
 			}
@@ -272,21 +262,9 @@ void PlayerBehavior::SwitchCharacter(BYTE keycode_prev ,BYTE keycode_next) {
 	if (Input::GetKeyTrigger(keycode_prev)) {
 		if (mpModelManager->GetModel() != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-			ParitcleSetting* setting = new ParitcleSetting;
-			setting->Amount = 3000;
-			setting->PostionMinMaxX = D3DXVECTOR2(-5, 5);
-			setting->PostionMinMaxY = D3DXVECTOR2(-5, 5);
-			setting->SpeedMinMaxX = D3DXVECTOR2(-50.0f, 50.0f);
-			setting->SpeedMinMaxY = D3DXVECTOR2(-50.0f, 50.0f);
-			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 10.0f);
-			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
-			setting->Size = 0.2f;
-			setting->PolarCoordinates = true;
-			pc->Create(setting);
-			delete setting;
-
-			pc->Position = Position;
+			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerSwitchCharacter_Particle.json"));
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
+			pc->Position = Position;
 
 			mpModelManager->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
@@ -300,21 +278,9 @@ void PlayerBehavior::SwitchCharacter(BYTE keycode_prev ,BYTE keycode_next) {
 		if (mpModelManager->GetModel() != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2)) {
 
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-			ParitcleSetting* setting = new ParitcleSetting;
-			setting->Amount = 3000;
-			setting->PostionMinMaxX = D3DXVECTOR2(-5, 5);
-			setting->PostionMinMaxY = D3DXVECTOR2(-5, 5);
-			setting->SpeedMinMaxX = D3DXVECTOR2(-50.0f, 50.0f);
-			setting->SpeedMinMaxY = D3DXVECTOR2(-50.0f, 50.0f);
-			setting->SpeedMinMaxZ = D3DXVECTOR2(0.0f, 10.0f);
-			setting->LifeMinMax = D3DXVECTOR2(10.0f, 120.0f);
-			setting->Size = 0.2f;
-			setting->PolarCoordinates = true;
-			pc->Create(setting);
-			delete setting;
-
-			pc->Position = Position;
+			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerSwitchCharacter_Particle.json"));
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
+			pc->Position = Position;
 
 			mpModelManager->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2));
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);

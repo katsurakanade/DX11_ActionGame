@@ -57,20 +57,16 @@ enum class TEXTURE_ENUM_GAME
 	BAR_FILL,
 	EXPLOSION,
 	PARTICLE,
-	GRASS,
 	FRAME,
 	ROUND_FRAME,
-	SWORD_ICON,
 	PLANT,
 	DIRT,
 	DIRT_NORMAL,
 	DIRT_HEIGHT,
-	HAL,
 	FOG,
 	HANE,
 	CHARACTERICON_0,
 	CHARACTERICON_1,
-	BAG,
 	NUMBER,
 	END,
 };
@@ -196,6 +192,12 @@ protected:
 	void LoadModel();
 	void LoadTexture();
 	void LoadSound();
+
+	// ファイルチェック
+	void CheckFile(const char* path);
+
+	// JSONデータ完全性チェック
+	void CheckJSONDataIntegrity();
 
 public:
 
