@@ -1,5 +1,5 @@
 /*
-行為クラス
+敵行為クラス
 */
 #pragma once
 #include "Component.h"
@@ -15,22 +15,28 @@ enum class BEHAVIOR_STATE{
 	Attack, // 攻撃
 };
 
-class Behavior : public Component
+class EnemyBehavior : public Component
 {
 
 private:
 
-	// ステート
-	BEHAVIOR_STATE mState;
 	// コンポーネント
 	Physical* mpPhysical;
 	Animation* mpAnimation;
 	// プレイヤーポインタ
 	Player* mpPlayer;
+	// プレイヤーとの距離
+	float mLengthToPlayer;
+
 	// 移動
 	void Movement(int arrow);
 	// 場所に移動
 	void MoveTo(D3DXVECTOR3 target_position);
+
+	// ステート
+	std::string mState;
+	// ステートマップ
+	std::map <BEHAVIOR_STATE, std::string> mStatemap;
 
 public:
 
@@ -38,6 +44,7 @@ public:
 	void Uninit();
 	void Update();
 	void FixedUpdate();
+	void DataPanel();
 
 };
 

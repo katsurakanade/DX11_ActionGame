@@ -198,7 +198,10 @@
     <ClCompile Include="ParticleManager.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Behavior.cpp">
+    <ClCompile Include="EnemyBehavior.cpp">
+      <Filter>ソース ファイル\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBehavior.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
   </ItemGroup>
@@ -353,7 +356,10 @@
     <ClInclude Include="ParticleManager.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Behavior.h">
+    <ClInclude Include="EnemyBehavior.h">
+      <Filter>ヘッダー ファイル\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerBehavior.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
   </ItemGroup>

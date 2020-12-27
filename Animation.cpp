@@ -47,13 +47,12 @@ void Animation::Update() {
 		mOneTimeFlag = false;
 	}
 
-	// ForDebug
-	if (GetUsePanel()) {
-		DataPanel();
-	}
+
 }
 
 void Animation::FixedUpdate() {
+
+	Component::FixedUpdate();
 
 	// ƒtƒŒ[ƒ€C³
 	if (mFrame >= 1000000) 

@@ -25,11 +25,14 @@ void Light::Uninit() {
 
 void Light::Update() {
 
-	ImGui::Begin(u8"ライト");
-	ImGui::SliderFloat4("Direction", mSource->Direction, -1.0f, 1.0f);
-	D3DXVec4Normalize(&mSource->Direction, &mSource->Direction);
-	ImGui::SliderFloat4("Ambient", mSource->Ambient, 0.0f, 1.0f);
-	ImGui::SliderFloat4("Diffuse", mSource->Diffuse, 0.0f, 1.0f);
+	ImGui::Begin(u8"システム");
+	if (ImGui::TreeNode(u8"ライト")) {
+		ImGui::SliderFloat4("Direction", mSource->Direction, -1.0f, 1.0f);
+		D3DXVec4Normalize(&mSource->Direction, &mSource->Direction);
+		ImGui::SliderFloat4("Ambient", mSource->Ambient, 0.0f, 1.0f);
+		ImGui::SliderFloat4("Diffuse", mSource->Diffuse, 0.0f, 1.0f);
+		ImGui::TreePop();
+	}
 	ImGui::End();
 
 }

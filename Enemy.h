@@ -11,7 +11,7 @@ class Animation;
 class ModelManager;
 class BoxCollider;
 class Physical;
-class Behavior;
+class EnemyBehavior;
 
 class Enemy : public Resource
 {
@@ -28,11 +28,9 @@ private:
 	ModelManager* mpModel;
 	Physical* mpPhysical;
 	BoxCollider* mpCollider;
-	Behavior* mpBehavior;
+	EnemyBehavior* mpBehavior;
 	// ƒƒbƒN‰æ‘œ
 	Sprite* mpLockImage;
-	// “®‚«n‚ß‚é
-	bool mStart;
 
 public:
 
@@ -50,4 +48,3 @@ public:
 	void AddGauge();
 	
 };
-

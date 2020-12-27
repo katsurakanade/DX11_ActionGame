@@ -41,6 +41,7 @@ public:
 	void Uninit();
 	void Update();
 	void Render();
+	void FixedUpdate();
 
 	// Setter
 	void SetTexture(ID3D11ShaderResourceView* texture) { mTexture = texture; };

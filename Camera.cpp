@@ -50,17 +50,20 @@ void Camera::Update() {
 		mControllerPosition += D3DXVECTOR3(0, -5.0f, 0) * Time::GetDeltaTime();
 	}
 
-	ImGui::Begin(u8"カメラ");
+	ImGui::Begin(u8"システム");
 
-	if (mFollowTarget) {
-		ImGui::SliderFloat3(u8"座標偏移", mFollowPostionOffset, -200.0f, 200.0f, "%.0f", 2.0f);
-		ImGui::SliderFloat3(u8"視点偏移", mFollowProjectionOffset, -200.0f, 200.0f, "%.0f", 2.0f);
-		ImGui::SliderFloat3(u8"コントロール", mControllerPosition, -200.0f, 200.0f, "%.0f", 2.0f);
-	}
+	if (ImGui::TreeNode(u8"カメラ")) {
+		if (mFollowTarget) {
+			ImGui::SliderFloat3(u8"座標偏移", mFollowPostionOffset, -200.0f, 200.0f, "%.0f", 2.0f);
+			ImGui::SliderFloat3(u8"視点偏移", mFollowProjectionOffset, -200.0f, 200.0f, "%.0f", 2.0f);
+			ImGui::SliderFloat3(u8"コントロール", mControllerPosition, -200.0f, 200.0f, "%.0f", 2.0f);
+		}
 
-	else {
-		ImGui::SliderFloat3(u8"座標", Position, -200.0f, 200.0f, "%.0f", 2.0f);
-		ImGui::SliderFloat3(u8"視点", mTarget, -200.0f, 200.0f, "%.0f", 2.0f);
+		else {
+			ImGui::SliderFloat3(u8"座標", Position, -200.0f, 200.0f, "%.0f", 2.0f);
+			ImGui::SliderFloat3(u8"視点", mTarget, -200.0f, 200.0f, "%.0f", 2.0f);
+		}
+		ImGui::TreePop();
 	}
 
 	ImGui::End();

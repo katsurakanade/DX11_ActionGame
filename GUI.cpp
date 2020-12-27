@@ -56,6 +56,6 @@ void GUI::Init() {
 
 void GUI::Update() {
 
-	/*mpPlayerHP->mFillAmount = mpPlayer->mHp / mpPlayer->GetHpInit();*/
+	mpPlayerHP->mFillAmount = mpPlayer->mHp / mpPlayer->GetHpInit();
 }
 

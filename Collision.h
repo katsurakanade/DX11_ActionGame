@@ -35,6 +35,7 @@ public:
 	void Uninit();
 	void Update();
 	void Render();
+	void FixedUpdate();
 
 	// ëÿç›
 	bool Collision_Box_Stay(BoxCollider* target);

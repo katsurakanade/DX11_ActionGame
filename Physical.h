@@ -40,6 +40,7 @@ public:
 	void Init();
 	void Uninit();
 	void Update();
+	void FixedUpdate();
 
 	// —Í’Ç‰Á
 	void AddForce(D3DXVECTOR3 force);

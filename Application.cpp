@@ -63,11 +63,9 @@ void Application::Uninit() {
 
 void Application::Update() {
 		
+	System();
 	Input::Update();
 	mScene->Update();
-
-	std::thread system(System);
-	system.join();
 
 
 }

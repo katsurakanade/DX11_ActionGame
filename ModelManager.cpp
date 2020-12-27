@@ -29,7 +29,7 @@ void ModelManager::Update() {
 }
 
 void ModelManager::FixedUpdate() {
-
+	Component::FixedUpdate();
 }
 
 

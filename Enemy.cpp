@@ -12,7 +12,7 @@
 #include "MeshField.h"
 #include "ModelManager.h"
 #include "ImageManager.h"
-#include "Behavior.h"
+#include "EnemyBehavior.h"
 #include <random>
 
 
@@ -29,7 +29,7 @@ void Enemy::Init() {
 	mpCollider = AddComponent<BoxCollider>();
 	mpAnination = AddComponent<Animation>();
 	mpModel = AddComponent<ModelManager>();
-	mpBehavior = AddComponent<Behavior>();
+	mpBehavior = AddComponent<EnemyBehavior>();
 
 	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
 	mpCollider->mScaleOffestCoff = D3DXVECTOR3(150.0f, 157.0f, 150.0f);
@@ -55,6 +55,8 @@ void Enemy::Init() {
 	mpLockImage->Scale = D3DXVECTOR3(3, 3, 3);
 	mpLockImage->SetActive(false);
 
+	mpBehavior->SetUsePanel(true);
+
 	AddGauge();
 	Resource::Init();
 
@@ -78,7 +80,6 @@ void Enemy::Uninit() {
 	if (mGauge) {
 		mGauge->Destroy();
 	}
-
 	if (mpLockImage) {
 		mpLockImage->Destroy();
 	}
@@ -88,13 +89,8 @@ void Enemy::Uninit() {
 
 void Enemy::Update() {
 
-
 	if (mGauge) {
 		mGauge->mFillAmount = mHp / mHpInit;
-	}
-
-	if (Input::GetKeyTrigger(DIK_H)) {
-		mStart = true;
 	}
 
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);

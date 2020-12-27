@@ -75,8 +75,6 @@ void ImageManager::Uninit() {
 
 void ImageManager::Update() {
 	
-	
-
 	if (mAnimation) {
 		if (!mLoop) {
 			mWaitframe++;
@@ -94,6 +92,10 @@ void ImageManager::Update() {
 		}
 	}
 
+}
+
+void ImageManager::FixedUpdate() {
+	Component::FixedUpdate();
 }
 
 void ImageManager::Render() {

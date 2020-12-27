@@ -41,10 +41,13 @@ void Physical::Update() {
 
 	IsGround = false;
 
-	if (GetUsePanel()) {
-		DataPanel();
-	}
+
 }
+
+void Physical::FixedUpdate() {
+	Component::FixedUpdate();
+}
+
 
 void Physical::AddForce(D3DXVECTOR3 force) {
 	GetResource()->Position += force * 100.0f * Time::GetDeltaTime();

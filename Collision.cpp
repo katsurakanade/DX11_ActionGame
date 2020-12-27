@@ -55,9 +55,11 @@ void BoxCollider::Update(){
 	Rotation = GetResource()->Rotation;
 	Scale = GetResource()->Scale + (mScaleOffest);
 
-	if (GetUsePanel()) {
-		DataPanel();
-	}
+
+}
+
+void BoxCollider::FixedUpdate() {
+	Component::FixedUpdate();
 }
 
 void BoxCollider::Render() {

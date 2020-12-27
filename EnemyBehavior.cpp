@@ -6,9 +6,10 @@
 #include "Animation.h"
 #include "Physical.h"
 #include "Player.h"
-#include "Behavior.h"
+#include "EnemyBehavior.h"
+#include <map>
 
-void Behavior::Init() {
+void EnemyBehavior::Init() {
 
 	// コンポーネント取得
 	mpPhysical = GetResource()->GetComponent<Physical>();
@@ -16,14 +17,16 @@ void Behavior::Init() {
 	// プレイヤー取得
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 	// ステート初期化
-	mState = BEHAVIOR_STATE::Idle;
+	mStatemap[BEHAVIOR_STATE::Idle] = "Idle";
+	mStatemap[BEHAVIOR_STATE::Chase] = "Chase";
+	mStatemap[BEHAVIOR_STATE::Attack] = "Attack";
 }
 
-void Behavior::Uninit() {
+void EnemyBehavior::Uninit() {
 
 }
 
-void Behavior::Update() {
+void EnemyBehavior::Update() {
 
 	Position = GetResource()->Position;
 
@@ -31,45 +34,49 @@ void Behavior::Update() {
 	D3DXVECTOR3 pp = mpPlayer->Position;
 	D3DXVECTOR3 sp = Position;
 	D3DXVECTOR3 direction = pp - sp;
-	float length = D3DXVec3Length(&direction);
-
-	ImGui::Begin(GetResource()->Name.c_str());
-	ImGui::Text("Length : %f", length);
-	ImGui::Text("State : %d", mState);
-	ImGui::End();
+	mLengthToPlayer = D3DXVec3Length(&direction);
 
 	// 行動決め
-	if (length < 10) 
-		mState = BEHAVIOR_STATE::Attack;
-	else if (length > 10 && length < 40) 
-		mState = BEHAVIOR_STATE::Chase;
-	else if (length > 40) 
-		mState = BEHAVIOR_STATE::Idle;
+	if (mLengthToPlayer < 10)
+		mState = "Attack";
+	else if (mLengthToPlayer > 10 && mLengthToPlayer < 40)
+		mState = "Chase";
+	else if (mLengthToPlayer > 40)
+		mState = "Idle";
 
 	// 行動
-	switch (mState)
-	{
-	case BEHAVIOR_STATE::Idle:
+	if (mState == "Idle") {
 		mpAnimation->SetNewState("Idle");
-		break;
-	case BEHAVIOR_STATE::Chase:
+	}
+	else if (mState == "Chase") {
 		mpAnimation->SetNewState("Running");
 		MoveTo(mpPlayer->Position);
-		break;
-	case BEHAVIOR_STATE::Attack:
-		mpAnimation->SetNewStateOneTime("Attack",0.7f);
-		break;
-	default:
-		break;
 	}
+	else if (mState == "Attack") {
+		mpAnimation->SetNewStateOneTime("Attack", 0.7f);
+	}
+
+
+
 }
 
-void Behavior::FixedUpdate() {
+void EnemyBehavior::FixedUpdate() {
 
-	
+	Component::FixedUpdate();
 }
 
-void Behavior::Movement(int arrow) {
+void EnemyBehavior::DataPanel() {
+
+	ImGui::Begin(GetResource()->Name.c_str());
+	if (ImGui::TreeNode(u8"行為")) {
+		ImGui::Text("State : %s", mState);
+		ImGui::Text("LengthToPlayer : %f", mLengthToPlayer);
+		ImGui::TreePop();
+	}
+	ImGui::End();
+}
+
+void EnemyBehavior::Movement(int arrow) {
 
 	switch (arrow)
 	{
@@ -140,13 +147,13 @@ void Behavior::Movement(int arrow) {
 
 }
 
-void Behavior::MoveTo(D3DXVECTOR3 target_position) {
+void EnemyBehavior::MoveTo(D3DXVECTOR3 target_position) {
 
 	D3DXVECTOR3 result;
 	D3DXVECTOR3 direction = target_position - Position;
 	D3DXVec3Normalize(&result, &direction);
 
-	// TODO:8方向改善、角度改善
+	// TODO:角度改善
 	if (direction.z > 5.0f) {
 		if (direction.x > -4.0f && direction.x < 4.0f)
 			GetResource()->Rotation.y = D3DX_PI * 1.0f;
