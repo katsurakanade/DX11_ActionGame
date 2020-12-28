@@ -61,6 +61,9 @@
     <Filter Include="ヘッダー ファイル\File">
       <UniqueIdentifier>{121c542b-95d9-4803-aa42-2b3049f379cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="JSON">
+      <UniqueIdentifier>{00e76168-069e-4624-ab8c-87495b2af198}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -397,5 +400,28 @@
     <FxCompile Include="pixelShader_WithHeight.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="asset\json_asset\Asset_Animation_Game.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_asset\Asset_Model_Game.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_asset\Asset_Model_Title.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_asset\Asset_Sound_Game.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_asset\Asset_Sound_Title.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_asset\Asset_Texture_Game.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_asset\Asset_Texture_Title.json">
+      <Filter>JSON</Filter>
+    </None>
   </ItemGroup>
 </Project>

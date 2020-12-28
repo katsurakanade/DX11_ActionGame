@@ -18,9 +18,7 @@ class Enemy : public Resource
 
 private:
 
-	
-	// HP初期
-	float mHpInit;
+	AssimpModel* mModel;
 	// ゲージ
 	Gauge* mGauge;
 	// コンポーネント
@@ -36,8 +34,6 @@ public:
 
 	// ロック
 	bool Is_Lock = false;
-	// HP
-	float mHp;
 
 	void Init();
 	void Uninit();

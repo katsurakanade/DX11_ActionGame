@@ -8,7 +8,7 @@
 void ModelManager::Init() {
 
 	Name = "ModelManager";
-
+	mpAnimation = GetResource()->GetComponent<Animation>();
 
 }
 

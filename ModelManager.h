@@ -25,7 +25,6 @@ public:
 	
 	// Setter
 	void SetModel(AssimpModel* model) { mModel = model; };
-	void SetAnimation(Animation* animation) { mpAnimation = animation; };
 	// Getter
 	AssimpModel* GetModel() { return mModel; };
 

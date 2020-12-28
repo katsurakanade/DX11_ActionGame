@@ -263,6 +263,15 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="asset\json_asset\Asset_Animation_Game.json" />
+    <None Include="asset\json_asset\Asset_Model_Game.json" />
+    <None Include="asset\json_asset\Asset_Model_Title.json" />
+    <None Include="asset\json_asset\Asset_Sound_Game.json" />
+    <None Include="asset\json_asset\Asset_Sound_Title.json" />
+    <None Include="asset\json_asset\Asset_Texture_Game.json" />
+    <None Include="asset\json_asset\Asset_Texture_Title.json" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{361150B7-8ECE-4AAD-8B0C-0D7214476E50}</ProjectGuid>
@@ -390,7 +399,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Asset_3Texture_3Game_1json__JsonSchema="https://gitpod.io/schemas/gitpod-schema.json" />
+      <UserProperties />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

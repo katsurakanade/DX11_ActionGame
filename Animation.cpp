@@ -24,7 +24,7 @@ void Animation::Uninit() {
 void Animation::Update() {
 
 	// フレーム処理
-	mFrame += 60.0f * Time::GetDeltaTime();
+	mFrame += 60.0f * mCoefficient * Time::GetDeltaTime();
 
 	// ブレンド処理
 	if (mState != mNewState) {
@@ -71,7 +71,7 @@ void Animation::DataPanel() {
 	ImGui::Begin(GetResource()->Name.c_str());
 	if (ImGui::TreeNode(u8"アニメーション")) {
 		ImGui::Text("Frame : %f", mFrame);
-		ImGui::Text(u8"再生速度 : %f", 60.0f);
+		ImGui::Text(u8"再生速度 : %f", mCoefficient);
 		ImGui::Text(u8"Blend : %f", mBlend);
 		ImGui::Text(u8"WaitTime : %f", mWaitTime);
 		ImGui::Text(u8"OneTimeFlag : %d", mOneTimeFlag);

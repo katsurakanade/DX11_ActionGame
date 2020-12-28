@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Missile.h"
 #include "Particle.h"
+#include "EnemyBehavior.h"
 #include "ImageManager.h"
 
 
@@ -58,7 +59,7 @@ void Missile::Update() {
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 			pc->Position = es[mTargetIndex]->Position + D3DXVECTOR3(0, 3, 0);
 
-			es[mTargetIndex]->mHp -= 3.0f;
+			es[mTargetIndex]->GetComponent<EnemyBehavior>()->mHp -= 3.0f;
 			Destroy();
 		}
 	}

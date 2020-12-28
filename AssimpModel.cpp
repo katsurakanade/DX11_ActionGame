@@ -143,7 +143,6 @@ void AssimpModel::Update(const char* animationname,int frame){
 
 void AssimpModel::Update(const char* animationname1, const char* animationname2,float BlendRate, int frame) {
 
-
 	if (!mAnimation[animationname1]->HasAnimations()) {
 		return;
 	}
@@ -243,7 +242,8 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 	// Data to fill
 	std::string name;
-	std::vector<VERTEX_3D> vertices;
+	// TODO:ƒƒ‚ƒŠ‰ñŽû
+	VERTEX_3D* vertices = new VERTEX_3D[mesh->mNumVertices];
 	std::vector<UINT> indices;
 	std::vector<Texture> textures;
 	std::vector<Texture> textures_normal;
@@ -283,7 +283,7 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 		vertex.Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 
-		vertices.push_back(vertex);
+		vertices[i] = vertex;
 	}
 
 	// Index
@@ -358,10 +358,10 @@ Mesh* AssimpModel::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		CreateBone(scene->mRootNode, Bone);
 
 
-		return new Mesh(name, vertices, indices, textures, cmatrixerial, DeformVertex, Bone);
+		return new Mesh(name, vertices, mesh->mNumVertices ,indices, textures, cmatrixerial, DeformVertex, Bone);
 	}
 
-	return new Mesh(name, vertices, indices, textures,textures_normal, cmatrixerial);
+	return new Mesh(name, vertices, mesh->mNumVertices, indices, textures,textures_normal, cmatrixerial);
 
 }
 

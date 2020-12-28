@@ -170,6 +170,7 @@ void Asset::LoadAnimation() {
 		index_animation.push_back("Running");
 		index_animation.push_back("Attack");
 		index_animation.push_back("Mage");
+		index_animation.push_back("Dying");
 
 		for (unsigned int i = 6; i < path.size(); i++) {
 			AddAssimpModelToList(path[i].c_str(), animationpath, index_animation);

@@ -11,6 +11,7 @@
 #include "Particle.h"
 #include "Missile.h"
 #include "PlayerBehavior.h"
+#include "EnemyBehavior.h"
 
 void PlayerBehavior::Init() {
 
@@ -216,7 +217,7 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 					pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
 					pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 					pc->Position = Position + D3DXVECTOR3(0, 3, 0);
-					es[i]->mHp -= 10.0f;
+					es[i]->GetComponent<EnemyBehavior>()->mHp -= 10.0f;
 				}
 			}
 

@@ -33,7 +33,6 @@ void Player::Init() {
 
 	// モデルコンポーネント初期化
 	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
-	mpModel->SetAnimation(mpAnination);
 
 	// 当たり判定コンポーネント初期化
 	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
@@ -42,7 +41,6 @@ void Player::Init() {
 
 	// アニメーションコンポーネント初期化
 	mpAnination->SetState("Idle");
-	mpAnination->SetCoefficient(10.0f);
 
 	// カメラ調整
 	mpCamera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
@@ -71,7 +69,6 @@ void Player::Update() {
 	}
 	if (mpAnination->GetState() == "Running" && speed <= 1.0f) {
 		mpAnination->SetNewState("Idle");
-		mpAnination->SetCoefficient(60.0f);
 	}
 
 	// 高さ修正

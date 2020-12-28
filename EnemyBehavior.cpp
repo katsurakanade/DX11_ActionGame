@@ -20,6 +20,12 @@ void EnemyBehavior::Init() {
 	mStatemap[BEHAVIOR_STATE::Idle] = "Idle";
 	mStatemap[BEHAVIOR_STATE::Chase] = "Chase";
 	mStatemap[BEHAVIOR_STATE::Attack] = "Attack";
+	mStatemap[BEHAVIOR_STATE::Dying] = "Dying";
+	// HPèâä˙âª
+	mHpInit = 50.0f;
+	mHp = mHpInit;
+
+	mDeadTimer = 0.0f;
 }
 
 void EnemyBehavior::Uninit() {
@@ -37,12 +43,17 @@ void EnemyBehavior::Update() {
 	mLengthToPlayer = D3DXVec3Length(&direction);
 
 	// çsìÆåàÇﬂ
-	if (mLengthToPlayer < 10)
-		mState = "Attack";
-	else if (mLengthToPlayer > 10 && mLengthToPlayer < 40)
-		mState = "Chase";
-	else if (mLengthToPlayer > 40)
-		mState = "Idle";
+	if (mHp > 0.0f) {
+		if (mLengthToPlayer < 10)
+			mState = "Attack";
+		else if (mLengthToPlayer > 10 && mLengthToPlayer < 40)
+			mState = "Chase";
+		else if (mLengthToPlayer > 40)
+			mState = "Idle";
+	}
+	else if (mHp <= 0.0f) {
+		mState = "Dying";
+	}
 
 	// çsìÆ
 	if (mState == "Idle") {
@@ -53,14 +64,19 @@ void EnemyBehavior::Update() {
 		MoveTo(mpPlayer->Position);
 	}
 	else if (mState == "Attack") {
-		mpAnimation->SetNewStateOneTime("Attack", 0.7f);
+		mpAnimation->SetNewStateOneTime("Attack", 0.8f);
+	} 
+	else if (mState == "Dying") {
+		Dying();
 	}
-
-
 
 }
 
 void EnemyBehavior::FixedUpdate() {
+
+	if (mDeadTimer >= 3.5f) {
+		GetResource()->Destroy();
+	}
 
 	Component::FixedUpdate();
 }
@@ -71,6 +87,7 @@ void EnemyBehavior::DataPanel() {
 	if (ImGui::TreeNode(u8"çsà◊")) {
 		ImGui::Text("State : %s", mState);
 		ImGui::Text("LengthToPlayer : %f", mLengthToPlayer);
+		ImGui::Text("DeadTimer : %f", mDeadTimer);
 		ImGui::TreePop();
 	}
 	ImGui::End();
@@ -182,4 +199,20 @@ void EnemyBehavior::MoveTo(D3DXVECTOR3 target_position) {
 	
 	mpPhysical->mSpeed += mpPhysical->mAcceleration;
 	mpPhysical->mVelocity = result;
+}
+
+void EnemyBehavior::Dying() {
+
+	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
+
+	if (camera) {
+		camera->SetLookTarget(nullptr);
+	}
+
+	if (mpAnimation->GetNewState() != "Dying") {
+		mpAnimation->SetNewStateOneTime("Dying", 3.5f);
+	}
+
+	mDeadTimer += Time::GetDeltaTime();
+
 }

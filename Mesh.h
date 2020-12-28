@@ -39,7 +39,6 @@ private:
 	bool SetupMesh();
 	// Compute Shader 用
 	void CreateComputeResource();
-	void Process(VERTEX_3D* target,int index);
 	void FillComputeMatrix();
 	void FillVertex();
 
@@ -51,7 +50,7 @@ public:
 	ID3D11Buffer* mpBuf = nullptr;
 	ID3D11Buffer* mpComputeBuf = nullptr;
 	ID3D11Buffer* mpVerticesBuf = nullptr;
-	ID3D11Buffer* resultbuffer = nullptr;
+	ID3D11Buffer* mpResultbuffer = nullptr;
 	// SRV
 	ID3D11ShaderResourceView* mpBufSRV = nullptr;
 	ID3D11ShaderResourceView* mpBoneBufSRV = nullptr;
@@ -64,7 +63,9 @@ public:
 	// テクスチャパス
 	std::string TexturePass;
 	// 頂点
-	std::vector <VERTEX_3D> Vertices;
+	VERTEX_3D* Vertices;
+	// 頂点数
+	unsigned int Vertices_Size;
 	// インデックス
 	std::vector <UINT> Indices;
 	// テクスチャ
@@ -84,7 +85,7 @@ public:
 	// マテリアル
 	MATERIAL Material;
 	// アニメーションあり
-	Mesh(std::string name, std::vector<VERTEX_3D> vertices, std::vector<UINT> indices, std::vector <Texture> textures, MATERIAL material, std::vector <DEFORM_VERTEX> deform, std::unordered_map  <std::string, BONE> bone) {
+	Mesh(std::string name, VERTEX_3D* vertices, unsigned int vertices_size,std::vector<UINT> indices, std::vector <Texture> textures, MATERIAL material, std::vector <DEFORM_VERTEX> deform, std::unordered_map  <std::string, BONE> bone) {
 
 		this->Name = name;
 		this->Vertices = vertices;
@@ -93,6 +94,7 @@ public:
 		this->Material = material;
 		this->mDeformVertex = deform;
 		this->mBone = bone;
+		this->Vertices_Size = vertices_size;
 
 		this->Enable = true;
 		this->SetupMesh();
@@ -102,7 +104,7 @@ public:
 
 	};
 	// アニメーションなし
-	Mesh(std::string name, std::vector<VERTEX_3D> vertices, std::vector<UINT> indices, std::vector <Texture> textures, std::vector <Texture> texturesnormal, MATERIAL material) {
+	Mesh(std::string name, VERTEX_3D* vertices, unsigned int vertices_size,std::vector<UINT> indices, std::vector <Texture> textures, std::vector <Texture> texturesnormal, MATERIAL material) {
 
 		this->Name = name;
 		this->Vertices = vertices;
@@ -110,6 +112,7 @@ public:
 		this->Textures = textures;
 		this->Material = material;
 		this->TexturesNormal = TexturesNormal;
+		this->Vertices_Size = vertices_size;
 
 		this->Enable = true;
 		this->SetupMesh();

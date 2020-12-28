@@ -15,7 +15,6 @@
 #include "EnemyBehavior.h"
 #include <random>
 
-
 void Enemy::Init() {
 
 	Name = "Enemy";
@@ -38,11 +37,15 @@ void Enemy::Init() {
 	mpCollider->SetUsePanel(true);
 
 	mpAnination->SetState("Idle");
-	mpAnination->SetCoefficient(5.0f);
 	mpAnination->SetUsePanel(true);
 
-	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ENEMY));
-	mpModel->SetAnimation(mpAnination);
+	mModel = new AssimpModel(true);
+	mModel->Load("asset\\model\\enemy\\Enemy.fbx");
+	mModel->LoadAnimation("asset\\animation\\Idle.fbx","Idle");
+	mModel->LoadAnimation("asset\\animation\\Running.fbx", "Running");
+	mModel->LoadAnimation("asset\\animation\\Attack.fbx", "Attack");
+	mModel->LoadAnimation("asset\\animation\\Dying.fbx", "Dying");
+	mpModel->SetModel(mModel);
 
 	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
 	mpLockImage->Name = "enemy_lock_" + Name;
@@ -69,9 +72,7 @@ void Enemy::AddGauge() {
 	gauge->mPositionOffest = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	mGauge = gauge;
 
-	mHpInit = 50.0f;
-	mHp = mHpInit;
-	mGauge->mFillAmount = mHp / mHpInit;
+	mGauge->mFillAmount = mpBehavior->mHp / mpBehavior->mHpInit;
 
 }
 
@@ -83,6 +84,11 @@ void Enemy::Uninit() {
 	if (mpLockImage) {
 		mpLockImage->Destroy();
 	}
+	if (mModel) {
+		mModel->Unload();
+		delete mModel;
+		mModel = nullptr;
+	}
 
 	Resource::Uninit();
 }
@@ -90,7 +96,7 @@ void Enemy::Uninit() {
 void Enemy::Update() {
 
 	if (mGauge) {
-		mGauge->mFillAmount = mHp / mHpInit;
+		mGauge->mFillAmount = mpBehavior->mHp / mpBehavior->mHpInit;
 	}
 
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
@@ -105,15 +111,8 @@ void Enemy::Update() {
 		mpLockImage->SetActive(false);
 	}
 
-	if (mHp <= 0.0f) {
-
-		Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
-
-		if (camera) {
-			camera->SetLookTarget(nullptr);
-		}
-
-		Destroy();
+	if (mpBehavior->mHp <= 0.0f) {
+		mpLockImage->SetActive(false);
 	}
 
 	Resource::Update();

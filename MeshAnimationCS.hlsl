@@ -24,7 +24,7 @@ StructuredBuffer<COMPUTEMATRIX> computematrix : register(t0);
 StructuredBuffer<VERTEX_3D> v3d : register(t1);
 RWStructuredBuffer<VERTEX_3D> BufOut : register(u0);
 
-#define size_x      1024
+#define size_x      256
 #define size_y      1
 #define size_z      1
 
@@ -51,5 +51,7 @@ void CSFunc(const CSInput input)
     BufOut[input.dispatch.x].Normal = nor.xyz;
     BufOut[input.dispatch.x].TexCoord.x = v3d[input.dispatch.x].TexCoord.x;
     BufOut[input.dispatch.x].TexCoord.y = v3d[input.dispatch.x].TexCoord.y;
+    BufOut[input.dispatch.x].Diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
+
 }
 

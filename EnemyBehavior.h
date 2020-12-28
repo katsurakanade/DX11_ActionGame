@@ -13,6 +13,7 @@ enum class BEHAVIOR_STATE{
 	Idle, // 待機
 	Chase, // 追跡
 	Attack, // 攻撃
+	Dying, // 死亡
 };
 
 class EnemyBehavior : public Component
@@ -27,11 +28,15 @@ private:
 	Player* mpPlayer;
 	// プレイヤーとの距離
 	float mLengthToPlayer;
+	// 死亡タイマー
+	float mDeadTimer;
 
 	// 移動
 	void Movement(int arrow);
 	// 場所に移動
 	void MoveTo(D3DXVECTOR3 target_position);
+	// 死亡処理
+	void Dying();
 
 	// ステート
 	std::string mState;
@@ -39,6 +44,11 @@ private:
 	std::map <BEHAVIOR_STATE, std::string> mStatemap;
 
 public:
+
+	// HP初期
+	float mHpInit;
+	// HP
+	float mHp;
 
 	void Init();
 	void Uninit();

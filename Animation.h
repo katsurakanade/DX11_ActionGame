@@ -18,8 +18,7 @@ private:
 	// フレーム
 	float mFrame = 0;
 	// 速度用係数
-	float mCoefficient = 3.0f;
-	float mAnimationSpeed = 3.0f;
+	float mCoefficient = 1.0f;
 	// ブレンド
 	float mBlend;
 	// 一回アニメーション用
