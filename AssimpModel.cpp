@@ -21,10 +21,17 @@ bool AssimpModel::Load(std::string FileName) {
 	return true;
 }
 
-void AssimpModel::LoadAnimation(std::string Filename,std::string name) {
+bool AssimpModel::LoadAnimation(std::string Filename,std::string name) {
 
-	mAnimation[name] = aiImportFile(Filename.c_str(), aiProcess_ConvertToLeftHanded);
-	assert(mAnimation[name]);
+	auto file = aiImportFile(Filename.c_str(), aiProcess_ConvertToLeftHanded);
+
+	if (file == nullptr)
+		return false;
+
+	mAnimation[name] = file;
+	
+	return true;
+	
 }
 
 void AssimpModel::Unload() {

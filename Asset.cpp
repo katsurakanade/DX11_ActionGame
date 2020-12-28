@@ -16,11 +16,14 @@ void Asset::LoadSceneAsset(){
 
 	// アセットロード(マルチスレッド)
 	std::thread thread_loadmodel(&Asset::LoadModel,this);
+	std::thread thread_loadanimation(&Asset::LoadAnimation, this);
 	std::thread thread_loadtexture(&Asset::LoadTexture, this);
 	std::thread thread_loadsound(&Asset::LoadSound, this);
 	thread_loadmodel.join();
+	thread_loadanimation.join();
 	thread_loadtexture.join();
 	thread_loadsound.join();
+	
 
 	// アセットファイル完全性チェック
 	if (mLostFileList.size() > 0) {
@@ -93,9 +96,6 @@ void Asset::LoadModel() {
 
 	auto start = std::chrono::system_clock::now();
 
-	std::vector <std::string> animation;
-	std::vector <std::string> pass;
-
 	std::string jsonpath;
 	switch (mScene)
 	{
@@ -122,27 +122,8 @@ void Asset::LoadModel() {
 		}
 		break;
 	case SCENE_ASSET::GAME:
-
-		pass.push_back("asset\\animation\\Idle.fbx");
-		pass.push_back("asset\\animation\\Running.fbx");
-		pass.push_back("asset\\animation\\Jump.fbx");
-		pass.push_back("asset\\animation\\Roll.fbx");
-		pass.push_back("asset\\animation\\Attack.fbx");
-		pass.push_back("asset\\animation\\Mage.fbx");
-		animation.push_back("Idle");
-		animation.push_back("Running");
-		animation.push_back("Jump");
-		animation.push_back("Roll");
-		animation.push_back("Attack");
-		animation.push_back("Mage");
-
-		for (unsigned int i = 0; i < path.size(); i++) {
-			if (i < 6) {
-				AddAssimpModelToList(path[i].c_str());
-			}
-			else {
-				AddAssimpModelToList(path[i].c_str(),pass,animation);
-			}
+		for (unsigned int i = 0; i < path.size() - 3; i++) {
+			AddAssimpModelToList(path[i].c_str());
 		}
 		break;
 	case SCENE_ASSET::RESULT:
@@ -154,6 +135,52 @@ void Asset::LoadModel() {
 	auto end = std::chrono::system_clock::now();
 
 	Debug::OutputRuntime("Model Loaded", end, start);
+}
+
+void Asset::LoadAnimation() {
+
+	std::string jsonpath_model;
+	std::string jsonpath_animation;
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		jsonpath_model = "asset\\json_asset\\Asset_Model_Title.json";
+		break;
+	case SCENE_ASSET::GAME:
+		jsonpath_model = "asset\\json_asset\\Asset_Model_Game.json";
+		jsonpath_animation = "asset\\json_asset\\Asset_Animation_Game.json";
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
+
+	std::vector <std::string> index_animation;
+	std::vector <std::string> path = GetPathFromFile(jsonpath_model.c_str());
+	std::vector <std::string> animationpath = GetPathFromFile(jsonpath_animation.c_str());
+
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		break;
+	case SCENE_ASSET::GAME:
+
+		index_animation.push_back("Idle");
+		index_animation.push_back("Running");
+		index_animation.push_back("Attack");
+		index_animation.push_back("Mage");
+
+		for (unsigned int i = 6; i < path.size(); i++) {
+			AddAssimpModelToList(path[i].c_str(), animationpath, index_animation);
+		}
+
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
 }
 
 void Asset::LoadTexture() {
@@ -204,15 +231,35 @@ void Asset::LoadSound() {
 
 	auto start = std::chrono::system_clock::now();
 
+	std::string jsonpath;
+	switch (mScene)
+	{
+	case SCENE_ASSET::TITLE:
+		jsonpath = "asset\\json_asset\\Asset_Sound_Title.json";
+		break;
+	case SCENE_ASSET::GAME:
+		jsonpath = "asset\\json_asset\\Asset_Sound_Game.json";
+		break;
+	case SCENE_ASSET::RESULT:
+		break;
+	default:
+		break;
+	}
+
+	std::vector <std::string> path = GetPathFromFile(jsonpath.c_str());
+
 	// シーンことロード
 	switch (mScene)
 	{
 	case SCENE_ASSET::TITLE:
-		AddSoundToList("asset/sound/bgm.wav");
-		AddSoundToList("asset/sound/switch.wav");
+		for (unsigned int i = 0; i < path.size(); i++) {
+			AddSoundToList(path[i].c_str());
+		}
 		break;
 	case SCENE_ASSET::GAME:
-		AddSoundToList("asset/sound/bgm2.wav");
+		for (unsigned int i = 0; i < path.size(); i++) {
+			AddSoundToList(path[i].c_str());
+		}
 		break;
 	case SCENE_ASSET::RESULT:
 		break;
@@ -237,6 +284,7 @@ void Asset::CheckJSONDataIntegrity() {
 	int error = 0;
 
 	CheckFile("asset\\json_asset\\Asset_Model_Game.json");
+	CheckFile("asset\\json_asset\\Asset_Animation_Game.json");
 	CheckFile("asset\\json_asset\\Asset_Model_Title.json");
 	CheckFile("asset\\json_asset\\Asset_Texture_Game.json");
 	CheckFile("asset\\json_asset\\Asset_Texture_Title.json");

@@ -114,7 +114,12 @@ protected:
 		AssimpModel* md = new AssimpModel(true);
 		if (md->Load(value)) {
 			for (unsigned int i = 0; i < animationpass.size(); i++) {
-				md->LoadAnimation(animationpass[i], animationname[i]);
+				if (md->LoadAnimation(animationpass[i], animationname[i])) {
+
+				}
+				else {
+					mLostFileList.push_back(animationpass[i]);
+				}
 			}
 			mAssimpModelList.push_back(md);
 		}
@@ -190,6 +195,7 @@ protected:
 
 	// ÉçÅ[Éh
 	void LoadModel();
+	void LoadAnimation();
 	void LoadTexture();
 	void LoadSound();
 
