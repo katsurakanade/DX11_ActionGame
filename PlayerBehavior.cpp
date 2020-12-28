@@ -68,23 +68,26 @@ void PlayerBehavior::Movement(BYTE keycodeF, BYTE keycodeB, BYTE keycodeR, BYTE 
 
 			GetResource()->Rotation.y = D3DX_PI * -0.25f;
 
-			if (mpPhysical->mAcceleration < 1.5f) {
-				mpPhysical->mAcceleration += 0.1f;
-			}
+			if (GetResource()->Position.z > -295.0f) {
+				if (mpPhysical->mAcceleration < 1.5f) {
+					mpPhysical->mAcceleration += 0.1f;
+				}
 
-			mpPhysical->mSpeed += mpPhysical->mAcceleration;
-			mpPhysical->mVelocity = D3DXVECTOR3(-sinf(-D3DX_PI * 0.75f), 0, cosf(-D3DX_PI * 0.75f));
+				mpPhysical->mSpeed += mpPhysical->mAcceleration;
+				mpPhysical->mVelocity = D3DXVECTOR3(-sinf(-D3DX_PI * 0.75f), 0, cosf(-D3DX_PI * 0.75f));
 
-			if (mpCamera->GetLookTarget()) {
-				mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+				if (mpCamera->GetLookTarget()) {
+					mpCamera->AddControllerPosition(D3DXVECTOR3(0.015f, 0, 0));
+				}
 			}
+			
 		}
 
 		else if (Input::GetKeyPress(keycodeR)) {
 
 			GetResource()->Rotation.y = D3DX_PI * 0.25f;
 
-			if (GetResource()->Position.x > -95.0f) {
+			if (GetResource()->Position.x > -95.0f && GetResource()->Position.z > -295.0f) {
 				if (mpPhysical->mAcceleration < 1.5f) {
 					mpPhysical->mAcceleration += 0.1f;
 				}
@@ -100,12 +103,13 @@ void PlayerBehavior::Movement(BYTE keycodeF, BYTE keycodeB, BYTE keycodeR, BYTE 
 		else {
 
 			GetResource()->Rotation.y = 0.0f;
-
-			if (mpPhysical->mAcceleration < 1.5f) {
-				mpPhysical->mAcceleration += 0.1f;
+			if (GetResource()->Position.z > -295.0f) {
+				if (mpPhysical->mAcceleration < 1.5f) {
+					mpPhysical->mAcceleration += 0.1f;
+				}
+				mpPhysical->mSpeed += mpPhysical->mAcceleration;
+				mpPhysical->mVelocity = D3DXVECTOR3(0, 0, -1.0f);
 			}
-			mpPhysical->mSpeed += mpPhysical->mAcceleration;
-			mpPhysical->mVelocity = D3DXVECTOR3(0, 0, -1.0f);
 		}
 
 	}
@@ -234,13 +238,17 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 			std::uniform_real_distribution<float> rndz(Position.z - 100, Position.z - 50);
 
 			if (es.size() > 0 && mpAnimation->GetState() != "Mage") {
-				Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
-				ms->mTargetIndex = mLockIndex;
-				ms->Position = Position;
-				ms->p0 = ms->Position;
-				D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
-				ms->p1 = mid;
-				ms->p2 = es[mLockIndex]->Position;
+
+				for (int i = 0; i < 5; i++) {
+					Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
+					ms->mTargetIndex = mLockIndex;
+					ms->Position = Position;
+					ms->p0 = ms->Position;
+					D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
+					ms->p1 = mid;
+					ms->p2 = es[mLockIndex]->Position;
+				}
+				
 			}
 
 		}

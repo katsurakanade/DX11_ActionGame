@@ -11,5 +11,7 @@ void main(in PS_IN In, out float4 outDiffuse : SV_Target)
     
     outDiffuse.rgb *= In.Diffuse.rgb;
     outDiffuse.a *= In.Diffuse.a;
-
+    
+    if (outDiffuse.a < 0.1)
+        discard;
 }

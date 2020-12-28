@@ -27,6 +27,7 @@ void Missile::Init() {
 	effect->Scale = D3DXVECTOR3(3, 3, 3);
 	mpEffect = effect;
 
+
 	Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
 	Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 

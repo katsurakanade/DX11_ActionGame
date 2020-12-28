@@ -64,7 +64,7 @@ void LevelTools::Update() {
 		for (unsigned int i = 0; i < grasslist.size(); i++) {
 			if (ImGui::TreeNode(grasslist[i]->Name.c_str())) {
 				ImGui::PushItemWidth(1000);
-				ImGui::SliderFloat3(u8"座標", grasslist[i]->Position, -200.0f, 200.0f, "%.1f", 1.0f);
+				ImGui::SliderFloat3(u8"座標", grasslist[i]->Position, -300.0f, 300.0f, "%.1f", 1.0f);
 				ImGui::SliderFloat3(u8"回転", grasslist[i]->Rotation, -3.14f, 3.14f);
 				ImGui::SliderFloat3(u8"スケール", grasslist[i]->Scale, 0.1f, 10.0f);
 				if (ImGui::Button(u8"削除")) {
@@ -76,7 +76,7 @@ void LevelTools::Update() {
 		for (unsigned int i = 0; i < propslist.size(); i++) {
 			if (ImGui::TreeNode(propslist[i]->Name.c_str())) {
 				ImGui::PushItemWidth(1000);
-				ImGui::SliderFloat3(u8"座標", propslist[i]->Position, -200.0f, 200.0f, "%.1f", 1.0f);
+				ImGui::SliderFloat3(u8"座標", propslist[i]->Position, -300.0f, 300.0f, "%.1f", 1.0f);
 				ImGui::SliderFloat3(u8"回転", propslist[i]->Rotation, -3.14f, 3.14f);
 				ImGui::SliderFloat3(u8"スケール", propslist[i]->Scale, 0.1f, 300.0f);
 				if (ImGui::Button(u8"削除")) {

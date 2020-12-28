@@ -31,5 +31,5 @@ void main(in PS_IN In , out float4 outDiffuse : SV_Target)
     rim = pow(rim, 2) * mRimStrength;
     outDiffuse.rgb += rim;
     
- 
+   
 }
