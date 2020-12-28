@@ -37,11 +37,8 @@ protected:
 	// ƒƒCƒ“ƒJƒƒ‰
 	Camera* mMaincamera;
 
-
 public:
 
-	
-	
 	virtual void Init() = 0;
 
 	virtual void Uninit() {

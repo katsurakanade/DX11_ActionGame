@@ -37,6 +37,7 @@ private:
 	// –Ú•WƒƒbƒN
 	void LockTarget(BYTE keycode_lock);
 
+
 public:
 
 	void Init();

@@ -12,6 +12,7 @@
 #include "Missile.h"
 #include "PlayerBehavior.h"
 #include "EnemyBehavior.h"
+#include <algorithm>
 
 void PlayerBehavior::Init() {
 
@@ -206,6 +207,7 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 
 		// ëSìGéÊìæ
 		std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
+		std::sort(es.begin(), es.end(), [](Enemy* lh, Enemy* rh) {return lh->GetComponent<EnemyBehavior>()->GetLengthToPlayer() < rh->GetComponent<EnemyBehavior>()->GetLengthToPlayer(); });
 
 		// ïÅí çUåÇ
 		if (mCharacterType == 0) {
@@ -294,31 +296,31 @@ void PlayerBehavior::SwitchCharacter(BYTE keycode_prev ,BYTE keycode_next) {
 }
 
 void PlayerBehavior::LockTarget(BYTE keycode_lock) {
+
+	std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
+	std::sort(enemys.begin(), enemys.end(), [](Enemy* lh, Enemy* rh) {return lh->GetComponent<EnemyBehavior>()->GetLengthToPlayer() < rh->GetComponent<EnemyBehavior>()->GetLengthToPlayer(); });
+
 	if (Input::GetKeyTrigger(keycode_lock)) {
 
-		std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
-
-		if (enemys.size() > 0) {
-			if (!mpCamera->GetLookTarget()) {
-				if (enemys.size() == 1) {
-					mLockIndex = 0;
-				}
+		if (!mpCamera->GetLookTarget()) {
+			if (enemys.size() > 0) {
 				mpCamera->SetLookTarget(enemys[mLockIndex]);
 				mpCamera->SetFollowPostionOffset(D3DXVECTOR3(0, 3, 20));
 				enemys[mLockIndex]->Is_Lock = true;
 			}
-			else {
-				mpCamera->SetLookTarget(nullptr);
-				enemys[mLockIndex]->Is_Lock = false;
-				mpCamera->SetFollowPostionOffset(D3DXVECTOR3(0, 3, 10));
-				mpCamera->SetControllerPosition(D3DXVECTOR3(0, 0, 0));
-			}
 		}
-
+		else {
+			for (Enemy* e : enemys) {
+				e->Is_Lock = false;
+			}
+			mpCamera->SetLookTarget(nullptr);
+			mLockIndex = 0;
+		}
 	}
-	if (mpCamera->GetLookTarget()) {
-		std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
 
+	if (mpCamera->GetLookTarget()) {
+
+	
 		if (Input::GetKeyTrigger(DIK_RIGHTARROW)) {
 			enemys[mLockIndex]->Is_Lock = false;
 			mpCamera->SetLookTarget(nullptr);

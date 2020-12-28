@@ -33,6 +33,10 @@ void Game::Init() {
 	enemy_2->Name = "Enemy_2";
 	enemy_2->Position = D3DXVECTOR3(-70, 0, -20);
 
+	Enemy* enemy_3 = AddGameObject<Enemy>(ObjectLayer);
+	enemy_3->Name = "Enemy_3";
+	enemy_3->Position = D3DXVECTOR3(100, 0, -40);
+
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 	LevelTools* lt = AddGameObject<LevelTools>(ObjectLayer);
 	ParticleManager* pm = AddGameObject<ParticleManager>(ObjectLayer);

@@ -196,7 +196,7 @@ void Mesh::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix) {
 
 void Mesh::FillComputeMatrix() {
 
-	// Fill COMPUTEMATRIX (Performance Issues)
+	// TODO:Å“K‰»
 	D3D11_MAPPED_SUBRESOURCE subRes_1;
 	Renderer::GetDeviceContext()->Map(mpComputeBuf, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes_1);
 	COMPUTEMATRIX* pBufType_cm = (COMPUTEMATRIX*)subRes_1.pData;
@@ -222,6 +222,7 @@ void Mesh::FillComputeMatrix() {
 
 void Mesh::FillVertex() {
 
+	// TODO:Å“K‰»
 	D3D11_MAPPED_SUBRESOURCE subRes_2;
 	Renderer::GetDeviceContext()->Map(mpVerticesBuf, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes_2);
 	VERTEX_3D* pBufType_vtx = (VERTEX_3D*)subRes_2.pData;

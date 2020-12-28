@@ -18,7 +18,6 @@ class Enemy : public Resource
 
 private:
 
-	AssimpModel* mModel;
 	// ゲージ
 	Gauge* mGauge;
 	// コンポーネント

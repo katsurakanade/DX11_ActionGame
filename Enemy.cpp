@@ -39,13 +39,7 @@ void Enemy::Init() {
 	mpAnination->SetState("Idle");
 	mpAnination->SetUsePanel(true);
 
-	mModel = new AssimpModel(true);
-	mModel->Load("asset\\model\\enemy\\Enemy.fbx");
-	mModel->LoadAnimation("asset\\animation\\Idle.fbx","Idle");
-	mModel->LoadAnimation("asset\\animation\\Running.fbx", "Running");
-	mModel->LoadAnimation("asset\\animation\\Attack.fbx", "Attack");
-	mModel->LoadAnimation("asset\\animation\\Dying.fbx", "Dying");
-	mpModel->SetModel(mModel);
+	mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Enemy.fbx");
 
 	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
 	mpLockImage->Name = "enemy_lock_" + Name;
@@ -84,11 +78,7 @@ void Enemy::Uninit() {
 	if (mpLockImage) {
 		mpLockImage->Destroy();
 	}
-	if (mModel) {
-		mModel->Unload();
-		delete mModel;
-		mModel = nullptr;
-	}
+	
 
 	Resource::Uninit();
 }

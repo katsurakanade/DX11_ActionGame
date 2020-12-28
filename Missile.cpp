@@ -42,6 +42,7 @@ void Missile::Uninit() {
 void Missile::Update() {
 
 	std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
+	std::sort(es.begin(), es.end(), [](Enemy* lh, Enemy* rh) {return lh->GetComponent<EnemyBehavior>()->GetLengthToPlayer() < rh->GetComponent<EnemyBehavior>()->GetLengthToPlayer(); });
 	
 	if (es.size() > 0) {
 
@@ -58,7 +59,6 @@ void Missile::Update() {
 			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 			pc->Position = es[mTargetIndex]->Position + D3DXVECTOR3(0, 3, 0);
-
 			es[mTargetIndex]->GetComponent<EnemyBehavior>()->mHp -= 3.0f;
 			Destroy();
 		}

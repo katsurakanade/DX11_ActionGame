@@ -57,7 +57,6 @@ void Title::Update() {
 	}
 	
 	if (!mStart) {
-
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 		pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\Title_Particle.json"));
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::PARTICLE));

@@ -56,5 +56,7 @@ public:
 	void FixedUpdate();
 	void DataPanel();
 
+	// Getter
+	float GetLengthToPlayer() { return mLengthToPlayer; };
 };
 
