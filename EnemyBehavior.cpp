@@ -16,8 +16,6 @@ void EnemyBehavior::Init() {
 	mpAnimation = GetResource()->GetComponent<Animation>();
 	// プレイヤー取得
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
-	mHpInit = 50.0f;
-	mHp = mHpInit;
 	mDeadTimer = 0.0f;
 }
 
@@ -35,33 +33,7 @@ void EnemyBehavior::Update() {
 	D3DXVECTOR3 direction = pp - sp;
 	mLengthToPlayer = D3DXVec3Length(&direction);
 
-	// 行動決め
-	if (mHp > 0.0f) {
-		if (mLengthToPlayer < 10)
-			mState = "Attack";
-		else if (mLengthToPlayer > 10 && mLengthToPlayer < 40)
-			mState = "Chase";
-		else if (mLengthToPlayer > 40)
-			mState = "Idle";
-	}
-	else if (mHp <= 0.0f) {
-		mState = "Dying";
-	}
 
-	// 行動
-	if (mState == "Idle") {
-		mpAnimation->SetNewState("Idle");
-	}
-	else if (mState == "Chase") {
-		mpAnimation->SetNewState("Running");
-		MoveTo(mpPlayer->Position);
-	}
-	else if (mState == "Attack") {
-		mpAnimation->SetNewStateOneTime("Attack", 0.8f);
-	} 
-	else if (mState == "Dying") {
-		Dying();
-	}
 
 }
 

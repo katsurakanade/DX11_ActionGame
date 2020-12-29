@@ -3,7 +3,8 @@
 #include "Application.h"
 #include "Missile.h"
 #include "Particle.h"
-#include "EnemyBehavior.h"
+#include "SoldierBehavior.h"
+#include "BossBehavior.h"
 #include "ImageManager.h"
 
 
@@ -43,7 +44,7 @@ void Missile::Uninit() {
 void Missile::Update() {
 
 	std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
-	std::sort(es.begin(), es.end(), [](Enemy* lh, Enemy* rh) {return lh->GetComponent<EnemyBehavior>()->GetLengthToPlayer() < rh->GetComponent<EnemyBehavior>()->GetLengthToPlayer(); });
+	std::sort(es.begin(), es.end(), [](Enemy* lh, Enemy* rh) { if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer(); });
 	
 	if (es.size() > 0) {
 
@@ -60,7 +61,12 @@ void Missile::Update() {
 			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 			pc->Position = es[mTargetIndex]->Position + D3DXVECTOR3(0, 3, 0);
-			es[mTargetIndex]->GetComponent<EnemyBehavior>()->mHp -= 3.0f;
+			if (es[mTargetIndex]->TryGetComponent<BossBehavior>()) {
+				es[mTargetIndex]->GetComponent<BossBehavior>()->mHp -= 3.0f;
+			}
+			else if (es[mTargetIndex]->TryGetComponent<SoldierBehavior>()) {
+				es[mTargetIndex]->GetComponent<SoldierBehavior>()->mHp -= 3.0f;
+			}
 			Destroy();
 		}
 	}

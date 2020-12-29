@@ -131,6 +131,7 @@ public:
         Position.y = ty + (x0 - tx) * sin(D3DXToRadian(force)) + (y0 - ty) * cos(D3DXToRadian(force));
     }
 
+
     template <typename T>
     T* AddComponent() {
         T* Component = new T();
@@ -150,4 +151,13 @@ public:
         return nullptr;
     };
 
+    template <typename T>
+    bool TryGetComponent() {
+        for (Component* obj : Components) {
+            if (typeid(*obj) == typeid(T)) {
+                return true;
+            }
+        }
+        return false;
+    };
 };

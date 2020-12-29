@@ -12,6 +12,8 @@
 #include "MeshField.h"
 #include "ModelManager.h"
 #include "ImageManager.h"
+#include "BossBehavior.h"
+#include "SoldierBehavior.h"
 #include "EnemyBehavior.h"
 #include <random>
 
@@ -29,6 +31,7 @@ void Enemy::Init() {
 	mpAnination = AddComponent<Animation>();
 	mpModel = AddComponent<ModelManager>();
 
+
 	Resource::Init();
 
 }
@@ -36,21 +39,21 @@ void Enemy::Init() {
 void Enemy::Create() {
 
 	if (Name == "Boss") {
-		mpBehavior = AddComponent<EnemyBehavior>();
+		mpBehavior = AddComponent<BossBehavior>();
 		mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 6.5f, 0.0f);
 		mpCollider->mScaleOffestCoff = D3DXVECTOR3(200.0f, 157.0f, 200.0f);
 		mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
 		mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Boss.fbx");
 		Scale = D3DXVECTOR3(0.08f, 0.08f, 0.08f);
-		AddGauge(D3DXVECTOR3(0,15,0));
+		AddGauge(D3DXVECTOR3(0,16,0));
 	}
 	else {
-		mpBehavior = AddComponent<EnemyBehavior>();
+		mpBehavior = AddComponent<SoldierBehavior>();
 		mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
 		mpCollider->mScaleOffestCoff = D3DXVECTOR3(150.0f, 157.0f, 150.0f);
 		mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
 		mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Enemy.fbx");
-		AddGauge(D3DXVECTOR3(0, 10, 0));
+		AddGauge(D3DXVECTOR3(0, 11, 0));
 	}
 
 	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
@@ -107,7 +110,12 @@ void Enemy::Update() {
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
 
-	mpLockImage->Position = Position + D3DXVECTOR3(0, 10, 4);
+	if (Name == "Boss") {
+		mpLockImage->Position = Position + D3DXVECTOR3(0, 18, 0);
+	}
+	else {
+		mpLockImage->Position = Position + D3DXVECTOR3(0, 13, 0);
+	}
 
 	if (Is_Lock) {
 		mpLockImage->SetActive(true);

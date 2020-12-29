@@ -24,6 +24,7 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="AudioListener.cpp" />
+    <ClCompile Include="BossBehavior.cpp" />
     <ClCompile Include="EnemyBehavior.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
@@ -62,6 +63,7 @@
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="SoldierBehavior.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StaticManger.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -72,6 +74,7 @@
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="AudioListener.h" />
+    <ClInclude Include="BossBehavior.h" />
     <ClInclude Include="EnemyBehavior.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
@@ -115,6 +118,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="SoldierBehavior.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StaticManger.h" />
     <ClInclude Include="Time.h" />

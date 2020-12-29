@@ -11,7 +11,8 @@
 #include "Particle.h"
 #include "Missile.h"
 #include "PlayerBehavior.h"
-#include "EnemyBehavior.h"
+#include "SoldierBehavior.h"
+#include "BossBehavior.h"
 #include <algorithm>
 
 void PlayerBehavior::Init() {
@@ -211,7 +212,7 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 
 		// ‘S“GŽæ“¾
 		std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
-		std::sort(es.begin(), es.end(), [](Enemy* lh, Enemy* rh) {return lh->GetComponent<EnemyBehavior>()->GetLengthToPlayer() < rh->GetComponent<EnemyBehavior>()->GetLengthToPlayer(); });
+		std::sort(es.begin(), es.end(), [](Enemy* lh, Enemy* rh) {if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer(); });
 
 		// •’ÊUŒ‚
 		if (mCharacterType == 0) {
@@ -223,7 +224,12 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 					pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
 					pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 					pc->Position = Position + D3DXVECTOR3(0, 3, 0);
-					es[i]->GetComponent<EnemyBehavior>()->mHp -= 10.0f;
+					if (es[i]->TryGetComponent<BossBehavior>()) {
+						es[i]->GetComponent<BossBehavior>()->mHp -= 10;
+					}
+					else if (es[i]->TryGetComponent<SoldierBehavior>()) {
+						es[i]->GetComponent<SoldierBehavior>()->mHp -= 3.0f;
+					}
 				}
 			}
 
@@ -306,7 +312,8 @@ void PlayerBehavior::SwitchCharacter(BYTE keycode_prev ,BYTE keycode_next) {
 void PlayerBehavior::LockTarget(BYTE keycode_lock) {
 
 	std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
-	std::sort(enemys.begin(), enemys.end(), [](Enemy* lh, Enemy* rh) {return lh->GetComponent<EnemyBehavior>()->GetLengthToPlayer() < rh->GetComponent<EnemyBehavior>()->GetLengthToPlayer(); });
+	std::sort(enemys.begin(), enemys.end(), [](Enemy* lh, Enemy* rh) {if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer();});
+	
 
 	if (Input::GetKeyTrigger(keycode_lock)) {
 

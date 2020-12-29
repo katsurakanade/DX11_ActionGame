@@ -29,6 +29,7 @@ private:
 	// ロック画像
 	Sprite* mpLockImage;
 
+
 public:
 
 	// ロック
