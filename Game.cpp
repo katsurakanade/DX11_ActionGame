@@ -23,19 +23,12 @@ void Game::Init() {
 	skybox->SetModelTexture(2);
 
 	Player* player = AddGameObject<Player>(ObjectLayer);
-	player->Position = D3DXVECTOR3(-50, 0, 50);
+	player->Position = D3DXVECTOR3(75, 0, -100);
 
 	Enemy* enemy = AddGameObject<Enemy>(ObjectLayer);
-	enemy->Name = "Enemy";
-	enemy->Position = D3DXVECTOR3(0, 0, -50);
-
-	Enemy* enemy_2 = AddGameObject<Enemy>(ObjectLayer);
-	enemy_2->Name = "Enemy_2";
-	enemy_2->Position = D3DXVECTOR3(-70, 0, -20);
-
-	Enemy* enemy_3 = AddGameObject<Enemy>(ObjectLayer);
-	enemy_3->Name = "Enemy_3";
-	enemy_3->Position = D3DXVECTOR3(100, 0, -40);
+	enemy->Name = "Boss";
+	enemy->Position = player->Position + D3DXVECTOR3(0, 0, -80);
+	enemy->Create();
 
 	MeshField* mf = AddGameObject<MeshField>(ObjectLayer);
 	LevelTools* lt = AddGameObject<LevelTools>(ObjectLayer);

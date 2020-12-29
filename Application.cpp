@@ -29,6 +29,7 @@ ShaderParameter Application::mShaderParameter;
 std::map<std::string, std::string> StaticManger::StateMap;
 
 bool Application::Init() {
+ 
 
 	mDisableLighting = false;
 	mUsingGPU = true;
@@ -62,7 +63,11 @@ void Application::Uninit() {
 }
 
 void Application::Update() {
-		
+	
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
 	System();
 	Input::Update();
 	mScene->Update();

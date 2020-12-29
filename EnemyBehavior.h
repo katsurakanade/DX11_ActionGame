@@ -19,7 +19,7 @@ enum class BEHAVIOR_STATE{
 class EnemyBehavior : public Component
 {
 
-private:
+protected:
 
 	// コンポーネント
 	Physical* mpPhysical;

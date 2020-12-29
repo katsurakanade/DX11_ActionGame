@@ -39,7 +39,9 @@ public:
 	void Update();
 	void Render();
 
+	void Create();
+
 	// ÉQÅ[ÉWí«â¡
-	void AddGauge();
+	void AddGauge(D3DXVECTOR3 offset);
 	
 };

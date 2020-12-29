@@ -258,6 +258,7 @@ void Renderer::Uninit()
 
 void Renderer::Begin()
 {
+
 	// バックバッファクリア
 	float ClearColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	mImmediateContext->ClearRenderTargetView(mRenderTargetView, ClearColor);

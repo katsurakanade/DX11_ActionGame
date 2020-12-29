@@ -16,15 +16,8 @@ void EnemyBehavior::Init() {
 	mpAnimation = GetResource()->GetComponent<Animation>();
 	// プレイヤー取得
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
-	// ステート初期化
-	mStatemap[BEHAVIOR_STATE::Idle] = "Idle";
-	mStatemap[BEHAVIOR_STATE::Chase] = "Chase";
-	mStatemap[BEHAVIOR_STATE::Attack] = "Attack";
-	mStatemap[BEHAVIOR_STATE::Dying] = "Dying";
-	// HP初期化
 	mHpInit = 50.0f;
 	mHp = mHpInit;
-
 	mDeadTimer = 0.0f;
 }
 

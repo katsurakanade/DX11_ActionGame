@@ -122,7 +122,7 @@ void Asset::LoadModel() {
 		}
 		break;
 	case SCENE_ASSET::GAME:
-		for (unsigned int i = 0; i < path.size() - 3; i++) {
+		for (unsigned int i = 0; i < path.size() - 4; i++) {
 			AddAssimpModelToList(path[i].c_str());
 		}
 		break;

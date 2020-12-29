@@ -28,42 +28,57 @@ void Enemy::Init() {
 	mpCollider = AddComponent<BoxCollider>();
 	mpAnination = AddComponent<Animation>();
 	mpModel = AddComponent<ModelManager>();
-	mpBehavior = AddComponent<EnemyBehavior>();
 
-	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
-	mpCollider->mScaleOffestCoff = D3DXVECTOR3(150.0f, 157.0f, 150.0f);
-	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 3.5f, 0.0f);
-	mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
-	mpCollider->SetUsePanel(true);
+	Resource::Init();
 
-	mpAnination->SetState("Idle");
-	mpAnination->SetUsePanel(true);
+}
 
-	mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Enemy.fbx");
+void Enemy::Create() {
+
+	if (Name == "Boss") {
+		mpBehavior = AddComponent<EnemyBehavior>();
+		mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 6.5f, 0.0f);
+		mpCollider->mScaleOffestCoff = D3DXVECTOR3(200.0f, 157.0f, 200.0f);
+		mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
+		mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Boss.fbx");
+		Scale = D3DXVECTOR3(0.08f, 0.08f, 0.08f);
+		AddGauge(D3DXVECTOR3(0,15,0));
+	}
+	else {
+		mpBehavior = AddComponent<EnemyBehavior>();
+		mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
+		mpCollider->mScaleOffestCoff = D3DXVECTOR3(150.0f, 157.0f, 150.0f);
+		mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
+		mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Enemy.fbx");
+		AddGauge(D3DXVECTOR3(0, 10, 0));
+	}
 
 	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
 	mpLockImage->Name = "enemy_lock_" + Name;
 	mpLockImage->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 	mpLockImage->GetImage()->SetAnimationSprite(true);
 	mpLockImage->GetImage()->SetBillBoard(true);
-	mpLockImage->GetImage()->SetHW(1,1);
+	mpLockImage->GetImage()->SetHW(1, 1);
 	mpLockImage->GetImage()->SetLoop(true);
-	mpLockImage->Position = Position;
-	mpLockImage->Scale = D3DXVECTOR3(3, 3, 3);
+	mpLockImage->Scale = D3DXVECTOR3(1,1,1);
 	mpLockImage->SetActive(false);
 
+	// アニメーション設定
+	mpAnination->SetState("Idle");
+
+	// パネル表示
+	mpCollider->SetUsePanel(true);
+	mpAnination->SetUsePanel(true);
 	mpBehavior->SetUsePanel(true);
 
-	AddGauge();
-	Resource::Init();
 
 }
 
-void Enemy::AddGauge() {
+void Enemy::AddGauge(D3DXVECTOR3 offset) {
 
 	Gauge* gauge = Application::GetScene()->AddGameObject<Gauge>(EffectLayer);
 	gauge->SetBillBoard(this);
-	gauge->mPositionOffest = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
+	gauge->mPositionOffest = offset;
 	mGauge = gauge;
 
 	mGauge->mFillAmount = mpBehavior->mHp / mpBehavior->mHpInit;
@@ -92,7 +107,7 @@ void Enemy::Update() {
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
 
-	mpLockImage->Position = Position + D3DXVECTOR3(0, 5, 3);
+	mpLockImage->Position = Position + D3DXVECTOR3(0, 10, 4);
 
 	if (Is_Lock) {
 		mpLockImage->SetActive(true);

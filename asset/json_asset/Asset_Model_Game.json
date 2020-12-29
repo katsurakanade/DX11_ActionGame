@@ -1,4 +1,4 @@
-9
+10
 { "Path": "asset\\model\\ball\\ball.obj" }
 { "Path": "asset\\model\\cube\\cube.obj" }
 { "Path": "asset\\model\\torus\\torus.obj" }
@@ -6,5 +6,6 @@
 { "Path": "asset\\model\\rock\\rock.obj" }
 { "Path": "asset\\model\\wall\\Wall.obj" }
 { "Path": "asset\\model\\enemy\\Enemy.fbx" }
+{ "Path": "asset\\model\\enemy\\Boss.fbx" }
 { "Path": "asset\\model\\human\\Human.fbx" }
 { "Path": "asset\\model\\human\\Human2.fbx" }
