@@ -208,11 +208,11 @@ void PlayerBehavior::Movement(BYTE keycodeF, BYTE keycodeB, BYTE keycodeR, BYTE 
 
 void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE keycode_3) {
 
+
 	if (Input::GetKeyTrigger(keycode_0)) {
 
 		// ëSìGéÊìæ
 		std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
-		std::sort(es.begin(), es.end(), [](Enemy* lh, Enemy* rh) {if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer(); });
 
 		// ïÅí çUåÇ
 		if (mCharacterType == 0) {
@@ -247,16 +247,14 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 
 				for (int i = 0; i < 5; i++) {
 					Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
-					ms->mTargetIndex = mLockIndex;
+					ms->mTarget = es[mLockIndex];
 					ms->Position = Position;
 					ms->p0 = ms->Position;
 					D3DXVECTOR3 mid = D3DXVECTOR3(rndx(Application::RandomGen), rndy(Application::RandomGen), rndz(Application::RandomGen));
 					ms->p1 = mid;
 					ms->p2 = es[mLockIndex]->Position;
 				}
-				
 			}
-
 		}
 	}
 
@@ -312,12 +310,12 @@ void PlayerBehavior::SwitchCharacter(BYTE keycode_prev ,BYTE keycode_next) {
 void PlayerBehavior::LockTarget(BYTE keycode_lock) {
 
 	std::vector <Enemy*> enemys = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
-	std::sort(enemys.begin(), enemys.end(), [](Enemy* lh, Enemy* rh) {if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer();});
+	if (!mpCamera->GetLookTarget())
+		std::sort(enemys.begin(), enemys.end(), [](Enemy* lh, Enemy* rh) {if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer(); });
 	
-
 	if (Input::GetKeyTrigger(keycode_lock)) {
-
 		if (!mpCamera->GetLookTarget()) {
+			std::sort(enemys.begin(), enemys.end(), [](Enemy* lh, Enemy* rh) {if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer(); });
 			if (enemys.size() > 0) {
 				mpCamera->SetLookTarget(enemys[mLockIndex]);
 				mpCamera->SetFollowPostionOffset(D3DXVECTOR3(0, 3, 20));
@@ -329,37 +327,29 @@ void PlayerBehavior::LockTarget(BYTE keycode_lock) {
 				e->Is_Lock = false;
 			}
 			mpCamera->SetLookTarget(nullptr);
+			mpCamera->SetControllerPosition(D3DXVECTOR3(0, -3, 5));
 			mLockIndex = 0;
 		}
 	}
 
 	if (mpCamera->GetLookTarget()) {
 
-	
 		if (Input::GetKeyTrigger(DIK_RIGHTARROW)) {
-			enemys[mLockIndex]->Is_Lock = false;
 			mpCamera->SetLookTarget(nullptr);
 			if (mLockIndex < enemys.size() - 1) {
 				mLockIndex++;
 			}
-			else if (mLockIndex == enemys.size() - 1) {
-				mLockIndex = 0;
-			}
 			mpCamera->SetLookTarget(enemys[mLockIndex]);
-			enemys[mLockIndex]->Is_Lock = true;
+			mLockedEnemy = enemys[mLockIndex];
 		}
 
 		else if (Input::GetKeyTrigger(DIK_LEFTARROW)) {
-			enemys[mLockIndex]->Is_Lock = false;
 			mpCamera->SetLookTarget(nullptr);
 			if (mLockIndex > 0) {
 				mLockIndex--;
 			}
-			else if (mLockIndex == 0) {
-				mLockIndex = enemys.size() - 1;
-			}
 			mpCamera->SetLookTarget(enemys[mLockIndex]);
-			enemys[mLockIndex]->Is_Lock = true;
+			mLockedEnemy = enemys[mLockIndex];
 		}
 
 	}

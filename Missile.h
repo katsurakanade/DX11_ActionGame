@@ -19,7 +19,7 @@ public:
 	// エフェクト
 	Sprite* mpEffect;
 	// ターゲットインデックス
-	int mTargetIndex;
+	Enemy* mTarget;
 
 };
 

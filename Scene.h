@@ -5,6 +5,7 @@
 #pragma once
 #include <list>
 #include <typeinfo>
+#include <future>
 #include "main.h"
 #include "Resource.h"
 #include "Camera.h"
@@ -64,14 +65,16 @@ public:
 		for (int i = 0; i < EndLayer; i++) {
 			for (Resource* g : mGameObject[i])
 			{
-				g->Update();
+				if (g->StandBy)
+					g->Update();
 			}
 		}
 
 		for (int i = 0; i < EndLayer; i++) {
 			for (Resource* g : mGameObject[i])
 			{
-				g->FixedUpdate();
+				if (g->StandBy)
+					g->FixedUpdate();
 			}
 		}
 
@@ -105,7 +108,8 @@ public:
 			for (Resource* g : mGameObject[i])
 			{
 				if (g->GetActive()) {
-					g->Render();
+					if (g->StandBy)
+						g->Render();
 				}
 			}
 		}

@@ -54,6 +54,8 @@ public:
     // ƒp[ƒlƒ‹
     bool Panel;
 
+    bool StandBy = true;
+
     virtual void Init() {
         for (Component* c : Components) {
             c->Init();

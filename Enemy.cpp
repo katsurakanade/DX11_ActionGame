@@ -31,7 +31,6 @@ void Enemy::Init() {
 	mpAnination = AddComponent<Animation>();
 	mpModel = AddComponent<ModelManager>();
 
-
 	Resource::Init();
 
 }
@@ -45,7 +44,9 @@ void Enemy::Create() {
 		mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
 		mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Boss.fbx");
 		Scale = D3DXVECTOR3(0.08f, 0.08f, 0.08f);
-		AddGauge(D3DXVECTOR3(0,16,0));
+		mpCollider->SetUsePanel(true);
+		mpAnination->SetUsePanel(true);
+		mpBehavior->SetUsePanel(true);
 	}
 	else {
 		mpBehavior = AddComponent<SoldierBehavior>();
@@ -53,7 +54,6 @@ void Enemy::Create() {
 		mpCollider->mScaleOffestCoff = D3DXVECTOR3(150.0f, 157.0f, 150.0f);
 		mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
 		mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Enemy.fbx");
-		AddGauge(D3DXVECTOR3(0, 11, 0));
 	}
 
 	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
@@ -68,12 +68,6 @@ void Enemy::Create() {
 
 	// アニメーション設定
 	mpAnination->SetState("Idle");
-
-	// パネル表示
-	mpCollider->SetUsePanel(true);
-	mpAnination->SetUsePanel(true);
-	mpBehavior->SetUsePanel(true);
-
 
 }
 
@@ -106,6 +100,12 @@ void Enemy::Update() {
 	if (mGauge) {
 		mGauge->mFillAmount = mpBehavior->mHp / mpBehavior->mHpInit;
 	}
+	else {
+		if (Name == "Boss")
+			AddGauge(D3DXVECTOR3(0, 16, 0));
+		else 
+			AddGauge(D3DXVECTOR3(0, 11, 0));
+	}
 
 	MeshField* mf = Application::GetScene()->GetGameObject<MeshField>(ObjectLayer);
 	Position.y = mf->GetHeight(Position) + mf->Position.y;
@@ -117,10 +117,12 @@ void Enemy::Update() {
 		mpLockImage->Position = Position + D3DXVECTOR3(0, 13, 0);
 	}
 
-	if (Is_Lock) {
+	Camera* c = Application::GetScene()->GetMainCamera();
+
+	if (c->GetLookTarget() == this) {
 		mpLockImage->SetActive(true);
 	}
-	else if (!Is_Lock) {
+	else {
 		mpLockImage->SetActive(false);
 	}
 
@@ -143,7 +145,8 @@ void Enemy::Render() {
 	D3DXMATRIX world = MakeWorldMatrix();
 	Renderer::SetWorldMatrix(&world);
 	Shader::Use(SHADER_TYPE_VSPS::Default);
-	mGauge->Hide(false);
+	if (mGauge)
+		mGauge->Hide(false);
 	mpModel->Render(world);
 	mpCollider->Render();
 

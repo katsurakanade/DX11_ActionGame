@@ -17,6 +17,8 @@ void EnemyBehavior::Init() {
 	// プレイヤー取得
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 	mDeadTimer = 0.0f;
+
+	mState = "Idle";
 }
 
 void EnemyBehavior::Uninit() {
@@ -48,14 +50,6 @@ void EnemyBehavior::FixedUpdate() {
 
 void EnemyBehavior::DataPanel() {
 
-	ImGui::Begin(GetResource()->Name.c_str());
-	if (ImGui::TreeNode(u8"行為")) {
-		ImGui::Text("State : %s", mState);
-		ImGui::Text("LengthToPlayer : %f", mLengthToPlayer);
-		ImGui::Text("DeadTimer : %f", mDeadTimer);
-		ImGui::TreePop();
-	}
-	ImGui::End();
 }
 
 void EnemyBehavior::Movement(int arrow) {

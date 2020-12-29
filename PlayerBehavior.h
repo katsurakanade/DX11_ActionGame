@@ -28,6 +28,8 @@ private:
 	// ロックしている敵インデックス
 	unsigned int mLockIndex;
 
+	Enemy* mLockedEnemy = 0;
+
 	// 移動
 	void Movement(BYTE keycodeF, BYTE keycodeB, BYTE keycodeR, BYTE keycodeL);
 	// スキル

@@ -28,7 +28,6 @@ void Missile::Init() {
 	effect->Scale = D3DXVECTOR3(3, 3, 3);
 	mpEffect = effect;
 
-
 	Enemy* e = Application::GetScene()->GetGameObject<Enemy>(ObjectLayer);
 	Player* p = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 
@@ -44,12 +43,11 @@ void Missile::Uninit() {
 void Missile::Update() {
 
 	std::vector <Enemy*> es = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer);
-	std::sort(es.begin(), es.end(), [](Enemy* lh, Enemy* rh) { if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer(); });
 	
 	if (es.size() > 0) {
 
 		if (mCurveProgress <= 1.0f) {
-			mCurveProgress += 1.0f * Time::GetDeltaTime();
+			mCurveProgress += Time::GetDeltaTime();
 		}
 
 		mpEffect->Position = Bezier(p0, p1, p2, mCurveProgress);
@@ -60,12 +58,12 @@ void Missile::Update() {
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-			pc->Position = es[mTargetIndex]->Position + D3DXVECTOR3(0, 3, 0);
-			if (es[mTargetIndex]->TryGetComponent<BossBehavior>()) {
-				es[mTargetIndex]->GetComponent<BossBehavior>()->mHp -= 3.0f;
+			pc->Position = mTarget->Position + D3DXVECTOR3(0, 3, 0);
+			if (mTarget->TryGetComponent<BossBehavior>()) {
+				mTarget->GetComponent<BossBehavior>()->mHp -= 3.0f;
 			}
-			else if (es[mTargetIndex]->TryGetComponent<SoldierBehavior>()) {
-				es[mTargetIndex]->GetComponent<SoldierBehavior>()->mHp -= 3.0f;
+			else if (mTarget->TryGetComponent<SoldierBehavior>()) {
+				mTarget->GetComponent<SoldierBehavior>()->mHp -= 3.0f;
 			}
 			Destroy();
 		}
