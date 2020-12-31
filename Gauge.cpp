@@ -105,6 +105,7 @@ void Gauge::SetBillBoard(Resource* target) {
 	hpbar_fill->GetImage()->SetHW(1, 1);
 	hpbar_fill->GetImage()->SetLoop(true);
 	hpbar_fill->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
+	hpbar_fill->GetImage()->SetHighBrightness(true);
 	hpbar_fill->Position = D3DXVECTOR3(0, 0, 0);
 	hpbar_fill->Scale = D3DXVECTOR3(7.0f, 0.5f, 1.0f);
 

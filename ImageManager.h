@@ -15,7 +15,6 @@ private:
 	// サイス
 	D3DXVECTOR3 mSize;
 
-
 	// アニメーション用
 	bool mAnimation = false;
 	int mFramecount;
@@ -30,18 +29,24 @@ private:
 
 	// ビルボード
 	bool mBillBoard;
+	// GUI
+	bool mGUI = true;
 	//	FillAmount
 	float mFillAmount;
+	// 高明度
+	bool mHighBrightness = false;
 
 public:
 
-	ImageManager() : mSize(D3DXVECTOR3(64.0f,64.0f,0.0f)), mWidth(3) , mHeight(3) , mAnimeSpeed(1.0f), mFillAmount(1.0f) , mLoop(false), mBillBoard(false){};
+	ImageManager() : mSize(D3DXVECTOR3(64.0f, 64.0f, 0.0f)), mWidth(3), mHeight(3), mAnimeSpeed(1.0f), mFillAmount(1.0f), mLoop(false), mBillBoard(false) {};
 
 	void Init();
 	void Uninit();
 	void Update();
 	void Render();
 	void FixedUpdate();
+
+	void DataPanel();
 
 	// Setter
 	void SetTexture(ID3D11ShaderResourceView* texture) { mTexture = texture; };
@@ -52,9 +57,11 @@ public:
 	void SetBillBoard(bool val) { mBillBoard = val; };
 	void SetLoop(bool val) { mLoop = val; };
 	void SetFrame(int frame) { mFramecount = frame; };
+	void SetGUI(bool val) { mGUI = val; };
 	void SetHW(int valx, int valy) { mWidth = valx; mHeight = valy; };
 	void SetAnimationSpeed(float val) { mAnimeSpeed = val; };
 	void SetFillAmount(float val) { mFillAmount = val; };
+	void SetHighBrightness(bool val) { mHighBrightness = val; };
 
 	// Getter
 	D3DXVECTOR3 GetSize() { return mSize; };

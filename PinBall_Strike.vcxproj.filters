@@ -412,6 +412,9 @@
     <FxCompile Include="pixelShader_WithHeight.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="UnlitPS_HighBrightness.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="asset\json_asset\Asset_Animation_Game.json">

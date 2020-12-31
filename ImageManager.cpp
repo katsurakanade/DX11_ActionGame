@@ -14,7 +14,9 @@ void ImageManager::Init() {
 	float col[4];
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	Rotation = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 	Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	D3DXQuaternionIdentity(&Quaternion);
 
 	vertex[0].Position = D3DXVECTOR3(Position.x, Position.y, 0.0f);
 	vertex[1].Position = D3DXVECTOR3(Position.x + mSize.x, Position.y, 0.0f);
@@ -101,7 +103,18 @@ void ImageManager::FixedUpdate() {
 void ImageManager::Render() {
 
 	if (!mBillBoard) {
-		Renderer::SetWorldViewProjection2D();
+		if (mGUI) {
+			Renderer::SetWorldViewProjection2D();
+		}
+		else if (!mGUI) {
+			D3DXMATRIX world, scale, trans ,rot ;
+			D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);
+			D3DXQuaternionRotationYawPitchRoll(&Quaternion, Rotation.y, Rotation.x, Rotation.z);
+			D3DXMatrixRotationQuaternion(&rot, &Quaternion);
+			D3DXMatrixTranslation(&trans, Position.x, Position.y, Position.z);
+			world = scale * rot * trans;
+			Renderer::SetWorldMatrix(&world);
+		}
 	}
 
 	else if (mBillBoard) {
@@ -160,9 +173,27 @@ void ImageManager::Render() {
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &mTexture);
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	Shader::Use(SHADER_TYPE_VSPS::Unlit);
+	if (mHighBrightness)
+		Shader::Use(SHADER_TYPE_VSPS::Unlit_HighBrightness);
+	else 
+		Shader::Use(SHADER_TYPE_VSPS::Unlit);
 
 	Renderer::GetDeviceContext()->Draw(4, 0);
+}
+
+void ImageManager::DataPanel() {
+
+	// ImGui
+	ImGui::Begin(GetResource()->Name.c_str());
+	if (ImGui::TreeNode(u8"ImageManager")) {
+		ImGui::Checkbox("BillBoard", &mBillBoard);
+		ImGui::Checkbox("GUI", &mGUI);
+		ImGui::SliderFloat3(u8"座標", Position, -1000.0f, 1000.0f, "%.0f", 5.0f);
+		ImGui::SliderFloat3(u8"回転", Rotation, -3.14f, 3.14f);
+		ImGui::SliderFloat3(u8"スケール", Scale, 0.1f, 10.0f);
+		ImGui::TreePop();
+	}
+	ImGui::End();
 }
 
 D3DXVECTOR2 ImageManager::MakeFrame() {

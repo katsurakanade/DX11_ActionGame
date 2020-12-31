@@ -9,9 +9,9 @@
 void Sprite::Init() {
 
 	mImage = AddComponent<ImageManager>();
-	mImage->SetResource(this);
 
 	mImage->Position = Position;
+	mImage->Rotation = Rotation;
 	mImage->Scale = Scale;
 	
 }
@@ -24,15 +24,11 @@ void Sprite::Uninit() {
 void Sprite::Update() {
 
 	mImage->Position = Position;
+	mImage->Rotation = Rotation;
 	mImage->Scale = Scale;
 
 	if (!mImage->GetIsBillBoard()) {
-		/*ImGui::Begin("GUI Editor");
-		if (ImGui::TreeNode(Name.c_str())) {
-			ImGui::SliderFloat3("Postition", Position, 0, 1920);
-			ImGui::TreePop();
-		}
-		ImGui::End();*/
+	
 
 		mImage->Set2DPosition(Position);
 	}

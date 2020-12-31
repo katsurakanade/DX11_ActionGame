@@ -107,6 +107,7 @@ void AssimpModel::DrawConfig() {
 			ImGui::TreePop();
 		}
 
+		ImGui::Text(u8"アニメーション数 : %d", mAnimationChannel.size());
 		if (ImGui::TreeNode(u8"アニメーション情報")) {
 
 			for (unsigned int i = 0; i < mAnimationChannel.size(); i++) {

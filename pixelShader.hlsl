@@ -15,7 +15,7 @@ void main(in PS_IN In , out float4 outDiffuse : SV_Target)
     outDiffuse += Material.Ambient * Light.Ambient;
     outDiffuse *= Material.Diffuse;
     
-    outDiffuse.rgb *= In.Diffuse.rgb * light;
+    outDiffuse.rgb *= In.Diffuse.rgb * light * 1.5f;
     outDiffuse.a *= In.Diffuse.a * Material.Diffuse.a;
     
     //Specular

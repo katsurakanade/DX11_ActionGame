@@ -160,5 +160,17 @@ void BossBehavior::Summon() {
 	mSummonenemy->Position = Position;
 	mSummonenemy->Position.x += offsetx;
 	mSummonenemy->Create();
-	
+
+	auto sprite = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
+	sprite->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::MAGICRING));
+	sprite->GetComponent<ImageManager>()->SetBillBoard(false);
+	sprite->GetComponent<ImageManager>()->SetAnimationSprite(true);
+	sprite->GetComponent<ImageManager>()->SetGUI(false);
+	sprite->GetComponent<ImageManager>()->SetHW(1, 1);
+	sprite->GetComponent<ImageManager>()->SetLoop(true);
+	sprite->GetComponent<ImageManager>()->SetHighBrightness(true);
+	sprite->Position = mSummonenemy->Position + D3DXVECTOR3(0,1,0);
+	sprite->Rotation = D3DXVECTOR3(1.72f, 0, 0);
+	sprite->Scale = D3DXVECTOR3(5, 5, 5);
+
 }

@@ -27,7 +27,7 @@ private:
 	std::vector<Texture> mTexturesSelect;
 	// アニメーション
 	std::map < std::string, const aiScene*> mAnimation;
-
+	// アニメーションチャンネル数
 	std::vector<std::string> mAnimationChannel;
 
 	// ロード処理

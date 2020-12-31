@@ -46,6 +46,7 @@ void SoldierBehavior::DataPanel() {
 }
 
 void SoldierBehavior::ChooseAction(){
+
 	if (mHp > 0.0f) {
 		if (mLengthToPlayer < 10)
 			mState = "Attack";
@@ -60,6 +61,7 @@ void SoldierBehavior::ChooseAction(){
 }
 
 void SoldierBehavior::RunAction() {
+
 	if (mState == "Idle") {
 		mpAnimation->SetNewState("Idle");
 	}

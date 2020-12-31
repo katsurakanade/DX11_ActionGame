@@ -20,6 +20,8 @@ void Shader::Init() {
 	CreatePixelShader(SHADER_TYPE_VSPS::Default);
 	CreateVertexShader(SHADER_TYPE_VSPS::Unlit);
 	CreatePixelShader(SHADER_TYPE_VSPS::Unlit);
+	CreateVertexShader(SHADER_TYPE_VSPS::Unlit_HighBrightness);
+	CreatePixelShader(SHADER_TYPE_VSPS::Unlit_HighBrightness);
 	CreateVertexShader(SHADER_TYPE_VSPS::WithNormal);
 	CreatePixelShader(SHADER_TYPE_VSPS::WithNormal);
 	CreateVertexShader(SHADER_TYPE_VSPS::WithHeight);
@@ -28,6 +30,7 @@ void Shader::Init() {
 	CreatePixelShader(SHADER_TYPE_VSPS::Particle);
 	CreateVertexShader(SHADER_TYPE_VSPS::Gizmos);
 	CreatePixelShader(SHADER_TYPE_VSPS::Gizmos);
+
 	CreateComputeShader(SHADER_TYPE::SkinMesh);
 	CreateComputeShader(SHADER_TYPE::Particle);
 }
@@ -71,6 +74,9 @@ void Shader::CreateVertexShader(SHADER_TYPE_VSPS type) {
 		vspass = "vertexShader.cso";
 	}
 	else if (type == SHADER_TYPE_VSPS::Unlit) {
+		vspass = "UnlitVS.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::Unlit_HighBrightness) {
 		vspass = "UnlitVS.cso";
 	}
 	else if (type == SHADER_TYPE_VSPS::WithNormal) {
@@ -135,6 +141,9 @@ void Shader::CreatePixelShader(SHADER_TYPE_VSPS type) {
 	}
 	else if (type == SHADER_TYPE_VSPS::Unlit) {
 		pspass = "UnlitPS.cso";
+	}
+	else if (type == SHADER_TYPE_VSPS::Unlit_HighBrightness) {
+		pspass = "UnlitPS_HighBrightness.cso";
 	}
 	else if (type == SHADER_TYPE_VSPS::WithNormal) {
 		pspass = "pixelShader_WithNormal.cso";
