@@ -47,7 +47,7 @@ void Missile::Update() {
 	if (es.size() > 0) {
 
 		if (mCurveProgress <= 1.0f) {
-			mCurveProgress += Time::GetDeltaTime();
+			mCurveProgress += 2.0f * Time::GetDeltaTime();
 		}
 
 		mpEffect->Position = Bezier(p0, p1, p2, mCurveProgress);
@@ -60,10 +60,10 @@ void Missile::Update() {
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 			pc->Position = mTarget->Position + D3DXVECTOR3(0, 3, 0);
 			if (mTarget->TryGetComponent<BossBehavior>()) {
-				mTarget->GetComponent<BossBehavior>()->mHp -= 3.0f;
+				mTarget->GetComponent<BossBehavior>()->mHp -= 30.0f;
 			}
 			else if (mTarget->TryGetComponent<SoldierBehavior>()) {
-				mTarget->GetComponent<SoldierBehavior>()->mHp -= 3.0f;
+				mTarget->GetComponent<SoldierBehavior>()->mHp -= 30.0f;
 			}
 			Destroy();
 		}

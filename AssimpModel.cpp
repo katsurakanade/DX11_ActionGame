@@ -29,6 +29,9 @@ bool AssimpModel::LoadAnimation(std::string Filename,std::string name) {
 		return false;
 
 	mAnimation[name] = file;
+
+	aiAnimation* animation = mAnimation[name]->mAnimations[0];
+	mAnimationChannel.push_back(std::to_string(animation->mNumChannels).c_str());
 	
 	return true;
 	
@@ -103,6 +106,15 @@ void AssimpModel::DrawConfig() {
 
 			ImGui::TreePop();
 		}
+
+		if (ImGui::TreeNode(u8"アニメーション情報")) {
+
+			for (unsigned int i = 0; i < mAnimationChannel.size(); i++) {
+				ImGui::Text("%s", mAnimationChannel[i]);
+			}
+
+			ImGui::TreePop();
+		}
 		ImGui::TreePop();
 	}
 
@@ -156,8 +168,16 @@ void AssimpModel::Update(const char* animationname1, const char* animationname2,
 
 	for (unsigned int c = 0; c < animation_1->mNumChannels; c++) {
 
-		aiNodeAnim* node_1 = animation_1->mChannels[c];
-		aiNodeAnim* node_2 = animation_2->mChannels[c];
+		aiNodeAnim* node_1;
+		aiNodeAnim* node_2;
+
+		node_1 = animation_1->mChannels[c];
+		if (c >= animation_2->mNumChannels) {
+			node_2 = animation_2->mChannels[animation_2->mNumChannels -1];
+		}
+		else {
+			node_2 = animation_2->mChannels[c];
+		}
 
 		int f;
 

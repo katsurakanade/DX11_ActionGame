@@ -28,6 +28,8 @@ private:
 	// アニメーション
 	std::map < std::string, const aiScene*> mAnimation;
 
+	std::vector<std::string> mAnimationChannel;
+
 	// ロード処理
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);

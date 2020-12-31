@@ -37,7 +37,6 @@ void ModelManager::FixedUpdate() {
 	Component::FixedUpdate();
 }
 
-
 void ModelManager::Render(D3DXMATRIX world) {
 	mModel->Draw(world);
 }
@@ -46,9 +45,10 @@ void ModelManager::LoadModelWithAnimation(std::string path) {
 
 	mModel = new AssimpModel(true);
 	mModel->Load(path);
-	mModel->LoadAnimation("asset\\animation\\Idle.fbx", "Idle");
-	mModel->LoadAnimation("asset\\animation\\Running.fbx", "Running");
-	mModel->LoadAnimation("asset\\animation\\Attack.fbx", "Attack");
-	mModel->LoadAnimation("asset\\animation\\Dying.fbx", "Dying");
+	mModel->LoadAnimation("asset\\animation\\Enemy\\Idle.fbx", "Idle");
+	mModel->LoadAnimation("asset\\animation\\Enemy\\Running.fbx", "Running");
+	mModel->LoadAnimation("asset\\animation\\Enemy\\Attack.fbx", "Attack");
+	mModel->LoadAnimation("asset\\animation\\Enemy\\Dying.fbx", "Dying");
+	mModel->LoadAnimation("asset\\animation\\Enemy\\Spell.fbx", "Spell");
 	mIndependence = true;
 }

@@ -17,7 +17,7 @@ void EnemyBehavior::Init() {
 	// ƒvƒŒƒCƒ„[Žæ“¾
 	mpPlayer = Application::GetScene()->GetGameObject<Player>(ObjectLayer);
 	mDeadTimer = 0.0f;
-
+	// ‰Šú‰»
 	mState = "Idle";
 }
 
@@ -41,7 +41,7 @@ void EnemyBehavior::Update() {
 
 void EnemyBehavior::FixedUpdate() {
 
-	if (mDeadTimer >= 3.5f) {
+	if (mDeadTimer >= 2.5f) {
 		GetResource()->Destroy();
 	}
 
@@ -160,6 +160,38 @@ void EnemyBehavior::MoveTo(D3DXVECTOR3 target_position) {
 	mpPhysical->mVelocity = result;
 }
 
+void EnemyBehavior::LookAt(D3DXVECTOR3 target_position) {
+
+	D3DXVECTOR3 result;
+	D3DXVECTOR3 direction = target_position - Position;
+	D3DXVec3Normalize(&result, &direction);
+
+	// TODO:Šp“x‰ü‘P
+	if (direction.z > 5.0f) {
+		if (direction.x > -4.0f && direction.x < 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * 1.0f;
+		else if (direction.x > 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * -0.75f;
+		else if (direction.x < 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * 0.75f;
+	}
+	else if (direction.z < 5.0f && direction.z > -5.0f) {
+		if (direction.x > 0.0f)
+			GetResource()->Rotation.y = D3DX_PI * -0.5f;
+		else if (direction.x < 0.0f)
+			GetResource()->Rotation.y = D3DX_PI * 0.5f;
+	}
+	else if (direction.z < -5.0f) {
+		if (direction.x > -4.0f && direction.x < 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * 2.0f;
+		else if (direction.x > 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * -0.25f;
+		else if (direction.x < 4.0f)
+			GetResource()->Rotation.y = D3DX_PI * 0.25f;
+	}
+
+}
+
 void EnemyBehavior::Dying() {
 
 	Camera* camera = Application::GetScene()->GetGameObject<Camera>(CameraLayer);
@@ -169,7 +201,7 @@ void EnemyBehavior::Dying() {
 	}
 
 	if (mpAnimation->GetNewState() != "Dying") {
-		mpAnimation->SetNewStateOneTime("Dying", 3.5f);
+		mpAnimation->SetNewStateOneTime("Dying", 2.5f);
 	}
 
 	mDeadTimer += Time::GetDeltaTime();

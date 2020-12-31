@@ -20,6 +20,13 @@ private:
 	// ステートマップ
 	std::map <BEHAVIOR_STATE_SOLDIER, std::string> mStatemap;
 
+protected:
+
+	// 行動決め
+	void ChooseAction();
+	// 行動実行
+	void RunAction();
+
 public:
 	void Init();
 	void Uninit();

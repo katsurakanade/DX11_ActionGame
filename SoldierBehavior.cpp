@@ -8,7 +8,6 @@
 #include "Player.h"
 #include "SoldierBehavior.h"
 
-
 void SoldierBehavior::Init() {
 
 	EnemyBehavior::Init();
@@ -22,14 +21,31 @@ void SoldierBehavior::Init() {
 	mHpInit = 50.0f;
 	mHp = mHpInit;
 }
+
 void SoldierBehavior::Uninit() {
 	EnemyBehavior::Uninit();
 }
+
 void SoldierBehavior::Update() {
 
 	EnemyBehavior::Update();
 
 	// s“®Œˆ‚ß
+	ChooseAction();
+
+	// s“®
+	RunAction();
+}
+
+void SoldierBehavior::FixedUpdate() {
+	EnemyBehavior::FixedUpdate();
+}
+
+void SoldierBehavior::DataPanel() {
+	EnemyBehavior::DataPanel();
+}
+
+void SoldierBehavior::ChooseAction(){
 	if (mHp > 0.0f) {
 		if (mLengthToPlayer < 10)
 			mState = "Attack";
@@ -41,8 +57,9 @@ void SoldierBehavior::Update() {
 	else if (mHp <= 0.0f) {
 		mState = "Dying";
 	}
+}
 
-	// s“®
+void SoldierBehavior::RunAction() {
 	if (mState == "Idle") {
 		mpAnimation->SetNewState("Idle");
 	}
@@ -56,10 +73,4 @@ void SoldierBehavior::Update() {
 	else if (mState == "Dying") {
 		Dying();
 	}
-}
-void SoldierBehavior::FixedUpdate() {
-	EnemyBehavior::FixedUpdate();
-}
-void SoldierBehavior::DataPanel() {
-	EnemyBehavior::DataPanel();
 }

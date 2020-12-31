@@ -41,6 +41,16 @@ private:
 
 	// -------------------------------------
 
+	// スキル使え可能
+	bool mCanUseSkill;
+
+protected:
+
+	// 行動決め
+	void ChooseAction();
+	// 行動実行
+	void RunAction();
+
 public:
 
 	void Init();
@@ -48,6 +58,7 @@ public:
 	void Update();
 	void FixedUpdate();
 	void DataPanel();
+
 
 };
 

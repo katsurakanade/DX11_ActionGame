@@ -47,6 +47,7 @@ void Enemy::Create() {
 		mpCollider->SetUsePanel(true);
 		mpAnination->SetUsePanel(true);
 		mpBehavior->SetUsePanel(true);
+		mpModel->GetModel()->DisplayConfig = true;
 	}
 	else {
 		mpBehavior = AddComponent<SoldierBehavior>();

@@ -53,7 +53,7 @@ public:
     std::string Type;
     // ƒp[ƒlƒ‹
     bool Panel;
-
+    // €”õ
     bool StandBy = true;
 
     virtual void Init() {
@@ -99,6 +99,7 @@ public:
 
     // Getter
     bool GetActive() { return this->Active; };
+    bool GetAlive() { return this->Alive; };
     D3DXVECTOR3 GetForward() {
 
         D3DXMATRIX rot;

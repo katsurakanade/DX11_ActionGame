@@ -435,5 +435,17 @@
     <None Include="asset\json_asset\Asset_Texture_Title.json">
       <Filter>JSON</Filter>
     </None>
+    <None Include="asset\json_particle\PlayerAttack_FireBall_Particle.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_particle\PlayerAttack_Simple_Particle.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_particle\PlayerSwitchCharacter_Particle.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_particle\Title_Particle.json">
+      <Filter>JSON</Filter>
+    </None>
   </ItemGroup>
 </Project>

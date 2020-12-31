@@ -28,7 +28,7 @@ void Animation::Update() {
 
 	// ƒuƒŒƒ“ƒhˆ—
 	if (mState != mNewState) {
-		mBlend += 10.0f * Time::GetDeltaTime();
+		mBlend += 7.0f * Time::GetDeltaTime();
 	}
 
 	// ‘JˆÚ

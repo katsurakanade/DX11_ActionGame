@@ -1,8 +1,8 @@
 {
   "Amount": 1000000,
   "LifeMinMax": {
-    "x": 30000,
-    "y": 30000
+    "x": 600,
+    "y": 50000
   },
   "PolarCoordinates": false,
   "Position": {
@@ -23,7 +23,7 @@
     "y": 50
   },
   "RandomSpeed": true,
-  "Size": 0.029999999329447746,
+  "Size": 0.03,
   "Speed": {
     "x": 0,
     "y": 0,

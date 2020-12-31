@@ -24,12 +24,19 @@ protected:
 	float mDeadTimer;
 	// 移動
 	void Movement(int arrow);
-	// 場所に移動
+	// 指定場所に移動
 	void MoveTo(D3DXVECTOR3 target_position);
+	// 向き
+	void LookAt(D3DXVECTOR3 target_position);
 	// 死亡処理
 	void Dying();
 	// ステート
 	std::string mState;
+
+	// 行動決め
+	virtual void ChooseAction() = 0;
+	// 行動実行
+	virtual void RunAction() = 0;
 
 public:
 
