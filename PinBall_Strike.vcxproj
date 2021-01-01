@@ -295,6 +295,7 @@
     <None Include="asset\json_asset\Asset_Sound_Title.json" />
     <None Include="asset\json_asset\Asset_Texture_Game.json" />
     <None Include="asset\json_asset\Asset_Texture_Title.json" />
+    <None Include="asset\json_particle\BossMagic_Particle.json" />
     <None Include="asset\json_particle\PlayerAttack_FireBall_Particle.json" />
     <None Include="asset\json_particle\PlayerAttack_Simple_Particle.json" />
     <None Include="asset\json_particle\PlayerSwitchCharacter_Particle.json" />

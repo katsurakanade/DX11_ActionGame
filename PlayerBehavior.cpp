@@ -225,10 +225,10 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 					pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 					pc->Position = Position + D3DXVECTOR3(0, 3, 0);
 					if (es[i]->TryGetComponent<BossBehavior>()) {
-						es[i]->GetComponent<BossBehavior>()->mHp -= 10;
+						es[i]->GetComponent<BossBehavior>()->mHp -= 30.0f;
 					}
 					else if (es[i]->TryGetComponent<SoldierBehavior>()) {
-						es[i]->GetComponent<SoldierBehavior>()->mHp -= 3.0f;
+						es[i]->GetComponent<SoldierBehavior>()->mHp -= 30.0f;
 					}
 				}
 			}
@@ -321,6 +321,7 @@ void PlayerBehavior::LockTarget(BYTE keycode_lock) {
 			if (enemys.size() > 0) {
 				mpCamera->SetLookTarget(enemys[mLockIndex]);
 				mpCamera->SetFollowPostionOffset(D3DXVECTOR3(0, 3, 20));
+				// TODO: Fix Some Bug
 				if (enemys[mLockIndex]) {
 					enemys[mLockIndex]->Is_Lock = true;
 				}

@@ -64,7 +64,7 @@ void BoxCollider::FixedUpdate() {
 
 void BoxCollider::Render() {
 
-	if (Renderer::mGizmosMode){
+	if (Application::GetGizmosMode()){
 
 		D3DXMATRIX world, scale, rot, trans;
 		D3DXMatrixScaling(&scale, Scale.x, Scale.y, Scale.z);

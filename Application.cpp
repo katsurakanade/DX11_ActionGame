@@ -16,7 +16,7 @@
 Scene* Application::mScene = nullptr;
 Asset* Application::mAsset = nullptr;
 bool Application::mDisableLighting;
-bool Application::mUsingGPU;
+bool Application::mGizmosMode;
 float Application::mFrameTime[100];
 float Application::mMemoryUsage[100];
 int Application::mAnalysisCount;
@@ -30,17 +30,14 @@ std::map<std::string, std::string> StaticManger::StateMap;
 
 bool Application::Init() {
  
-
-	mDisableLighting = false;
-	mUsingGPU = true;
-
 	Input::Init();
 	Renderer::Init();
 	AudioListener::Init();
-	AudioListener::SetVolume(1.0f);
+	AudioListener::SetVolume(0.5f);
 	StaticManger::Init();
 
-	Renderer::mGizmosMode = false;
+	mDisableLighting = false;
+	mGizmosMode = false;
 
 	mScene = new Title();
 	mScene->Init();
@@ -110,8 +107,7 @@ void Application::System() {
 		ImGui::Text(str.c_str());
 		ImGui::PlotLines("", mMemoryUsage, IM_ARRAYSIZE(mMemoryUsage));
 		ImGui::Checkbox(u8"線描画モード", &Renderer::mLineMode);
-		ImGui::Checkbox(u8"Gizmosモード", &Renderer::mGizmosMode);
-		ImGui::Checkbox(u8"GPUで計算する", &mUsingGPU);
+		ImGui::Checkbox(u8"Gizmosモード", &mGizmosMode);
 		ImGui::End();
 	}
 

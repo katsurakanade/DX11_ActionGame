@@ -19,7 +19,7 @@ private:
 	
 	// ステートマップ
 	std::map <BEHAVIOR_STATE_SOLDIER, std::string> mStatemap;
-
+	// 攻撃待ちタイム
 	float mAttackWaitTime;
 
 protected:

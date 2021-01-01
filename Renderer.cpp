@@ -31,7 +31,6 @@ ID3D11RasterizerState* Renderer::mRasterizerState_CullNone = NULL;
 ID3D11BlendState* Renderer::mBlendState;
 
 bool Renderer::mLineMode = false;
-bool Renderer::mGizmosMode = true;
 
 void Renderer::Init()
 {

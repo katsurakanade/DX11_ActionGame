@@ -456,5 +456,8 @@
     <None Include="asset\json_particle\Test_Particle.json">
       <Filter>JSON</Filter>
     </None>
+    <None Include="asset\json_particle\BossMagic_Particle.json">
+      <Filter>JSON</Filter>
+    </None>
   </ItemGroup>
 </Project>

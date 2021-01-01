@@ -23,6 +23,9 @@ protected:
 	// 死亡タイマー
 	float mDeadTimer;
 
+	float mMaxSpeedChase;
+	float mPlusSpeedChase;
+
 	// 移動
 	void Movement(int arrow);
 	// 指定場所に移動

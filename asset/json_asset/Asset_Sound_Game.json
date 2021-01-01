@@ -1,2 +1,6 @@
-1
+5
 { "Path": "asset/sound/bgm2.wav" }
+{ "Path": "asset/sound/Phrase.wav" }
+{ "Path": "asset/sound/Alien_KillYou.wav" }
+{ "Path": "asset/sound/Alien_Die.wav" }
+{ "Path": "asset/sound/Alien_Human.wav" }

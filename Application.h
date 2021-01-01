@@ -21,7 +21,7 @@ private:
 	static Asset* mAsset;
 	// ƒtƒ‰ƒO
 	static bool mDisableLighting;
-	static bool mUsingGPU;
+	static bool mGizmosMode;
 	// ForDebug
 	static float mFrameTime[100];
 	static float mMemoryUsage[100];
@@ -47,7 +47,6 @@ public:
 	// Getter
 	static Scene* GetScene() { return mScene; };
 	static Asset* GetAsset() { return mAsset; };
-	static bool GetUsingGPU() { return mUsingGPU; };
 
 	// ForDebug
 	static void System();
@@ -70,10 +69,8 @@ public:
 	static void UseLighting(bool val) {
 		mDisableLighting = val;
 	}
-	static void UseGPUCompute(bool val) {
-		mUsingGPU = val;
-	}
 
+	static bool GetGizmosMode() { return mGizmosMode; };
 	
 };
 

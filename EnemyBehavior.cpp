@@ -19,6 +19,12 @@ void EnemyBehavior::Init() {
 	mDeadTimer = 0.0f;
 	// ‰Šú‰»
 	mState = "Idle";
+
+	std::uniform_real_distribution<float> rndx(1.0f, 1.5f);
+	std::uniform_real_distribution<float> rndy(0.01f, 0.07f);
+
+	mMaxSpeedChase = rndx(Application::RandomGen);
+	mPlusSpeedChase = rndy(Application::RandomGen);
 }
 
 void EnemyBehavior::Uninit() {
@@ -34,8 +40,6 @@ void EnemyBehavior::Update() {
 	D3DXVECTOR3 sp = Position;
 	D3DXVECTOR3 direction = pp - sp;
 	mLengthToPlayer = D3DXVec3Length(&direction);
-
-
 
 }
 
@@ -153,8 +157,8 @@ void EnemyBehavior::MoveTo(D3DXVECTOR3 target_position) {
 			GetResource()->Rotation.y = D3DX_PI * 0.25f;
 	}
 	
-	if (mpPhysical->mAcceleration < 1.5f) 
-		mpPhysical->mAcceleration += 0.05f;
+	if (mpPhysical->mAcceleration < mMaxSpeedChase)
+		mpPhysical->mAcceleration += mPlusSpeedChase;
 	
 	mpPhysical->mSpeed += mpPhysical->mAcceleration;
 	mpPhysical->mVelocity = result;

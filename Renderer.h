@@ -107,7 +107,6 @@ public:
 		
 	// 描画モード
 	static bool mLineMode;
-	static bool mGizmosMode;
 
 	// バッファ生成
 	static HRESULT CreateStructuredBuffer(UINT elementSize,UINT count,void* pInitData,ID3D11Buffer** ppBufferOut);

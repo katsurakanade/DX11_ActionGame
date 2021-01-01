@@ -1,7 +1,6 @@
 #include "main.h"
 #include "Application.h"
 #include "Renderer.h"
-
 #include "Resource.h"
 #include "Animation.h"
 #include "Physical.h"
@@ -55,14 +54,18 @@ void SoldierBehavior::ChooseAction(){
 				mState = "Attack";
 			}
 		}
-		else if (mLengthToPlayer > 10 && mLengthToPlayer < 40) {
+		else {
+			mAttackWaitTime = 0.0f;
+			mState = "Chase";
+		}
+		/*else if (mLengthToPlayer > 10 && mLengthToPlayer < 40) {
 			mAttackWaitTime = 0.0f;
 			mState = "Chase";
 		}
 		else if (mLengthToPlayer > 40) {
 			mAttackWaitTime = 0.0f;
 			mState = "Idle";
-		}
+		}*/
 	}
 	else if (mHp <= 0.0f) {
 		mState = "Dying";

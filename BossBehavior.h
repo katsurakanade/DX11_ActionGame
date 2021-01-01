@@ -9,6 +9,7 @@ enum class BEHAVIOR_STATE_BOSS {
 	Idle, // 待機
 	Chase, // 追跡
 	Attack, // 攻撃
+	Magic, // 魔法
 	Summon, // 召喚
 	Dying, // 死亡
 };
@@ -21,6 +22,7 @@ private:
 	// ステートマップ
 	std::map <BEHAVIOR_STATE_BOSS, std::string> mStatemap;
 
+	bool mStart;
 	
 	// 召喚関連 -----------------------------
 
@@ -40,11 +42,20 @@ private:
 	Enemy* mSummonenemy;
 	// 召喚予備敵の座標
 	D3DXVECTOR3 mSummonenemyPos;
+	// 召喚魔法陣エフェクト
+	Sprite* mSummonSprite;
 
 	// -------------------------------------
 
+	float mCoolMagic;
+	bool mUsedMagic;
+	Sprite* mMagicSprite;
+
+
 	// スキル使え可能
 	bool mCanUseSkill;
+
+	bool mDead;
 
 protected:
 

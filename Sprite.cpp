@@ -5,6 +5,7 @@
 #include "input.h"
 #include "Shader.h"
 #include "ImageManager.h"
+#include "Collision.h"
 
 void Sprite::Init() {
 

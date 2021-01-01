@@ -1,0 +1,44 @@
+{
+  "Amount": 300,
+  "LifeMinMax": {
+    "x": 600,
+    "y": 1500
+  },
+  "PolarCoordinates": false,
+  "Position": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "PostionMinMaxX": {
+    "x": -15,
+    "y": 15
+  },
+  "PostionMinMaxY": {
+    "x": 0,
+    "y": 0
+  },
+  "PostionMinMaxZ": {
+    "x": -15,
+    "y": 15
+  },
+  "RandomSpeed": true,
+  "Size": 3.0,
+  "Speed": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "SpeedMinMaxX": {
+    "x": 0,
+    "y": 0
+  },
+  "SpeedMinMaxY": {
+    "x": -25,
+    "y": -25
+  },
+  "SpeedMinMaxZ": {
+    "x": 0,
+    "y": 0
+  }
+}

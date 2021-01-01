@@ -295,6 +295,8 @@ void Asset::CheckJSONDataIntegrity() {
 	CheckFile("asset\\json_particle\\PlayerAttack_Simple_Particle.json");
 	CheckFile("asset\\json_particle\\PlayerSwitchCharacter_Particle.json");
 	CheckFile("asset\\json_particle\\Title_Particle.json");
+	CheckFile("asset\\json_particle\\Test_Particle.json");
+	CheckFile("asset\\json_particle\\BossMagic_Particle.json");
 
 	if (mLostFileList.size() > 0) {
 		std::string str;
