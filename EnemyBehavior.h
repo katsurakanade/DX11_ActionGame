@@ -22,6 +22,7 @@ protected:
 	float mLengthToPlayer;
 	// 死亡タイマー
 	float mDeadTimer;
+
 	// 移動
 	void Movement(int arrow);
 	// 指定場所に移動

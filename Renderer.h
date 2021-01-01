@@ -13,6 +13,13 @@ struct VERTEX_3D
 	D3DXVECTOR2 TexCoord;
 };
 
+// パーティクル用頂点レイアウト（法線、ライト無し）
+struct VERTEX_3D_PARTICLE
+{
+	D3DXVECTOR3 Position;
+	D3DXVECTOR2 TexCoord;
+};
+
 // マテリアル構造体
 struct MATERIAL
 {

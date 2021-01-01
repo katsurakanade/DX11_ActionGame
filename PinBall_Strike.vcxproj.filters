@@ -415,6 +415,9 @@
     <FxCompile Include="UnlitPS_HighBrightness.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="ParticleCS_Bezier.hlsl">
+      <Filter>リソース ファイル\Particle</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="asset\json_asset\Asset_Animation_Game.json">
@@ -448,6 +451,9 @@
       <Filter>JSON</Filter>
     </None>
     <None Include="asset\json_particle\Title_Particle.json">
+      <Filter>JSON</Filter>
+    </None>
+    <None Include="asset\json_particle\Test_Particle.json">
       <Filter>JSON</Filter>
     </None>
   </ItemGroup>

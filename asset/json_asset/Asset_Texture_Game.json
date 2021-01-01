@@ -1,4 +1,4 @@
-19
+20
 { "Path": "asset/texture/white.png" }
 { "Path": "asset/texture/sky.jpg" }
 { "Path": "asset/texture/star.jpg" }
@@ -18,3 +18,4 @@
 { "Path": "asset/texture/Character_Icon_1.png" }
 { "Path": "asset/texture/number.png" }
 { "Path": "asset/texture/magicring.png" }
+{ "Path": "asset/texture/Blood_Particle.png" }

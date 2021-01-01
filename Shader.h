@@ -9,7 +9,7 @@
 // ComputeShader
 enum class SHADER_TYPE
 {
-	SkinMesh,Particle
+	SkinMesh,Particle, Particle_Bezier
 };
 
 // GeometryShader

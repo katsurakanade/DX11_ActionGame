@@ -245,7 +245,9 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 
 			if (es.size() > 0 && mpAnimation->GetState() != "Mage") {
 
-				for (int i = 0; i < 5; i++) {
+				for (int i = 0; i < 1; i++) {
+
+
 					Missile* ms = Application::GetScene()->AddGameObject<Missile>(EffectLayer);
 					ms->mTarget = es[mLockIndex];
 					ms->Position = Position;
@@ -319,10 +321,13 @@ void PlayerBehavior::LockTarget(BYTE keycode_lock) {
 			if (enemys.size() > 0) {
 				mpCamera->SetLookTarget(enemys[mLockIndex]);
 				mpCamera->SetFollowPostionOffset(D3DXVECTOR3(0, 3, 20));
-				enemys[mLockIndex]->Is_Lock = true;
+				if (enemys[mLockIndex]) {
+					enemys[mLockIndex]->Is_Lock = true;
+				}
 			}
 		}
 		else {
+			std::sort(enemys.begin(), enemys.end(), [](Enemy* lh, Enemy* rh) {if (lh->TryGetComponent<SoldierBehavior>() && rh->TryGetComponent<SoldierBehavior>()) return lh->GetComponent<SoldierBehavior>()->GetLengthToPlayer() < rh->GetComponent<SoldierBehavior>()->GetLengthToPlayer(); });
 			for (Enemy* e : enemys) {
 				e->Is_Lock = false;
 			}

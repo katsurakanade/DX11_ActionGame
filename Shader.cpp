@@ -12,7 +12,7 @@ void Shader::Init() {
 
 	mVertexShaderArray.resize(SHADER_MAX);
 	mPixelShaderArray.resize(SHADER_MAX);
-	mComputeShaderArray.resize(2);
+	mComputeShaderArray.resize(3);
 	mGeometryShaderArray.resize(0);
 
 	// シェーダー生成
@@ -33,6 +33,7 @@ void Shader::Init() {
 
 	CreateComputeShader(SHADER_TYPE::SkinMesh);
 	CreateComputeShader(SHADER_TYPE::Particle);
+	CreateComputeShader(SHADER_TYPE::Particle_Bezier);
 }
 
 void Shader::Uninit() {
@@ -185,7 +186,9 @@ void Shader::CreateComputeShader(SHADER_TYPE type) {
 	else if (type == SHADER_TYPE::Particle) {
 		cspass = "ParticleCS.cso";
 	}
-
+	else if (type == SHADER_TYPE::Particle_Bezier) {
+		cspass = "ParticleCS_Bezier.cso";
+	}
 
 	FILE* file;
 	long int fsize;

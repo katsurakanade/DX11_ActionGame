@@ -6,13 +6,6 @@
 
 #include "Resource.h"
 
-// パーティクル用頂点レイアウト（法線、ライト無し）
-struct VERTEX_3D_PARTICLE
-{
-	D3DXVECTOR3 Position;
-	D3DXVECTOR2 TexCoord;
-};
-
 // パーティクル（Compute Shader計算用）
 struct ParticleCompute {
 	// 座標
@@ -23,6 +16,13 @@ struct ParticleCompute {
 	D3DXVECTOR4 col;
 	// ライフ
 	float life;
+};
+
+struct BezierCompute {
+	D3DXVECTOR3 p0;
+	D3DXVECTOR3 p1;
+	D3DXVECTOR3 p2;
+	float t;
 };
 
 // パーティクル数値設定用
@@ -75,8 +75,11 @@ protected:
 
 public:
 
+	bool UseBezier = false;
+
 	// パーティクル
 	ParticleCompute* mparticle;
+	BezierCompute* mBezier;
 	// バッファ
 	ID3D11Buffer* mVertexBuffer;
 	ID3D11Buffer* mpParticleBuffer;
@@ -84,11 +87,16 @@ public:
 	ID3D11Buffer* mpResultBuffer;
 	ID3D11Buffer* mpPositionBuffer;
 	ID3D11Buffer* mpLifeBuffer;
+
+	ID3D11Buffer* mpBezierBuffer;
+
 	// SRV
 	ID3D11ShaderResourceView* mpParticleSRV;
 	ID3D11ShaderResourceView* mpTimeSRV;
 	ID3D11ShaderResourceView* mpPositionSRV;
 	ID3D11ShaderResourceView* mpLifeSRV;
+
+	ID3D11ShaderResourceView* mpBezierSRV;
 	// UAV
 	ID3D11UnorderedAccessView* mpResultUAV;
 

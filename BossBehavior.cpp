@@ -122,10 +122,29 @@ void BossBehavior::RunAction() {
 		mCoolSummon = 0.0f;
 	}
 	else if (mState == "Summon") {
+
+		std::uniform_real_distribution<float> rndx(-70, 70);
+		float offsetx = rndx(Application::RandomGen);
+
+		while (abs(offsetx) < 20)
+			offsetx = rndx(Application::RandomGen);
+
+		mSummonenemyPos = Position;
+		mSummonenemyPos.x += offsetx;
+
+		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
+		pc->UseBezier = true;
+		pc->Position = mSummonenemyPos;
+		ParitcleSetting* setting = &FileManager::ReadParticleJSON("asset\\json_particle\\Test_Particle.json");
+		setting->Position = mSummonenemyPos - GetResource()->Position;
+		pc->Create(setting);
+		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BLOOD_PARTICLE));
+
 		mpAnimation->SetNewStateOneTime("Spell", 2.0f);
 		mCoolSummon = 0.0f;
 		mUsedSummon = true;
 		mSummonThread = std::thread(&BossBehavior::Summon, this);
+	
 		mState = "Idle";
 	}
 	else if (mState == "Dying") {
@@ -148,17 +167,10 @@ void BossBehavior::Summonprocess() {
 
 void BossBehavior::Summon() {
 
-	std::uniform_real_distribution<float> rndx(-70, 70);
-	float offsetx = rndx(Application::RandomGen);
-
-	while(abs(offsetx) < 20)
-		offsetx = rndx(Application::RandomGen);
-
 	mSummonenemy = Application::GetScene()->AddGameObject<Enemy>(ObjectLayer);
 	mSummonenemy->StandBy = false;
 	mSummonenemy->Name = "Enemy";
-	mSummonenemy->Position = Position;
-	mSummonenemy->Position.x += offsetx;
+	mSummonenemy->Position = mSummonenemyPos;
 	mSummonenemy->Create();
 
 	auto sprite = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);

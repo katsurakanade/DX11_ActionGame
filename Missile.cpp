@@ -56,9 +56,9 @@ void Missile::Update() {
 		if (mCurveProgress >= 1.0f) {
 			mpEffect->Destroy();
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
+			pc->Position = mTarget->Position + D3DXVECTOR3(0,3,0);
+			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_FireBall_Particle.json"));
 			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
-			pc->Position = mTarget->Position + D3DXVECTOR3(0, 3, 0);
 			if (mTarget->TryGetComponent<BossBehavior>()) {
 				mTarget->GetComponent<BossBehavior>()->mHp -= 30.0f;
 			}

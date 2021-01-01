@@ -38,12 +38,12 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 
 	vertex[3].Position = D3DXVECTOR3(setting->Size, -setting->Size, 0.0f);
 	vertex[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
-
 	// パーティクル資料生成
 	mParticleAmount = setting->Amount;
 	mParticleLifeMax = (int)setting->LifeMinMax.y;
 	mparticle = new ParticleCompute[setting->Amount];
 
+	// TODO:最適化
 	for (int i = 0; i < setting->Amount; i++) {
 		if (setting->RandomSpeed) {
 			if (setting->PolarCoordinates) {
@@ -65,8 +65,44 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 			}
 		}
 		mparticle[i].life = rndlife(Application::RandomGen);
-		mparticle[i].pos = setting->Position + D3DXVECTOR3(rndposX(Application::RandomGen), rndposY(Application::RandomGen), rndposZ(Application::RandomGen));
+		if (setting->PolarCoordinates) {
+			auto x = rndposX(Application::RandomGen);
+			auto y = rndposY(Application::RandomGen);
+			auto z = rndposZ(Application::RandomGen);
+			auto radius = sqrt(x * x + y * y + z * z);
+			auto theta = rndtheta(Application::RandomGen);
+			auto phi = 3.14f;
+
+			x = radius * sin(theta) * cos(phi);
+			y = radius * sin(theta) * sin(phi);
+			z = radius * cos(theta);
+
+			mparticle[i].pos = setting->Position + D3DXVECTOR3(x, z, y);
+		}
+		else {
+			mparticle[i].pos = setting->Position + D3DXVECTOR3(rndposX(Application::RandomGen), rndposY(Application::RandomGen), rndposZ(Application::RandomGen));
+		}
 		mparticle[i].col = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+	// TODO:最適化
+	if (UseBezier) {
+
+		std::uniform_real_distribution<float> rndp2offsetX(-5, 5);
+		std::uniform_real_distribution<float> rndp2offsetY(-5, 5);
+		std::uniform_real_distribution<float> rndp2offsetZ(-5,5);
+
+		mBezier = new BezierCompute[setting->Amount];
+		for (int i = 0; i < setting->Amount; i++) {
+
+			std::uniform_real_distribution<float> rndp1X(0, 0);
+			std::uniform_real_distribution<float> rndp1Y(mparticle[i].pos.y, 0);
+			std::uniform_real_distribution<float> rndp1Z(0, 0);
+
+			mBezier[i].p0 = mparticle[i].pos;
+			mBezier[i].p2 = D3DXVECTOR3(0, 0, 0) + D3DXVECTOR3(rndp2offsetX(Application::RandomGen), rndp2offsetY(Application::RandomGen), rndp2offsetZ(Application::RandomGen));
+			mBezier[i].p1 = (mBezier[i].p0 - mBezier[i].p2) / 2 + D3DXVECTOR3(0,50,0);
+			mBezier[i].t = 0.0f;
+		}
 	}
 
 	D3D11_BUFFER_DESC bd;
@@ -88,6 +124,7 @@ void ParticleSystem::Create(ParitcleSetting* setting) {
 	CreateComputeResource();
 
 }
+
 
 void ParticleSystem::Uninit() {
 
@@ -118,6 +155,12 @@ void ParticleSystem::CreateComputeResource() {
 	hr = Renderer::CreateStructuredBuffer_DYN(sizeof(ParticleCompute), (UINT)mParticleAmount, nullptr, &mpParticleBuffer);
 	assert(SUCCEEDED(hr));
 
+	// TODO:最適化
+	if (UseBezier) {
+		hr = Renderer::CreateStructuredBuffer_DYN(sizeof(BezierCompute), (UINT)mParticleAmount, nullptr, &mpBezierBuffer);
+		assert(SUCCEEDED(hr));
+	}
+
 	hr = Renderer::CreateStructuredBuffer_DYN(sizeof(TimeCompute), (UINT)mParticleAmount, nullptr, &mpTimeBuffer);
 	assert(SUCCEEDED(hr));
 
@@ -137,6 +180,12 @@ void ParticleSystem::CreateComputeResource() {
 	hr = Renderer::CreateBufferSRV(mpLifeBuffer, &mpLifeSRV);
 	assert(SUCCEEDED(hr));
 
+	// TODO:最適化
+	if (UseBezier) {
+		hr = Renderer::CreateBufferSRV(mpBezierBuffer, &mpBezierSRV);
+		assert(SUCCEEDED(hr));
+	}
+
 	// Output
 	hr = Renderer::CreateStructuredBuffer(sizeof(ParticleCompute), (UINT)mParticleAmount, nullptr, &mpResultBuffer);
 	assert(SUCCEEDED(hr));
@@ -150,7 +199,7 @@ void ParticleSystem::CreateComputeResource() {
 
 void ParticleSystem::Update() {
 
-	// Fill Data (Performance Issues)
+	// Fill Data 
 	{
 		D3D11_MAPPED_SUBRESOURCE subRes;
 		Renderer::GetDeviceContext()->Map(mpParticleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
@@ -171,12 +220,37 @@ void ParticleSystem::Update() {
 		Renderer::GetDeviceContext()->Unmap(mpTimeBuffer, 0);
 	}
 
-	// Compute
-	ID3D11ShaderResourceView* pSRVs[2] = { mpParticleSRV,mpTimeSRV };
-	Renderer::GetDeviceContext()->CSSetShaderResources(0, 2, pSRVs);
-	Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[1], nullptr, 0);
-	Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
-	Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
+	if (UseBezier) {
+
+		std::uniform_real_distribution<float> rndt(0.003f, 0.01f);
+
+		// TODO:CSで処理
+		for (int i = 0; i < mParticleAmount; i++) {
+			mBezier[i].t += rndt(Application::RandomGen);
+		}
+
+		D3D11_MAPPED_SUBRESOURCE subRes;
+		Renderer::GetDeviceContext()->Map(mpBezierBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);
+		BezierCompute* pBufType = (BezierCompute*)subRes.pData;
+		memcpy(subRes.pData, mBezier, sizeof(BezierCompute) * mParticleAmount);
+		Renderer::GetDeviceContext()->Unmap(mpBezierBuffer, 0);
+
+		// Compute
+		ID3D11ShaderResourceView* pSRVs[3] = { mpParticleSRV,mpTimeSRV,mpBezierSRV };
+		Renderer::GetDeviceContext()->CSSetShaderResources(0, 3, pSRVs);
+		Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[2], nullptr, 0);
+		Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
+		Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
+	}
+
+	else {
+		// Compute
+		ID3D11ShaderResourceView* pSRVs[2] = { mpParticleSRV,mpTimeSRV };
+		Renderer::GetDeviceContext()->CSSetShaderResources(0, 2, pSRVs);
+		Renderer::GetDeviceContext()->CSSetShader(Shader::GetComputeShaderArray()[1], nullptr, 0);
+		Renderer::GetDeviceContext()->CSSetUnorderedAccessViews(0, 1, &mpResultUAV, 0);
+		Renderer::GetDeviceContext()->Dispatch(1024, 1, 1);
+	}
 
 	// CopyResource
 	{
@@ -201,7 +275,7 @@ void ParticleSystem::Update() {
 		}
 		Renderer::GetDeviceContext()->Unmap(mpPositionBuffer, 0);
 	}
-
+	// Fiil Life To PositionBuffer
 	{
 		D3D11_MAPPED_SUBRESOURCE subRes;
 		Renderer::GetDeviceContext()->Map(mpLifeBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subRes);

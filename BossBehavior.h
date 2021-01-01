@@ -38,6 +38,8 @@ private:
 	void Summonprocess();
 	// 召喚した敵のポインタ
 	Enemy* mSummonenemy;
+	// 召喚予備敵の座標
+	D3DXVECTOR3 mSummonenemyPos;
 
 	// -------------------------------------
 
