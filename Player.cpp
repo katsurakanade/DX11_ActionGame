@@ -89,7 +89,7 @@ void Player::Render() {
 	Shader::Use(SHADER_TYPE_VSPS::Default);
 
 	mpModel->Render(world);
-	GetComponent<BoxCollider>()->Render();
+	mpCollider->Render();
 
 }
 

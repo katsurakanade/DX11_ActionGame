@@ -8,7 +8,7 @@
 // èâä˙âª
 void BoxCollider::Init() {
 
-	Name = "Field";
+	Name = "BoxCollider";
 
 	VERTEX_3D vertex[8];
 	vertex[0].Position = D3DXVECTOR3(Position.x - (mSize.x / 2), Position.y + (mSize.y / 2), Position.z + (mSize.z / 2));

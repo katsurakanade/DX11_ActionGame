@@ -9,7 +9,7 @@
 #include "BossBehavior.h"
 #include "Enemy.h"
 #include "Collision.h"
-
+#include "Skill_Skyblade.h"
 
 void BossBehavior::Init() {
 
@@ -27,12 +27,14 @@ void BossBehavior::Init() {
 	mHpInit = 300.0f;
 	mHp = mHpInit;
 	// スキル初期化
-	mCoolSummon = 0.0f;
 	mUsedSummon = false;
 	mCanUseSkill = true;
 	mDead = false;
 	// アニメーション初期化
 	mpAnimation->SetCoefficient(1.0f);
+
+	mPlusSpeedChase = 0.05f;
+	mMaxSpeedChase = 1.5f;
 }
 
 void BossBehavior::Uninit() {
@@ -46,6 +48,7 @@ void BossBehavior::Update() {
 	if (!mStart) {
 		if (mLengthToPlayer < 50.0f) {
 			mStart = true;
+			mpAnimation->SetNewStateOneTime("PowerUp", 2.0f);
 			AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::ALIEN_HUMAN), 0, 3.0f);
 		}
 	}
@@ -76,8 +79,7 @@ void BossBehavior::DataPanel() {
 		ImGui::Text("State : %s", mState);
 		ImGui::Text("LengthToPlayer : %f", mLengthToPlayer);
 		ImGui::Text("DeadTimer : %f", mDeadTimer);
-		ImGui::Text(u8"召喚クールタイム %f ", mCoolSummon);
-		ImGui::Text(u8"魔法クールタイム %f ", mCoolMagic);
+		ImGui::Text(u8"クールタイム %f ", mCoolSkill);
 		ImGui::TreePop();
 	}
 	ImGui::End();
@@ -87,29 +89,42 @@ void BossBehavior::ChooseAction() {
 
 	// 生きている敵の数
 	auto enemyalive = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer).size();
-	if (enemyalive < 8 && mCanUseSkill) {
-		mCoolSummon += Time::GetDeltaTime();
+	if (mCanUseSkill) {
+		mCoolSkill += Time::GetDeltaTime();
 	}
-
-	mCoolMagic += Time::GetDeltaTime();
 
 	// 生きている
 	if (mHp > 0.0f) {
 
+		// ->攻撃状態
+		if (mLengthToPlayer < 20.0f) {
+		/*	mState = "Attack";
+			mCanUseSkill = false;*/
+		}
+		// ->追跡状態
+		if (mLengthToPlayer >= 20.0f && mLengthToPlayer < 40.0f) {
+			/*mState = "Chase";
+			mCanUseSkill = false;*/
+		}
+		// ->待機状態
+		else if (mLengthToPlayer > 40.0f) {
+			mState = "Idle";
+			mCanUseSkill = true;
+		}
+
 		// 待機状態
 		if (mState == "Idle") {
-			// ->攻撃状態
-			if (mLengthToPlayer < 20.0f) {
-				mState = "Attack";
-				mCanUseSkill = false;
-			}
-			// ->召喚状態
-			if (mCoolSummon >= 10.0f) {
-				mState = "Summon";
-			}
 
-			if (mCoolMagic >= 15.0f) {
-				mState = "Magic";
+			// スキル使う
+			if (mCoolSkill >= 5.0f) {
+				// ->召喚状態
+				if (enemyalive < 4) {
+					mState = "Summon";
+				}
+				// ->魔法攻撃状態
+				else {
+					mState = "Magic";
+				}
 			}
 			
 		}
@@ -135,46 +150,41 @@ void BossBehavior::ChooseAction() {
 void BossBehavior::RunAction() {
 
 	if (mState == "Idle") {
-
+		if (mpAnimation->GetState() == "Running") {
+			mpAnimation->SetNewState("Idle");
+		}
 	}
 	else if (mState == "Chase") {
+		LookAt(mpPlayer->Position);
 		mpAnimation->SetNewState("Running");
-		MoveTo(mpPlayer->Position);
+		MoveTo(mpPlayer->Position + D3DXVECTOR3(0,0,5));
+		mCoolSkill = 0.0f;
 	}
 	else if (mState == "Attack") {
 		LookAt(mpPlayer->Position);
 		mpAnimation->SetNewStateOneTime("Attack", 0.8f);
-		mCoolSummon = 0.0f;
+		mCoolSkill = 0.0f;
 	}
 	else if (mState == "Magic") {
 
+		mpAnimation->SetNewStateOneTime("Spell2", 2.0f);
+		mUsedMagic = true;
+
+		LookAt(mpPlayer->Position);
 		AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::ALIEN_KILLYOU), 0, 2.5f);
 
-		mMagicSprite = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
-		mMagicSprite->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::MAGICRING));
-		mMagicSprite->GetComponent<ImageManager>()->SetBillBoard(false);
-		mMagicSprite->GetComponent<ImageManager>()->SetAnimationSprite(true);
-		mMagicSprite->GetComponent<ImageManager>()->SetGUI(false);
-		mMagicSprite->GetComponent<ImageManager>()->SetHW(1, 1);
-		mMagicSprite->GetComponent<ImageManager>()->SetLoop(true);
-		mMagicSprite->GetComponent<ImageManager>()->SetHighBrightness(true);
-		mMagicSprite->Position = mpPlayer->Position + D3DXVECTOR3(0,1,0);
-		mMagicSprite->Rotation = D3DXVECTOR3(1.57f, 0, 0);
-		mMagicSprite->Scale = D3DXVECTOR3(20, 10, 20);
 
-		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
-		pc->Position = mpPlayer->Position + D3DXVECTOR3(0,30,0);
-		ParitcleSetting* setting = &FileManager::ReadParticleJSON("asset\\json_particle\\BossMagic_Particle.json");
-		pc->Create(setting);
-		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::SWORD));
+		Skill_Skyblade* sk = Application::GetScene()->AddGameObject<Skill_Skyblade>(ObjectLayer);
+		sk->Position = mpPlayer->Position + D3DXVECTOR3(0, 1, 0);
 
-		mpAnimation->SetNewStateOneTime("Spell", 2.0f);
-		mCoolMagic = 0.0f;
-		mUsedMagic = true;
 		mState = "Idle";
-
+		mCoolSkill = 0.0f;
 	}
 	else if (mState == "Summon") {
+
+		mpAnimation->SetNewStateOneTime("Spell", 2.0f);
+		mUsedSummon = true;
+		mSummonThread = std::thread(&BossBehavior::Summon, this);
 
 		AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::PHRASE), 0, 2.0f);
 
@@ -194,13 +204,9 @@ void BossBehavior::RunAction() {
 		setting->Position = mSummonenemyPos - GetResource()->Position;
 		pc->Create(setting);
 		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BLOOD_PARTICLE));
-
-		mpAnimation->SetNewStateOneTime("Spell", 2.0f);
-		mCoolSummon = 0.0f;
-		mUsedSummon = true;
-		mSummonThread = std::thread(&BossBehavior::Summon, this);
 	
 		mState = "Idle";
+		mCoolSkill = 0.0f;
 	}
 	else if (mState == "Dying") {
 		Dying();

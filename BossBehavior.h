@@ -21,13 +21,10 @@ private:
 
 	// ステートマップ
 	std::map <BEHAVIOR_STATE_BOSS, std::string> mStatemap;
-
+	// スタート
 	bool mStart;
 	
 	// 召喚関連 -----------------------------
-
-	// クールタイム
-	float mCoolSummon; 
 	// 召喚した
 	bool mUsedSummon;
 	// 召喚用スレッド
@@ -44,17 +41,18 @@ private:
 	D3DXVECTOR3 mSummonenemyPos;
 	// 召喚魔法陣エフェクト
 	Sprite* mSummonSprite;
-
 	// -------------------------------------
 
-	float mCoolMagic;
+	// 魔法攻撃関連 ----------------------
+	float mSpellTimeMagic;
 	bool mUsedMagic;
-	Sprite* mMagicSprite;
+	// -------------------------------------
 
+	float mCoolSkill;
 
 	// スキル使え可能
 	bool mCanUseSkill;
-
+	// 死亡
 	bool mDead;
 
 protected:
