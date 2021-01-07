@@ -24,7 +24,10 @@ void Animation::Uninit() {
 void Animation::Update() {
 
 	// フレーム処理
-	mFrame += 60.0f * mCoefficient * Time::GetDeltaTime();
+	if (!mPauseFrame)
+		mFrame += 60.0f * mCoefficient * Time::GetDeltaTime();
+	else
+		return;
 
 	// ブレンド処理
 	if (mState != mNewState) {

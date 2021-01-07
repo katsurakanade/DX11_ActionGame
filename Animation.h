@@ -25,9 +25,10 @@ private:
 	bool mOneTimeFlag;
 	float mWaitTime;
 	float mTimeToWait;
+	// ˆêŽž’âŽ~
+	bool mPauseFrame;
 	// ForDebug
 	void DataPanel();
-	bool DebugPanel = false;
 
 public:
 
@@ -41,6 +42,7 @@ public:
 	void SetState(std::string str) { mState = str; };
 	void SetNewState(std::string str) { mNewState = str; };
 	void SetNewStateOneTime(std::string str, float timetowait);
+	void SetPause(bool val) { mPauseFrame = val; };
 
 	// Getter
 	std::string GetState() { return mState; };
@@ -48,6 +50,6 @@ public:
 	int GetFrame() { return (int)mFrame; };
 	float GetBlend() { return mBlend; };
 	bool GetOneTimeFlag() { return mOneTimeFlag; };
-
+	bool GetPause() { return mPauseFrame; };
 };
 

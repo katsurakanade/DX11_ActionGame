@@ -52,5 +52,7 @@ void ModelManager::LoadModelWithAnimation(std::string path) {
 	mModel->LoadAnimation("asset\\animation\\Enemy\\Spell.fbx", "Spell");
 	mModel->LoadAnimation("asset\\animation\\Enemy\\Spell2.fbx", "Spell2");
 	mModel->LoadAnimation("asset\\animation\\Enemy\\PowerUp.fbx", "PowerUp");
+	mModel->LoadAnimation("asset\\animation\\Enemy\\Jump_Attack.fbx", "Jump_Attack");
+	mModel->LoadAnimation("asset\\animation\\Enemy\\Prepare.fbx", "Prepare");
 	mIndependence = true;
 }

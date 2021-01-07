@@ -14,7 +14,7 @@ void Sprite::Init() {
 	mImage->Position = Position;
 	mImage->Rotation = Rotation;
 	mImage->Scale = Scale;
-	
+	Resource::Init();
 }
 
 void Sprite::Uninit() {
@@ -29,8 +29,6 @@ void Sprite::Update() {
 	mImage->Scale = Scale;
 
 	if (!mImage->GetIsBillBoard()) {
-	
-
 		mImage->Set2DPosition(Position);
 	}
 

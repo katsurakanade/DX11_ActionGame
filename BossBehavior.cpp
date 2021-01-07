@@ -10,6 +10,7 @@
 #include "Enemy.h"
 #include "Collision.h"
 #include "Skill_Skyblade.h"
+#include "Skill_AttackAround.h"
 
 void BossBehavior::Init() {
 
@@ -54,8 +55,11 @@ void BossBehavior::Update() {
 	}
 
 	if (mStart) {
+
 		// ¢Š«ˆ—
 		Summonprocess();
+		// ‹ß‹——£UŒ‚ˆ—
+		AttackAroundprocess();
 
 		// s“®Œˆ‚ß
 		ChooseAction();
@@ -89,6 +93,7 @@ void BossBehavior::ChooseAction() {
 
 	// ¶‚«‚Ä‚¢‚é“G‚Ì”
 	auto enemyalive = Application::GetScene()->GetGameObjects<Enemy>(ObjectLayer).size();
+
 	if (mCanUseSkill) {
 		mCoolSkill += Time::GetDeltaTime();
 	}
@@ -96,18 +101,8 @@ void BossBehavior::ChooseAction() {
 	// ¶‚«‚Ä‚¢‚é
 	if (mHp > 0.0f) {
 
-		// ->UŒ‚ó‘Ô
-		if (mLengthToPlayer < 20.0f) {
-		/*	mState = "Attack";
-			mCanUseSkill = false;*/
-		}
-		// ->’ÇÕó‘Ô
-		if (mLengthToPlayer >= 20.0f && mLengthToPlayer < 40.0f) {
-			/*mState = "Chase";
-			mCanUseSkill = false;*/
-		}
 		// ->‘Ò‹@ó‘Ô
-		else if (mLengthToPlayer > 40.0f) {
+		if (mLengthToPlayer > 40.0f) {
 			mState = "Idle";
 			mCanUseSkill = true;
 		}
@@ -117,13 +112,21 @@ void BossBehavior::ChooseAction() {
 
 			// ƒXƒLƒ‹g‚¤
 			if (mCoolSkill >= 5.0f) {
-				// ->¢Š«ó‘Ô
-				if (enemyalive < 4) {
-					mState = "Summon";
+
+				if (mLengthToPlayer > 40.0f && !mUsedAttack_Around) {
+					// ->¢Š«ó‘Ô
+					if (enemyalive < 4) {
+						mState = "Summon";
+					}
+					// ->–‚–@UŒ‚ó‘Ô
+					else {
+						mState = "Magic";
+					}
 				}
-				// ->–‚–@UŒ‚ó‘Ô
-				else {
-					mState = "Magic";
+
+				// ->üˆÍUŒ‚ó‘Ô
+				else if (mLengthToPlayer <= 40.0f) {
+					mState = "Attack_Around";
 				}
 			}
 			
@@ -150,9 +153,7 @@ void BossBehavior::ChooseAction() {
 void BossBehavior::RunAction() {
 
 	if (mState == "Idle") {
-		if (mpAnimation->GetState() == "Running") {
-			mpAnimation->SetNewState("Idle");
-		}
+	
 	}
 	else if (mState == "Chase") {
 		LookAt(mpPlayer->Position);
@@ -165,6 +166,20 @@ void BossBehavior::RunAction() {
 		mpAnimation->SetNewStateOneTime("Attack", 0.8f);
 		mCoolSkill = 0.0f;
 	}
+	else if (mState == "Attack_Around") {
+
+		mpAnimation->SetNewStateOneTime("Jump_Attack", 2.0f);
+
+		Skill_AttackAround* sa = Application::GetScene()->AddGameObject<Skill_AttackAround>(ObjectLayer);
+		sa->Position = Position + D3DXVECTOR3(0, 1, 0);
+		sa->SetEnemy(this);
+		AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::ALIEN_AGGRO), 0, 2.5f);
+
+		mState = "Idle";
+		mCoolSkill = 0.0f;
+		mUsedAttack_Around = true;
+		mCanUseSkill = false;
+	}
 	else if (mState == "Magic") {
 
 		mpAnimation->SetNewStateOneTime("Spell2", 2.0f);
@@ -172,7 +187,6 @@ void BossBehavior::RunAction() {
 
 		LookAt(mpPlayer->Position);
 		AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::ALIEN_KILLYOU), 0, 2.5f);
-
 
 		Skill_Skyblade* sk = Application::GetScene()->AddGameObject<Skill_Skyblade>(ObjectLayer);
 		sk->Position = mpPlayer->Position + D3DXVECTOR3(0, 1, 0);
@@ -246,5 +260,24 @@ void BossBehavior::Summon() {
 	mSummonSprite->Position = mSummonenemy->Position + D3DXVECTOR3(0,1,0);
 	mSummonSprite->Rotation = D3DXVECTOR3(1.57f, 0, 0);
 	mSummonSprite->Scale = D3DXVECTOR3(5, 5, 5);
+
+}
+
+void BossBehavior::AttackAroundprocess() {
+
+	if (mUsedAttack_Around)
+		mAttack_Around_WaitTime += Time::GetDeltaTime();
+
+	if (mAttack_Around_WaitTime > 0.4f && !mpAnimation->GetPause()) {
+		mpAnimation->SetPause(true);
+	}
+
+	if (mAttack_Around_WaitTime > 2.5f) {
+		mpAnimation->SetPause(false);
+		mUsedAttack_Around = false;
+		mAttack_Around_WaitTime = 0.0f;
+		mCanUseSkill = true;
+		
+	}
 
 }

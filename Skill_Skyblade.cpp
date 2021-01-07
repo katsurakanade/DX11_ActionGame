@@ -69,7 +69,7 @@ void Skill_Skyblade::Update() {
 	}
 
 	if (mKillTimer >= 3.5f) {
-			Destroy();
+		Destroy();
 	}
 
 	Resource::Update();

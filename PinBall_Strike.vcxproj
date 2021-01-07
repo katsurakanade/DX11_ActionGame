@@ -62,6 +62,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Skill_AttackAround.cpp" />
     <ClCompile Include="Skill_Skyblade.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SoldierBehavior.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Result.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Skill_AttackAround.h" />
     <ClInclude Include="Skill_Skyblade.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SoldierBehavior.h" />

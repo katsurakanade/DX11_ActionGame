@@ -213,6 +213,9 @@
     <ClCompile Include="Skill_Skyblade.cpp">
       <Filter>ソース ファイル\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="Skill_AttackAround.cpp">
+      <Filter>ソース ファイル\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -378,6 +381,9 @@
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
     <ClInclude Include="Skill_Skyblade.h">
+      <Filter>ヘッダー ファイル\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill_AttackAround.h">
       <Filter>ヘッダー ファイル\Resource</Filter>
     </ClInclude>
   </ItemGroup>

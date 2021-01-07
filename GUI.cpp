@@ -9,6 +9,7 @@
 
 void GUI::Init() {
 
+
 	Sprite* Round_fr = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer2);
 	Round_fr->Name = "RoundFrame";
 	Round_fr->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::ROUND_FRAME));

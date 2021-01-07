@@ -9,6 +9,7 @@ enum class BEHAVIOR_STATE_BOSS {
 	Idle, // 待機
 	Chase, // 追跡
 	Attack, // 攻撃
+	Attack_Around, // 周囲攻撃
 	Magic, // 魔法
 	Summon, // 召喚
 	Dying, // 死亡
@@ -48,8 +49,14 @@ private:
 	bool mUsedMagic;
 	// -------------------------------------
 
-	float mCoolSkill;
+	// 周囲攻撃関連 ----------------------
+	bool mUsedAttack_Around;
+	float mAttack_Around_WaitTime;
+	void AttackAroundprocess();
+	// -------------------------------------
 
+	// スキル全体のクールタイム
+	float mCoolSkill;
 	// スキル使え可能
 	bool mCanUseSkill;
 	// 死亡
