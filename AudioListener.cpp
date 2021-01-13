@@ -81,7 +81,7 @@ void AudioListener::Stop(Sound* sound){
 
 void AudioListener::StopAll() {
 
-	for (Sound* s : Application::GetAsset()->GetSoundList()) {
+	for (Sound* s : Asset::GetInstance()->GetSoundList()) {
 
 		if (s->mSourceVoice)
 		{

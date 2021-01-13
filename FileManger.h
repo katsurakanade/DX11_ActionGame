@@ -24,8 +24,8 @@ class FileManager
 private:
 
 
-
 public:
+
 
 	// ‚‚³ƒ}ƒbƒv“Ç‚İ‚İ
 	static void ReadImageMap(const char* pass, float output[FIELD_X][FIELD_X]);

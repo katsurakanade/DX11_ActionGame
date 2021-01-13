@@ -62,7 +62,7 @@ void Grass::Init() {
 
 	Renderer::GetDevice()->CreateBuffer(&cbd, &sd, &mColorBuffer);
 
-	mTexture = Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT);
+	mTexture = Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT);
 
 	Position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

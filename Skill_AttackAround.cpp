@@ -20,7 +20,7 @@ void Skill_AttackAround::Init() {
 
 	// –‚–@w¶¬
 	mMagicRing = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
-	mMagicRing->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::MAGICRING));
+	mMagicRing->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::MAGICRING));
 	mMagicRing->GetImage()->SetBillBoard(false);
 	mMagicRing->GetImage()->SetAnimationSprite(true);
 	mMagicRing->GetImage()->SetGUI(false);
@@ -57,7 +57,7 @@ void Skill_AttackAround::Update() {
 		ParitcleSetting* setting = &FileManager::ReadParticleJSON("asset\\json_particle\\Test_Particle.json");
 		setting->Position = Position - (Position + D3DXVECTOR3(0,30,0));
 		mEffect->Create(setting);
-		mEffect->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BLOOD_PARTICLE));
+		mEffect->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::BLOOD_PARTICLE));
 	}
 
 	if (mDamageTimer >= 2.75f) {
@@ -67,7 +67,7 @@ void Skill_AttackAround::Update() {
 	}
 
 	if (mKillTimer > 3.5f) {
-		AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::IMPACT_GROUND), 0, 2.5f);
+		AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_GAME::IMPACT_GROUND), 0, 2.5f);
 		Destroy();
 	}
 	Resource::Update();

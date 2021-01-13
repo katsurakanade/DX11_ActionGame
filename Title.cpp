@@ -6,9 +6,8 @@
 
 void Title::Init() {
 
-	mAsset = new Asset(SCENE_ASSET::TITLE);
-	mAsset->LoadSceneAsset();
-	Application::SetAsset(mAsset);
+	Asset::GetInstance()->SetScene(SCENE_ASSET::TITLE);
+	Asset::GetInstance()->LoadSceneAsset();
 
 	mMaincamera =  AddGameObject<Camera>(CameraLayer);
 	AddGameObject<Light>(CameraLayer);
@@ -20,18 +19,18 @@ void Title::Init() {
 
 	mTitleIcon = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	mTitleIcon->Name = "title_icon";
-	mTitleIcon->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::TITLE));
+	mTitleIcon->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_TITLE::TITLE));
 	mTitleIcon->Position = D3DXVECTOR3(437, 62, 1);
 	mTitleIcon->GetImage()->Set2DSize(D3DXVECTOR3(1000, 175, 1));
 
 	mButtonIcon = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	mButtonIcon->Name = "spacebutton";
-	mButtonIcon->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::SPACEBUTTON));
+	mButtonIcon->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_TITLE::SPACEBUTTON));
 	mButtonIcon->Position = D3DXVECTOR3(671, 780, 1);
 	mButtonIcon->GetImage()->Set2DSize(D3DXVECTOR3(500, 175, 1));
 
 
-	AudioListener::Play(mAsset->GetSound((int)SOUND_ENUM_TITLE::BGM_01), -1,0.1f);
+	AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_TITLE::BGM_01), -1,0.1f);
 }
 
 void Title::Update() {
@@ -44,7 +43,7 @@ void Title::Update() {
 	if (mpFade != nullptr) {
 		if (!mpFade->GetIsFade()) {
 			if (mClear) {
-				AudioListener::Stop(mAsset->GetSound((int)SOUND_ENUM_TITLE::BGM_01));
+				AudioListener::Stop(Asset::GetInstance()->GetSound((int)SOUND_ENUM_TITLE::BGM_01));
 				Application::SwitchScene<Game>();
 				return;
 			}
@@ -54,7 +53,7 @@ void Title::Update() {
 
 	if (Input::GetKeyTrigger(DIK_SPACE) && !mClear) {
 
-		AudioListener::Play(mAsset->GetSound((int)SOUND_ENUM_TITLE::SE_01), 0, 0.5f);
+		AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_TITLE::SE_01), 0, 0.5f);
 		Fade* fade = AddGameObject<Fade>(FadeLayer);
 		fade->Start(false, 90, D3DCOLOR_RGBA(0, 0, 0, 0));
 		mpFade = fade;
@@ -67,7 +66,7 @@ void Title::CreateTitle() {
 
 	mParticle = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 	mParticle->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\Title_Particle.json"));
-	mParticle->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::PARTICLE));
+	mParticle->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_TITLE::PARTICLE));
 	Application::GetScene()->GetGameObject<Camera>(CameraLayer)->SetFollowTarget(mParticle);
 
 }

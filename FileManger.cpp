@@ -51,7 +51,7 @@ void FileManager::ReadResource(const char* pass) {
 				g->Scale.z = data["Scale"]["z"];
 
 				if (data["Tag"] == "Grass") {
-					g->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
+					g->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::PLANT));
 				}
 			}
 
@@ -75,13 +75,13 @@ void FileManager::ReadResource(const char* pass) {
 
 				if (data["Tag"] == "Rock") {
 					if (p->GetComponent<ModelManager>()) {
-						p->GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
+						p->GetComponent<ModelManager>()->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
 					}
 				}
 
 				else if (data["Tag"] == "Wall") {
 					if (p->GetComponent<ModelManager>()) {
-						p->GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::WALL));
+						p->GetComponent<ModelManager>()->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::WALL));
 					}
 				}
 			}

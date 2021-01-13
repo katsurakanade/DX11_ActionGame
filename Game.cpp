@@ -12,9 +12,8 @@
 
 void Game::Init() {
 
-	mAsset = new Asset(SCENE_ASSET::GAME);
-	mAsset->LoadSceneAsset();
-	Application::SetAsset(mAsset);
+	Asset::GetInstance()->SetScene(SCENE_ASSET::GAME);
+	Asset::GetInstance()->LoadSceneAsset();
 
 	mMaincamera = AddGameObject<Camera>(CameraLayer);
 	AddGameObject<Light>(CameraLayer);
@@ -46,7 +45,7 @@ void Game::Init() {
 
 	GUI* gui = AddGameObject<GUI>(SpriteLayer);
 
-	AudioListener::Play(Application::GetAsset()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
+	AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_GAME::BGM_02), -1, 0.05f);
 
 }
 
@@ -57,7 +56,7 @@ void Game::Update() {
 	if (mpFade != nullptr) {
 		if (!mpFade->GetIsFade()) {
 			if (mClear) {
-				AudioListener::Stop(mAsset->GetSound((int)SOUND_ENUM_GAME::BGM_02));
+				AudioListener::Stop(Asset::GetInstance()->GetSound((int)SOUND_ENUM_GAME::BGM_02));
 				Application::SwitchScene<Title>();
 				return;
 			}

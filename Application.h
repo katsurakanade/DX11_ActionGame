@@ -9,7 +9,6 @@
 #include "Game.h"
 #include "Result.h"
 
-
 class Application
 {
 
@@ -17,8 +16,6 @@ private:
 
 	// シーン
 	static Scene* mScene;
-	// シーンアセット
-	static Asset* mAsset;
 	// フラグ
 	static bool mDisableLighting;
 	static bool mGizmosMode;
@@ -41,12 +38,8 @@ public:
 	static std::random_device RandomDevice;
 	static std::default_random_engine RandomGen;
 
-	// Setter
-	static void SetAsset(Asset* asset) { mAsset = asset; };
-
 	// Getter
 	static Scene* GetScene() { return mScene; };
-	static Asset* GetAsset() { return mAsset; };
 
 	// ForDebug
 	static void System();

@@ -14,7 +14,6 @@
 
 // Static
 Scene* Application::mScene = nullptr;
-Asset* Application::mAsset = nullptr;
 bool Application::mDisableLighting;
 bool Application::mGizmosMode;
 float Application::mFrameTime[100];

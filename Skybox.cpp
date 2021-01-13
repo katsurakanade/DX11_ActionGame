@@ -12,12 +12,12 @@ void Skybox::Init() {
 
 	mpModel = AddComponent<ModelManager>();
 
-	if (Application::GetAsset()->GetScene() == SCENE_ASSET::TITLE) {
-		mpModel->SetModel(Application::GetScene()->GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_TITLE::BALL));
+	if (Asset::GetInstance()->GetScene() == SCENE_ASSET::TITLE) {
+		mpModel->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_TITLE::BALL));
 	}
 
-	if (Application::GetAsset()->GetScene() == SCENE_ASSET::GAME) {
-		mpModel->SetModel(Application::GetScene()->GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::BALL));
+	if (Asset::GetInstance()->GetScene() == SCENE_ASSET::GAME) {
+		mpModel->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::BALL));
 	}
 
 	Position = D3DXVECTOR3(0, 0, 0); 

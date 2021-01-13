@@ -10,11 +10,11 @@ void Fade::Init() {
 
 	Sprite* sp = Application::GetScene()->AddGameObject<Sprite>(FadeLayer);
 	sp->Name = "FadeSprite";
-	if (Application::GetAsset()->GetScene() == SCENE_ASSET::TITLE) {
-		sp->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_TITLE::WHITE));
+	if (Asset::GetInstance()->GetScene() == SCENE_ASSET::TITLE) {
+		sp->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_TITLE::WHITE));
 	}
-	else if (Application::GetAsset()->GetScene() == SCENE_ASSET::GAME) {
-		sp->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::WHITE));
+	else if (Asset::GetInstance()->GetScene() == SCENE_ASSET::GAME) {
+		sp->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::WHITE));
 	}
 	sp->GetImage()->Set2DSize(D3DXVECTOR3(1920.0f, 1080.0f, 0));
 	sp->GetImage()->Set2DPosition(D3DXVECTOR3(0, 0, 0));

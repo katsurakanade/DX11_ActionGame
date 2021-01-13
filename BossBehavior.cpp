@@ -50,7 +50,7 @@ void BossBehavior::Update() {
 		if (mLengthToPlayer < 50.0f) {
 			mStart = true;
 			mpAnimation->SetNewStateOneTime("PowerUp", 2.0f);
-			AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::ALIEN_HUMAN), 0, 3.0f);
+			AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_GAME::ALIEN_HUMAN), 0, 3.0f);
 		}
 	}
 
@@ -144,28 +144,32 @@ void BossBehavior::ChooseAction() {
 	// éÄñS (-> éÄñSèÛë‘)
 	else if (mHp <= 0.0f) {
 		if (!mDead)
-			AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::ALIEN_DIE), 0, 3.5f);
+			AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_GAME::ALIEN_DIE), 0, 3.5f);
 		mDead = true;
 		mState = "Dying";
 	}
 }
 
 void BossBehavior::RunAction() {
-
+	
+	// ë“ã@èÛë‘
 	if (mState == "Idle") {
 	
 	}
+	// í«ê’èÛë‘
 	else if (mState == "Chase") {
 		LookAt(mpPlayer->Position);
 		mpAnimation->SetNewState("Running");
 		MoveTo(mpPlayer->Position + D3DXVECTOR3(0,0,5));
 		mCoolSkill = 0.0f;
 	}
+	// çUåÇèÛë‘
 	else if (mState == "Attack") {
 		LookAt(mpPlayer->Position);
 		mpAnimation->SetNewStateOneTime("Attack", 0.8f);
 		mCoolSkill = 0.0f;
 	}
+	// é¸àÕçUåÇèÛë‘
 	else if (mState == "Attack_Around") {
 
 		mpAnimation->SetNewStateOneTime("Jump_Attack", 2.0f);
@@ -173,20 +177,20 @@ void BossBehavior::RunAction() {
 		Skill_AttackAround* sa = Application::GetScene()->AddGameObject<Skill_AttackAround>(ObjectLayer);
 		sa->Position = Position + D3DXVECTOR3(0, 1, 0);
 		sa->SetEnemy(this);
-		AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::ALIEN_AGGRO), 0, 2.5f);
+		AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_GAME::ALIEN_AGGRO), 0, 2.5f);
 
 		mState = "Idle";
 		mCoolSkill = 0.0f;
 		mUsedAttack_Around = true;
 		mCanUseSkill = false;
 	}
+	// ñÇñ@çUåÇèÛë‘
 	else if (mState == "Magic") {
 
 		mpAnimation->SetNewStateOneTime("Spell2", 2.0f);
-		mUsedMagic = true;
 
 		LookAt(mpPlayer->Position);
-		AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::ALIEN_KILLYOU), 0, 2.5f);
+		AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_GAME::ALIEN_KILLYOU), 0, 2.5f);
 
 		Skill_Skyblade* sk = Application::GetScene()->AddGameObject<Skill_Skyblade>(ObjectLayer);
 		sk->Position = mpPlayer->Position + D3DXVECTOR3(0, 1, 0);
@@ -194,13 +198,14 @@ void BossBehavior::RunAction() {
 		mState = "Idle";
 		mCoolSkill = 0.0f;
 	}
+	// è¢ä´èÛë‘
 	else if (mState == "Summon") {
 
 		mpAnimation->SetNewStateOneTime("Spell", 2.0f);
 		mUsedSummon = true;
 		mSummonThread = std::thread(&BossBehavior::Summon, this);
 
-		AudioListener::Play(Application::GetScene()->GetAsset()->GetSound((int)SOUND_ENUM_GAME::PHRASE), 0, 2.0f);
+		AudioListener::Play(Asset::GetInstance()->GetSound((int)SOUND_ENUM_GAME::PHRASE), 0, 2.0f);
 
 		std::uniform_real_distribution<float> rndx(-70, 70);
 		float offsetx = rndx(Application::RandomGen);
@@ -217,11 +222,12 @@ void BossBehavior::RunAction() {
 		ParitcleSetting* setting = &FileManager::ReadParticleJSON("asset\\json_particle\\Test_Particle.json");
 		setting->Position = mSummonenemyPos - GetResource()->Position;
 		pc->Create(setting);
-		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BLOOD_PARTICLE));
+		pc->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::BLOOD_PARTICLE));
 	
 		mState = "Idle";
 		mCoolSkill = 0.0f;
 	}
+	// éÄñSèÛë‘
 	else if (mState == "Dying") {
 		Dying();
 	}
@@ -250,7 +256,7 @@ void BossBehavior::Summon() {
 	mSummonenemy->Create();
 
 	mSummonSprite = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
-	mSummonSprite->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::MAGICRING));
+	mSummonSprite->GetComponent<ImageManager>()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::MAGICRING));
 	mSummonSprite->GetComponent<ImageManager>()->SetBillBoard(false);
 	mSummonSprite->GetComponent<ImageManager>()->SetAnimationSprite(true);
 	mSummonSprite->GetComponent<ImageManager>()->SetGUI(false);

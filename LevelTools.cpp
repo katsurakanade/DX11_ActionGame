@@ -39,7 +39,7 @@ void LevelTools::Update() {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f, 0.5f, 0.0f, 1.0f });
 		if (ImGui::Button(u8"Šâ")) {
 			Props* rock = Application::GetScene()->AddGameObject<Props>(ObjectLayer);
-			rock->GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
+			rock->GetComponent<ModelManager>()->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
 			rock->Name = "Rock_" + std::to_string(Application::RandomDevice());
 			rock->Tag = "Rock";
 			rock->Type = "Object";
@@ -48,7 +48,7 @@ void LevelTools::Update() {
 		}
 		if (ImGui::Button(u8"•Ç")) {
 			Props* rock = Application::GetScene()->AddGameObject<Props>(ObjectLayer);
-			rock->GetComponent<ModelManager>()->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::WALL));
+			rock->GetComponent<ModelManager>()->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::WALL));
 			rock->Name = "Wall_" + std::to_string(Application::RandomDevice());
 			rock->Tag = "Wall";
 			rock->Type = "Object";

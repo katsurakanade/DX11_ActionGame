@@ -34,7 +34,7 @@ void ParticleManager::Update() {
 	if (ImGui::Button(u8"¶¬")) {
 		ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 		pc->Create(&mSetting);
-		pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+		pc->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 		pc->Position = Position;
 	}
 

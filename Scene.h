@@ -33,8 +33,6 @@ protected:
 
 	// フェイドポインタ
 	Fade* mpFade;
-	// シーンアセット
-	Asset* mAsset;
 	// メインカメラ
 	Camera* mMaincamera;
 
@@ -55,9 +53,7 @@ public:
 			mGameObject[i].clear();
 		}
 
-		mAsset->UnloadSceneAsset();
-		delete mAsset;
-		mAsset = nullptr;
+		Asset::GetInstance()->UnloadSceneAsset();
 	}
 
 	virtual void Update() {
@@ -160,6 +156,5 @@ public:
 	// Setter
 	void SetSwitchFlag(bool val) { mSwitchFlag = val; };
 	// Getter
-	Asset* GetAsset() { return mAsset; };
 	Camera* GetMainCamera() { return mMaincamera; };
 };

@@ -32,7 +32,7 @@ void Player::Init() {
 	mpPlayerBehavior = AddComponent<PlayerBehavior>();
 
 	// モデルコンポーネント初期化
-	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
+	mpModel->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
 
 	// 当たり判定コンポーネント初期化
 	mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);

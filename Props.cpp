@@ -14,7 +14,7 @@ void Props::Init() {
 	Name = "Props";
 
 	mpModel = AddComponent<ModelManager>();
-	mpModel->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
+	mpModel->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::ROCK));
 
 	Position = D3DXVECTOR3(0, 0, 0);
 	Rotation = D3DXVECTOR3(0, 1.57f, 0);

@@ -1,13 +1,15 @@
 #include "main.h"
 #include "Renderer.h"
-#include "Asset.h"
 #include "Debug.h"
 #include <thread>
 #include "Lib/nlohmann/json.hpp"
 #include <iostream>
 #include <fstream>
+#include "Asset.h"
 
 using json = nlohmann::json;
+
+Asset* Asset::instance = nullptr;
 
 void Asset::LoadSceneAsset(){
 

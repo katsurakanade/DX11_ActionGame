@@ -44,11 +44,6 @@ private:
 	Sprite* mSummonSprite;
 	// -------------------------------------
 
-	// –‚–@UŒ‚ŠÖ˜A ----------------------
-	float mSpellTimeMagic;
-	bool mUsedMagic;
-	// -------------------------------------
-
 	// üˆÍUŒ‚ŠÖ˜A ----------------------
 	bool mUsedAttack_Around;
 	float mAttack_Around_WaitTime;

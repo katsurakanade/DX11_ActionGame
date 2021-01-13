@@ -41,18 +41,27 @@ void ModelManager::Render(D3DXMATRIX world) {
 	mModel->Draw(world);
 }
 
-void ModelManager::LoadModelWithAnimation(std::string path) {
+void ModelManager::LoadModelWithAnimation(std::string type,std::string path) {
 
 	mModel = new AssimpModel(true);
 	mModel->Load(path);
-	mModel->LoadAnimation("asset\\animation\\Enemy\\Idle.fbx", "Idle");
-	mModel->LoadAnimation("asset\\animation\\Enemy\\Running.fbx", "Running");
-	mModel->LoadAnimation("asset\\animation\\Enemy\\Attack.fbx", "Attack");
-	mModel->LoadAnimation("asset\\animation\\Enemy\\Dying.fbx", "Dying");
-	mModel->LoadAnimation("asset\\animation\\Enemy\\Spell.fbx", "Spell");
-	mModel->LoadAnimation("asset\\animation\\Enemy\\Spell2.fbx", "Spell2");
-	mModel->LoadAnimation("asset\\animation\\Enemy\\PowerUp.fbx", "PowerUp");
-	mModel->LoadAnimation("asset\\animation\\Enemy\\Jump_Attack.fbx", "Jump_Attack");
-	mModel->LoadAnimation("asset\\animation\\Enemy\\Prepare.fbx", "Prepare");
+	if (type == "Enemy") {
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Idle.fbx", "Idle");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Running.fbx", "Running");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Attack.fbx", "Attack");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Dying.fbx", "Dying");
+	}
+	else if (type == "Boss") {
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Idle.fbx", "Idle");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Running.fbx", "Running");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Attack.fbx", "Attack");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Dying.fbx", "Dying");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Spell.fbx", "Spell");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Spell2.fbx", "Spell2");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\PowerUp.fbx", "PowerUp");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Jump_Attack.fbx", "Jump_Attack");
+		mModel->LoadAnimation("asset\\animation\\Enemy\\Prepare.fbx", "Prepare");
+	}
+
 	mIndependence = true;
 }

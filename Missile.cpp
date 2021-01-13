@@ -19,7 +19,7 @@ D3DXVECTOR3 Bezier(D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float t)
 void Missile::Init() {
 
 	Sprite* effect = Application::GetScene()->AddGameObject<Sprite>(EffectLayer);
-	effect->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::EXPLOSION));
+	effect->GetComponent<ImageManager>()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::EXPLOSION));
 	effect->GetComponent<ImageManager>()->SetBillBoard(true);
 	effect->GetComponent<ImageManager>()->SetAnimationSprite(true);
 	effect->GetComponent<ImageManager>()->SetHW(8, 6);
@@ -58,7 +58,7 @@ void Missile::Update() {
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 			pc->Position = mTarget->Position + D3DXVECTOR3(0,3,0);
 			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_FireBall_Particle.json"));
-			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+			pc->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 			if (mTarget->TryGetComponent<BossBehavior>()) {
 				mTarget->GetComponent<BossBehavior>()->mHp -= 30.0f;
 			}

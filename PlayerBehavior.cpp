@@ -222,7 +222,7 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 				if (es[i] != nullptr && es[i]->GetComponent<BoxCollider>()->Collision_Box_Stay(mpCollider)) {
 					ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 					pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerAttack_Simple_Particle.json"));
-					pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+					pc->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 					pc->Position = Position + D3DXVECTOR3(0, 3, 0);
 					if (es[i]->TryGetComponent<BossBehavior>()) {
 						es[i]->GetComponent<BossBehavior>()->mHp -= 30.0f;
@@ -277,31 +277,31 @@ void PlayerBehavior::Skill(BYTE keycode_0, BYTE keycode_1, BYTE keycode_2, BYTE 
 void PlayerBehavior::SwitchCharacter(BYTE keycode_prev ,BYTE keycode_next) {
 
 	if (Input::GetKeyTrigger(keycode_prev)) {
-		if (mpModelManager->GetModel() != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
+		if (mpModelManager->GetModel() != Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN)) {
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerSwitchCharacter_Particle.json"));
-			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
+			pc->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 			pc->Position = Position;
 
-			mpModelManager->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
+			mpModelManager->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN));
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
-			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
+			gui->SetPlayerIcon(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_0));
 
 			mCharacterType = 0;
 		}
 	}
 	if (Input::GetKeyTrigger(keycode_next)) {
 
-		if (mpModelManager->GetModel() != Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2)) {
+		if (mpModelManager->GetModel() != Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2)) {
 
 			ParticleSystem* pc = Application::GetScene()->AddGameObject<ParticleSystem>(EffectLayer);
 			pc->Create(&FileManager::ReadParticleJSON("asset\\json_particle\\PlayerSwitchCharacter_Particle.json"));
-			pc->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
+			pc->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::HANE));
 			pc->Position = Position;
 
-			mpModelManager->SetModel(Application::GetAsset()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2));
+			mpModelManager->SetModel(Asset::GetInstance()->GetAssimpModel((int)ASSIMP_MODEL_ENUM_GAME::HUMAN2));
 			GUI* gui = Application::GetScene()->GetGameObject<GUI>(SpriteLayer);
-			gui->SetPlayerIcon(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_1));
+			gui->SetPlayerIcon(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::CHARACTERICON_1));
 
 			mCharacterType = 1;
 		}

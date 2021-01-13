@@ -42,7 +42,7 @@ void Enemy::Create() {
 		mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 6.5f, 0.0f);
 		mpCollider->mScaleOffestCoff = D3DXVECTOR3(200.0f, 157.0f, 200.0f);
 		mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
-		mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Boss.fbx");
+		mpModel->LoadModelWithAnimation("Boss","asset\\model\\enemy\\Boss.fbx");
 		Scale = D3DXVECTOR3(0.08f, 0.08f, 0.08f);
 		mpCollider->SetUsePanel(true);
 		mpAnination->SetUsePanel(true);
@@ -54,12 +54,12 @@ void Enemy::Create() {
 		mpCollider->mPositionOffest = D3DXVECTOR3(0.0f, 4.2f, 0.0f);
 		mpCollider->mScaleOffestCoff = D3DXVECTOR3(150.0f, 157.0f, 150.0f);
 		mpCollider->mScaleOffest = D3DXVECTOR3(3.2f, 7.14f, 3.2f);
-		mpModel->LoadModelWithAnimation("asset\\model\\enemy\\Enemy.fbx");
+		mpModel->LoadModelWithAnimation("Enemy","asset\\model\\enemy\\Enemy.fbx");
 	}
 
 	mpLockImage = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
 	mpLockImage->Name = "enemy_lock_" + Name;
-	mpLockImage->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
+	mpLockImage->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::PARTICLE));
 	mpLockImage->GetImage()->SetAnimationSprite(true);
 	mpLockImage->GetImage()->SetBillBoard(true);
 	mpLockImage->GetImage()->SetHW(1, 1);

@@ -99,6 +99,10 @@ private:
 	// ファイルパス取得
 	std::vector <std::string> GetPathFromFile(const char* file);
 
+	// シングルトン
+	Asset() { };
+	static Asset* instance;
+
 protected:
 
 	// モデル
@@ -217,14 +221,21 @@ protected:
 
 public:
 
-	Asset() = delete;
-	Asset(SCENE_ASSET scene) : mScene(scene) {};
+	// シングルトン
+	static Asset* GetInstance() {
+		if (instance == nullptr)
+			instance = new Asset();
+		return instance;
+	};
 
 	// ロードシーンアセット
 	void LoadSceneAsset();
 	// アンロードシーンアセット
 	void UnloadSceneAsset();
 	
+	// Setter
+	void SetScene(SCENE_ASSET scene) { mScene = scene; };
+
 	// Getter
 	SCENE_ASSET GetScene() { return mScene; };
 	AssimpModel* GetAssimpModel(int index) { return mAssimpModelList[(int)index]; };

@@ -68,13 +68,13 @@ void Gauge::SetGUI(int length) {
 
 	Sprite* hpbar_empty = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	hpbar_empty->Name = "hpbarGUI";
-	hpbar_empty->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
+	hpbar_empty->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
 	hpbar_empty->GetImage()->Set2DSize(D3DXVECTOR3((float)length, 25, 0));
 	hpbar_empty->Position = D3DXVECTOR3(Position.x, Position.y, 1);
 
 	Sprite* hpbar_fill = Application::GetScene()->AddGameObject<Sprite>(SpriteLayer);
 	hpbar_fill->Name = "hpbarfillGUI";
-	hpbar_fill->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
+	hpbar_fill->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
 	hpbar_fill->GetImage()->Set2DSize(D3DXVECTOR3((float)length, 25, 0));
 	hpbar_fill->Position = D3DXVECTOR3(Position.x, Position.y, 1);
 
@@ -94,7 +94,7 @@ void Gauge::SetBillBoard(Resource* target) {
 	hpbar_empty->GetImage()->SetAnimationSprite(true);
 	hpbar_empty->GetImage()->SetHW(1, 1);
 	hpbar_empty->GetImage()->SetLoop(true);
-	hpbar_empty->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
+	hpbar_empty->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_EMPTY));
 	hpbar_empty->Position = D3DXVECTOR3(0, 0, 0);
 	hpbar_empty->Scale = D3DXVECTOR3(7.0f, 0.5f, 1.0f);
 
@@ -104,7 +104,7 @@ void Gauge::SetBillBoard(Resource* target) {
 	hpbar_fill->GetImage()->SetAnimationSprite(true);
 	hpbar_fill->GetImage()->SetHW(1, 1);
 	hpbar_fill->GetImage()->SetLoop(true);
-	hpbar_fill->GetImage()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
+	hpbar_fill->GetImage()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::BAR_FILL));
 	hpbar_fill->GetImage()->SetHighBrightness(true);
 	hpbar_fill->Position = D3DXVECTOR3(0, 0, 0);
 	hpbar_fill->Scale = D3DXVECTOR3(7.0f, 0.5f, 1.0f);

@@ -19,7 +19,7 @@ void Skill_Skyblade::Init() {
 
 	// –‚–@w¶¬
 	mMagicRing = Application::GetScene()->AddGameObject<Sprite>(EffectLayer2);
-	mMagicRing->GetComponent<ImageManager>()->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::MAGICRING));
+	mMagicRing->GetComponent<ImageManager>()->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::MAGICRING));
 	mMagicRing->GetComponent<ImageManager>()->SetBillBoard(false);
 	mMagicRing->GetComponent<ImageManager>()->SetAnimationSprite(true);
 	mMagicRing->GetComponent<ImageManager>()->SetGUI(false);
@@ -58,7 +58,7 @@ void Skill_Skyblade::Update() {
 			mEffect->Position = this->Position + D3DXVECTOR3(0, 30, 0);
 			ParitcleSetting* setting = &FileManager::ReadParticleJSON("asset\\json_particle\\BossMagic_Particle.json");
 			mEffect->Create(setting);
-			mEffect->SetTexture(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::SWORD));
+			mEffect->SetTexture(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::SWORD));
 		}
 		
 	}

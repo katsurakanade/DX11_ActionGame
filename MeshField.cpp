@@ -93,9 +93,9 @@ void MeshField::Init() {
 	}
 
 	// ‰æ‘œ
-	mTexture.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT));
-	mTextureNormal.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_NORMAL));
-	mTextureHeight.push_back(Application::GetAsset()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_HEIGHT));
+	mTexture.push_back(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT));
+	mTextureNormal.push_back(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_NORMAL));
+	mTextureHeight.push_back(Asset::GetInstance()->GetTexture((int)TEXTURE_ENUM_GAME::DIRT_HEIGHT));
 
 	Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

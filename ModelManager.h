@@ -25,7 +25,7 @@ public:
 
 	void Render(D3DXMATRIX world);
 
-	void LoadModelWithAnimation(std::string path);
+	void LoadModelWithAnimation(std::string type,std::string path);
 	
 	// Setter
 	void SetModel(AssimpModel* model) { mModel = model; };
